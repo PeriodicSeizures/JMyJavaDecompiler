@@ -69,6 +69,18 @@ public class JavaClassFile extends JavaItem {
         return (access_flags & ACC_INTERFACE) == ACC_INTERFACE;
     }
 
+    public boolean isAbstractClass() {
+        return (access_flags & ACC_ABSTRACT) == ACC_ABSTRACT && !isInterface();
+    }
+
+    public boolean isAnnotation() {
+        return (access_flags & ACC_ANNOTATION) == ACC_ANNOTATION;
+    }
+
+    public boolean isEnum() {
+        return (access_flags & ACC_ENUM) == ACC_ENUM;
+    }
+
     public int getMinorVersion() {
         return minor_version;
     }
@@ -90,14 +102,13 @@ public class JavaClassFile extends JavaItem {
         if ((access_flags & ACC_FINAL) == ACC_FINAL)
             s.append("final ");
 
-        if ((access_flags & ACC_ABSTRACT) == ACC_ABSTRACT)
-            s.append("abstract ");
-
-        if ((access_flags & ACC_ANNOTATION) == ACC_ANNOTATION)
-            s.append("@interface ");
-        else if ((access_flags & ACC_INTERFACE) == ACC_INTERFACE)
+        if (isAbstractClass())
+            s.append("abstract class");
+        else if (isInterface())
             s.append("interface ");
-        else if ((access_flags & ACC_ENUM) == ACC_ENUM)
+        else if (isAnnotation())
+            s.append("@interface ");
+        else if (isEnum())
             s.append("enum ");
         else
             s.append("class ");
@@ -110,12 +121,12 @@ public class JavaClassFile extends JavaItem {
         in: "Ljava/util/ArrayList", "something"
         out: "ArrayList<something>"
      */
-    public static String nameToSimpleName(String s) {
-        return null;
-    }
+    //public static String nameToSimpleName(String s) {
+    //    return null;
+    //}
 
     @Override
     public String toString() {
-        return constantPoolContainer.getEntry(this_class).toString();
+        return getEntry(this_class).toString();
     }
 }

@@ -70,7 +70,7 @@ public class JavaField extends JavaItem {
             case 'L': // is of an object
                 // Need to validate the name, ie remove any invalid characters
                 // replace all '/' with '.'
-                String typeName = getPackageUnqualifiedName(descriptor.substring(at+1, descriptor.length()-1));
+                String typeName = getQualifiedName(descriptor.substring(at+1, descriptor.length()-1));
 
                 //String objName = getUnqualifiedName(descriptor);
 

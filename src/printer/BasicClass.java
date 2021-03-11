@@ -1,6 +1,7 @@
 package printer;
 
 import decompiler.JavaClassFile;
+import decompiler.classfile.JavaItem;
 import decompiler.classfile.fields.JavaField;
 
 import java.util.ArrayList;
@@ -23,8 +24,12 @@ public class BasicClass {
         flags = javaClassFile.getAccessFlags();
 
         String class_name = javaClassFile.toString();
-        packageName = class_name.substring(0, class_name.lastIndexOf("/")).replace("/", ".");
-        name = class_name.substring(class_name.lastIndexOf("/") + 1);
+        //System.out.println(class_name);
+
+        String[] packageAndClass = JavaItem.getSimplePackageAndClass(class_name);
+
+        packageName = packageAndClass[0];
+        name = packageAndClass[1];
 
         for (JavaField javaField : javaClassFile.fieldContainer.fields)
             this.fields.add(javaField.toString());
@@ -36,15 +41,18 @@ public class BasicClass {
     public String toString() {
         StringBuilder s = new StringBuilder();
 
-        s.append("package ").append(packageName).append(";\n");
+        if (!packageName.isEmpty())
+            s.append("package ").append(packageName).append(";\n");
 
         // public class TestClass
         s.append(flags).append(name).append(" {\n");
 
         // fields
         for (String f : fields) {
-            s.append("\t").append(f).append(";\n");
+            s.append("    ").append(f).append(";\n");
         }
+
+        s.append("}");
 
         return s.toString();
     }
