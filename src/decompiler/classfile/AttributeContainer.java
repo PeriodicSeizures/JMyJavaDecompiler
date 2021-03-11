@@ -22,16 +22,11 @@ public class AttributeContainer extends JavaItem {
             int attribute_name_index = bytes.readUnsignedShort();
             long attribute_length = bytes.readUnsignedInt();
 
-            // constantPoolContainer starts at index of 1, not 0
-            ConstantUtf8 element = (ConstantUtf8)currentClassInstance.
-                    constantPoolContainer.getEntry(attribute_name_index);
-
-            //System.out.println("attribute: " + element.s);
-
 
 
             try {
-                JavaAttribute.Attribute atr = JavaAttribute.Attribute.valueOf(element.s);
+                String s = getEntry(attribute_name_index).toString();
+                JavaAttribute.Attribute atr = JavaAttribute.Attribute.valueOf(s);
 
                 float class_version = Float.parseFloat(currentClassInstance.getClassVersion());
                 float atr_version = Float.parseFloat(atr.major + "." + atr.minor);
@@ -49,7 +44,7 @@ public class AttributeContainer extends JavaItem {
 
                 } else {
                     // do nothing
-                    System.out.println("attribute being ignored due to class version: " + element.s);
+                    System.out.println("attribute being ignored due to class version: " + s);
                 }
 
             } catch (Exception e) {

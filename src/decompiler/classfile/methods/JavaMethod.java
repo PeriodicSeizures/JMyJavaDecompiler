@@ -48,7 +48,7 @@ public class JavaMethod extends JavaItem {
     public String toString() {
         StringBuilder s = new StringBuilder();
 
-        String methodName = ((ConstantUtf8)currentClassInstance.constantPoolContainer.getEntry(name_index)).s;
+        String methodName = getEntry(name_index).toString();
 
         //if (methodName.equals("<init>")) {
         //    currentClassInstance.

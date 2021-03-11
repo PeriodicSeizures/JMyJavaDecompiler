@@ -9,6 +9,7 @@ public class SAMPLER {
     private int[] oh_no_array = null;
     private static SAMPLER im_an_object = null;
     private static ArrayList<Integer> im_an_object2 = null;
+    private static Object[] some_objects_arr = new Object[3];
 
     //private String test = "well hi there ";
     //private int i=0;

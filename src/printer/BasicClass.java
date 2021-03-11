@@ -36,14 +36,14 @@ public class BasicClass {
     public String toString() {
         StringBuilder s = new StringBuilder();
 
-        s.append(packageName).append("\n");
+        s.append("package ").append(packageName).append(";\n");
 
         // public class TestClass
         s.append(flags).append(name).append(" {\n");
 
         // fields
         for (String f : fields) {
-            s.append(f).append("\n");
+            s.append("\t").append(f).append(";\n");
         }
 
         return s.toString();

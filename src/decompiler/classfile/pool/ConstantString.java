@@ -13,4 +13,9 @@ public class ConstantString extends JavaPoolEntry {
         string_index = bytes.readUnsignedShort();
         return Result.OK;
     }
+
+    @Override
+    public String toString() {
+        return getEntry(string_index).toString();
+    }
 }

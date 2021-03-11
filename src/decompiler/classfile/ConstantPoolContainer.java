@@ -23,8 +23,8 @@ public class ConstantPoolContainer extends JavaItem {
     private final static int CONSTANT_METHODTYPE =          16;
     private final static int CONSTANT_INVOKEDYNAMIC =       18;
 
-    private ArrayList<Integer> spaced_indexes = new ArrayList<>();
-    private ArrayList<JavaPoolEntry> constant_pool = new ArrayList<>();
+    public ArrayList<Integer> spaced_indexes = new ArrayList<>();
+    public ArrayList<JavaPoolEntry> constant_pool = new ArrayList<>();
 
 
 
@@ -89,8 +89,8 @@ public class ConstantPoolContainer extends JavaItem {
         return Result.OK;
     }
 
-    public JavaPoolEntry getEntry(int i) {
-        return constant_pool.get(spaced_indexes.get(i-1));
-    }
+    //public JavaPoolEntry getEntry(int i) {
+    //    return constant_pool.get(spaced_indexes.get(i-1));
+    //}
 
 }

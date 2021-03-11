@@ -19,11 +19,9 @@ public class ConstantNameAndType extends JavaPoolEntry {
     @Override
     public String toString() {
 
-        String name = currentClassInstance.constantPoolContainer.
-                getEntry(name_index).toString();
+        String name = getEntry(name_index).toString();
 
-        String type = currentClassInstance.constantPoolContainer.
-                getEntry(name_index).toString();
+        String type = getEntry(name_index).toString();
 
         return type + " " + name;
     }

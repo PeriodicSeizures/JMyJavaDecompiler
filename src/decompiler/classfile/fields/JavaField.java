@@ -3,10 +3,8 @@ package decompiler.classfile.fields;
 import decompiler.Result;
 import decompiler.classfile.AttributeContainer;
 import decompiler.classfile.JavaItem;
-import decompiler.classfile.attributes.JavaAttribute;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class JavaField extends JavaItem {
 
@@ -40,9 +38,51 @@ public class JavaField extends JavaItem {
 
         attribute_container.read();
 
+        this.getSimpleType();
+
         return Result.OK;
     }
-// volatile public static final transient Object
+
+    private String getSimpleType() {
+        String descriptor = getEntry(descriptor_index).toString();
+
+        StringBuilder builder = new StringBuilder();
+        StringBuilder arrayBuilder = new StringBuilder();
+
+        int at = 0;
+        for (; at<descriptor.codePointCount(0, descriptor.length()-1); at++) {
+            //System.out.println("found: " + pt);
+            if (descriptor.codePointAt(at) != '[')
+                break;
+            arrayBuilder.append("[]");
+        }
+
+        // get the object name from [at, end];
+        switch(descriptor.codePointAt(at)) {
+            case 'B': builder.insert(0, "byte"); break;
+            case 'C': builder.insert(0, "char"); break;
+            case 'D': builder.insert(0, "double"); break;
+            case 'F': builder.insert(0, "float"); break;
+            case 'I': builder.insert(0, "int"); break;
+            case 'J': builder.insert(0, "long"); break;
+            case 'S': builder.insert(0, "short"); break;
+            case 'Z': builder.insert(0, "boolean"); break;
+            case 'L': // is of an object
+                // Need to validate the name, ie remove any invalid characters
+                // replace all '/' with '.'
+                String typeName = getPackageUnqualifiedName(descriptor.substring(at+1, descriptor.length()-1));
+
+                //String objName = getUnqualifiedName(descriptor);
+
+                builder.append(typeName);
+        }
+
+        builder.append(arrayBuilder);
+
+        return builder.toString();
+    }
+
+    // volatile public static final transient Object
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
@@ -66,9 +106,11 @@ public class JavaField extends JavaItem {
         else if ((access_flags & ACC_TRANSIENT) == ACC_TRANSIENT)
             s.append("transient ");
 
-        s.append(currentClassInstance.constantPoolContainer.getEntry(descriptor_index)).append(" ");
-        s.append(currentClassInstance.constantPoolContainer.getEntry(name_index)).append("\n");
+        //s.append(getEntry(descriptor_index)).append(" ");
+        s.append(getSimpleType()).append(" ");
+        s.append(getEntry(name_index)); //.append("\n");
 
         return s.toString();
     }
+
 }

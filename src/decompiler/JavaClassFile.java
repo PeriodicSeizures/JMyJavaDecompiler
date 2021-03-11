@@ -105,6 +105,15 @@ public class JavaClassFile extends JavaItem {
         return s.toString();
     }
 
+    /*
+        performs a lookup to retrieve the name of the object, ie
+        in: "Ljava/util/ArrayList", "something"
+        out: "ArrayList<something>"
+     */
+    public static String nameToSimpleName(String s) {
+        return null;
+    }
+
     @Override
     public String toString() {
         return constantPoolContainer.getEntry(this_class).toString();
