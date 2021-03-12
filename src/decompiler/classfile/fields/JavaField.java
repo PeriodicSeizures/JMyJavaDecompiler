@@ -70,11 +70,20 @@ public class JavaField extends JavaItem {
             case 'L': // is of an object
                 // Need to validate the name, ie remove any invalid characters
                 // replace all '/' with '.'
-                String typeName = getQualifiedName(descriptor.substring(at+1, descriptor.length()-1));
+
+                //JavaItem.getUnqualifiedName()
+                String[] packageAndClass = JavaItem.getSimplePackageAndClass(descriptor.substring(at+1, descriptor.length()-1));
+
+                //String typeName = getQualifiedName(descriptor.substring(at+1, descriptor.length()-1));
+
+
+
+                //System.out.println("  /  " + packageAndClass[1]);
 
                 //String objName = getUnqualifiedName(descriptor);
 
-                builder.append(typeName);
+                //builder.append(typeName);
+                builder.append(packageAndClass[1]);
         }
 
         builder.append(arrayBuilder);
@@ -108,7 +117,8 @@ public class JavaField extends JavaItem {
 
         //s.append(getEntry(descriptor_index)).append(" ");
         s.append(getSimpleType()).append(" ");
-        s.append(getEntry(name_index)); //.append("\n");
+        //s.append(JavaItem.)
+        s.append(JavaItem.getUnqualifiedName(getEntry(name_index).toString())); //.append("\n");
 
         return s.toString();
     }

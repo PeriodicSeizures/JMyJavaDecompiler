@@ -21,9 +21,22 @@ public class SAMPLER {
     void spin() {
 
         for (int i=0; i<100; i++) {
-
+            oh_no++;
+            SAMPLER2.big_visible += 4;
         }
 
+    }
+
+    int return_something_int() {
+        return oh_no+7;
+    }
+
+    Object return_obj() {
+        return new Object();
+    }
+
+    SAMPLER return_a_new() {
+        return new SAMPLER();
     }
 
 }

@@ -1,6 +1,6 @@
 package decompiler.classfile;
 
-import decompiler.IncrementalBytes;
+import decompiler.JavaClassReader;
 import decompiler.JavaClassFile;
 import decompiler.Result;
 import decompiler.classfile.pool.JavaPoolEntry;
@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public abstract class JavaItem {
 
-    public static IncrementalBytes bytes;
+    public static JavaClassReader bytes;
 
     public static JavaClassFile currentClassInstance;
 
@@ -91,12 +91,14 @@ public abstract class JavaItem {
         // find occurrences of '/'
         int lastSlash = class_name.lastIndexOf('/');
 
+        //System.out.println("  :  " + class_name);
+        class_name = class_name.replaceAll(";", "");
         if (lastSlash != -1) {
             String name = getUnqualifiedName(class_name.substring(lastSlash+1));
-            String pkg = getQualifiedName(class_name.substring(0, lastSlash));
+            String pkg = getQualifiedName(class_name.substring(0, lastSlash).replaceAll("/", "."));
             return new String[] {pkg, name};
         } else {
-            return new String[] {"", getUnqualifiedName(class_name)};
+            return new String[] {null, getUnqualifiedName(class_name)};
         }
     }
 

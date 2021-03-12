@@ -44,20 +44,65 @@ public class JavaMethod extends JavaItem {
         return Result.OK;
     }
 
+    // uses the descriptor
+    private String getReturnType() {
+
+        StringBuilder builder = new StringBuilder();
+
+        String r = getEntry(descriptor_index).toString();
+        switch (r.charAt(2)) {
+            case 'B': return "byte";
+            case 'C': return "char";
+            case 'D': return "double";
+            case 'F': return "float";
+            case 'I': return "int";
+            case 'J': return "long";
+            case 'S': return "short";
+            case 'Z': return "boolean";
+            case 'V': return "void";
+            case 'L': {
+                String[] sp = JavaItem.getSimplePackageAndClass(r.substring(1));
+
+                return sp[1];
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
 
-        String methodName = getEntry(name_index).toString();
+        //System.out.println("mdescriptor" + getEntry(descriptor_index));
 
-        //if (methodName.equals("<init>")) {
-        //    currentClassInstance.
-        //    s.append();
-        //} else {
-//
-        //}
+        String name = getEntry(name_index).toString();
 
-        s.append(methodName);
+        if (name.equals("<init>")) {
+            name = getEntry(cl)
+        } else {
+        }
+
+        if ((access_flags & ACC_PUBLIC) == ACC_PUBLIC)
+            s.append("public ");
+        else if ((access_flags & ACC_PRIVATE) == ACC_PRIVATE)
+            s.append("private ");
+        else if ((access_flags & ACC_PROTECTED) == ACC_PROTECTED)
+            s.append("protected ");
+
+        if ((access_flags & ACC_STATIC) == ACC_STATIC)
+            s.append("static ");
+
+        if ((access_flags & ACC_FINAL) == ACC_FINAL)
+            s.append("final ");
+
+        if ((access_flags & ACC_ABSTRACT) == ACC_ABSTRACT)
+            s.append("abstract ");
+
+        if ((access_flags & ACC_SYNCHRONIZED) == ACC_SYNCHRONIZED)
+            s.append("synchronized ");
+
+        s.append(getReturnType()).append(" ");
+        s.append(JavaItem.getUnqualifiedName(name));
 
         return s.toString();
     }

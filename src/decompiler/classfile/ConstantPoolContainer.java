@@ -23,6 +23,13 @@ public class ConstantPoolContainer extends JavaItem {
     private final static int CONSTANT_METHODTYPE =          16;
     private final static int CONSTANT_INVOKEDYNAMIC =       18;
 
+    class PoolConstant {
+
+        // not all constants are fixed size, they depend on the tag
+        byte[] data;
+
+    }
+
     public ArrayList<Integer> spaced_indexes = new ArrayList<>();
     public ArrayList<JavaPoolEntry> constant_pool = new ArrayList<>();
 

@@ -41,8 +41,8 @@ public class BasicClass {
     public String toString() {
         StringBuilder s = new StringBuilder();
 
-        if (!packageName.isEmpty())
-            s.append("package ").append(packageName).append(";\n");
+        if (packageName != null)
+            s.append("package ").append(packageName).append(";\n\n");
 
         // public class TestClass
         s.append(flags).append(name).append(" {\n");

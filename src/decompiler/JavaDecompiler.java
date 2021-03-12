@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 
 public class JavaDecompiler {
     private JavaClassFile javaClassFile = new JavaClassFile();
-    private IncrementalBytes bytes;
+    private JavaClassReader bytes;
 
     public Result read(String f) {
 
@@ -24,7 +24,7 @@ public class JavaDecompiler {
         System.out.println("reading: " + f);
 
         try {
-            bytes = new IncrementalBytes(new DataInputStream(new FileInputStream(file)));
+            bytes = new JavaClassReader(new DataInputStream(new FileInputStream(file)));
 
             JavaItem.bytes = this.bytes;
             JavaItem.currentClassInstance = javaClassFile;

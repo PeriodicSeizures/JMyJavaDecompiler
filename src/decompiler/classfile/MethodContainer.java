@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class MethodContainer extends JavaItem {
 
 
-    private ArrayList<JavaMethod> methods = new ArrayList<>();
+    public ArrayList<JavaMethod> methods = new ArrayList<>();
 
     @Override
     public Result read() throws IOException {

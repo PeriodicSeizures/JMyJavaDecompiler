@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
-public class IncrementalBytes extends DataInputStream {
+public class JavaClassReader extends DataInputStream {
 
-    public IncrementalBytes(InputStream in) {
+    public JavaClassReader(InputStream in) {
         super(in);
     }
 
@@ -29,5 +29,7 @@ public class IncrementalBytes extends DataInputStream {
             throw new EOFException();
         return (ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4);
     }
+
+
 
 }

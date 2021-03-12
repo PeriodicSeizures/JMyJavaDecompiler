@@ -9,8 +9,8 @@ public class Main {
         JavaDecompiler decompiler = new JavaDecompiler();
 
         // "D:\\GitHub\\MyJavaDecompiler\\MyJavaDecompiler\\zz.class\\"
-        //Result result = decompiler.read("SAMPLER.class");
-        Result result = decompiler.read("obf1.class");
+        Result result = decompiler.read("SAMPLER.class");
+        //Result result = decompiler.read("obf3.class");
         System.out.println(new BasicClass(decompiler.getJavaClassFile()));
 
         System.out.println("Decoding result: " + result.name());

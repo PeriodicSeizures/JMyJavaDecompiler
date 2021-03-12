@@ -52,6 +52,11 @@ public class JavaClassFile extends JavaItem {
         methodContainer.read();
         attributeContainer.read();
 
+        System.out.println("fields: " + fieldContainer.fields.size());
+        System.out.println("methods: " + methodContainer.methods.size());
+
+        System.out.println(methodContainer);
+
         return Result.OK;
     }
 

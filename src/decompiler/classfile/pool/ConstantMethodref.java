@@ -14,4 +14,12 @@ public class ConstantMethodref extends JavaPoolEntry {
         name_and_type_index = bytes.readUnsignedShort();
         return Result.OK;
     }
+
+    @Override
+    public String toString() {
+
+
+
+        return "ConstantMethodref{}";
+    }
 }

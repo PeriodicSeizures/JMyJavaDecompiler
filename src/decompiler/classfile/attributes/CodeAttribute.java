@@ -59,4 +59,16 @@ public class CodeAttribute extends JavaAttribute {
 
         return Result.OK;
     }
+
+    @Override
+    public String toString() {
+
+        /*
+            try to return the body of the method
+         */
+
+
+
+        return "CodeAttribute{}";
+    }
 }
