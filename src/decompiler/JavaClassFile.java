@@ -24,7 +24,7 @@ public class JavaClassFile extends JavaItem {
 
     public ConstantPoolContainer constantPoolContainer = new ConstantPoolContainer();
     private int access_flags;
-    private int this_class;
+    public int this_class;
     private int super_class;
     public InterfaceContainer interfaceContainer = new InterfaceContainer();
     public FieldContainer fieldContainer = new FieldContainer();
@@ -52,21 +52,15 @@ public class JavaClassFile extends JavaItem {
         methodContainer.read();
         attributeContainer.read();
 
-        System.out.println("fields: " + fieldContainer.fields.size());
-        System.out.println("methods: " + methodContainer.methods.size());
-
-        System.out.println(methodContainer);
+        System.out.println(constantPoolContainer);
+        //System.out.println(methodContainer);
 
         return Result.OK;
     }
 
-    //public void printMethods() {
-    //    System.out.println(methodContainer);
-    //}
-
     public String getSuperClassName() {
         if (super_class != 0)
-            return constantPoolContainer.getEntry(super_class).toString();
+            return getEntry(super_class).toJavaSourceCode(this_class);
         return "Object";
     }
 
@@ -121,17 +115,14 @@ public class JavaClassFile extends JavaItem {
         return s.toString();
     }
 
-    /*
-        performs a lookup to retrieve the name of the object, ie
-        in: "Ljava/util/ArrayList", "something"
-        out: "ArrayList<something>"
-     */
-    //public static String nameToSimpleName(String s) {
-    //    return null;
-    //}
+    @Override
+    public String toJavaSourceCode(int class_index) {
+        return getEntry(this_class).toJavaSourceCode(class_index); //.toString();
+
+    }
 
     @Override
     public String toString() {
-        return getEntry(this_class).toString();
+        return "{JavaClassFile} ";
     }
 }

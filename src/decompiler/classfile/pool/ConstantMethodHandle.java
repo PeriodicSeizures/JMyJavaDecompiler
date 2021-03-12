@@ -15,4 +15,14 @@ public class ConstantMethodHandle extends JavaPoolEntry {
         reference_index = bytes.readUnsignedShort();
         return Result.OK;
     }
+
+    @Override
+    public String toJavaSourceCode(int class_index) {
+        return "";
+    }
+
+    @Override
+    public String toString() {
+        return "{ConstantMethodHandle} \treference_kind: " + reference_kind;
+    }
 }

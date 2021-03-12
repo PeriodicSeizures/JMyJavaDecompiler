@@ -76,11 +76,7 @@ public class JavaMethod extends JavaItem {
         //System.out.println("mdescriptor" + getEntry(descriptor_index));
 
         String name = getEntry(name_index).toString();
-
-        if (name.equals("<init>")) {
-            name = getEntry(cl)
-        } else {
-        }
+        // 60, 62 < >
 
         if ((access_flags & ACC_PUBLIC) == ACC_PUBLIC)
             s.append("public ");
@@ -105,5 +101,9 @@ public class JavaMethod extends JavaItem {
         s.append(JavaItem.getUnqualifiedName(name));
 
         return s.toString();
+    }
+
+    public String getName() {
+        return getEntry(name_index).toString();
     }
 }

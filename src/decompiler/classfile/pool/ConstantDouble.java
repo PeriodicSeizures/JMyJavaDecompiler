@@ -16,6 +16,11 @@ public class ConstantDouble extends JavaPoolEntry {
 
     @Override
     public String toString() {
+        return "{ConstantDouble} \t" + value;
+    }
+
+    @Override
+    public String toJavaSourceCode(int class_index) {
         return "" + value;
     }
 }

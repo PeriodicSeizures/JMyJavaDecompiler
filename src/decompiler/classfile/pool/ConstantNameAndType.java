@@ -17,12 +17,17 @@ public class ConstantNameAndType extends JavaPoolEntry {
     }
 
     @Override
-    public String toString() {
-
+    public String toJavaSourceCode(int class_index) {
         String name = getEntry(name_index).toString();
 
         String type = getEntry(name_index).toString();
 
         return type + " " + name;
+    }
+
+    @Override
+    public String toString() {
+        return "{ConstantNameAndType} \tname_index: " + name_index + " (" + getEntry(name_index) + ") " +
+                "descriptor_index: " + descriptor_index + " (" + getEntry(descriptor_index) + ")";
     }
 }

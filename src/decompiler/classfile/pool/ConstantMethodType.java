@@ -13,4 +13,14 @@ public class ConstantMethodType extends JavaPoolEntry {
         descriptor_index = bytes.readUnsignedShort();
         return Result.OK;
     }
+
+    @Override
+    public String toJavaSourceCode(int class_index) {
+        return "";
+    }
+
+    @Override
+    public String toString() {
+        return "{ConstantClass} \tdescriptor_index: " + descriptor_index + " (" + getEntry(descriptor_index) + ")";
+    }
 }

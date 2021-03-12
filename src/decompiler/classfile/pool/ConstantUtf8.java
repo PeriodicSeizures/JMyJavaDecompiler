@@ -13,31 +13,16 @@ public class ConstantUtf8 extends JavaPoolEntry {
 
         s = bytes.readUTF(); // works as intended
 
-        System.out.println(s);
-
         return Result.OK;
     }
 
     @Override
     public String toString() {
-
-        /*
-           this is where invalid codepoints are to be reformatted in a consistent manner.
-         */
-
-        // scan string for invalid codepts, if there are any invalid, then getUnqualifiedName
-
-        //if (s.codePointCount(0, s.length()) == s.length())
-        //    return s;
-
-        //StringBuilder builder = new StringBuilder("_");
-        //for (int pt : s.codePoints().toArray()) {
-        //    builder.append(Integer.toHexString(pt));
-        //}
-
-        //return builder.toString();
-        return s;
+        return "{ConstantUtf8} \t" + s;
     }
 
-    //public String
+    @Override
+    public String toJavaSourceCode(int class_index) {
+        return s;
+    }
 }

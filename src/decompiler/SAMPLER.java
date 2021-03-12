@@ -39,4 +39,9 @@ public class SAMPLER {
         return new SAMPLER();
     }
 
+    int arg_method(int i, Object obb) {
+        obb = new Object();
+        return i+5;
+    }
+
 }

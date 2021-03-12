@@ -3,6 +3,7 @@ package printer;
 import decompiler.JavaClassFile;
 import decompiler.classfile.JavaItem;
 import decompiler.classfile.fields.JavaField;
+import decompiler.classfile.methods.JavaMethod;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,8 +24,9 @@ public class BasicClass {
     public BasicClass(JavaClassFile javaClassFile) {
         flags = javaClassFile.getAccessFlags();
 
-        String class_name = javaClassFile.toString();
-        //System.out.println(class_name);
+        String class_name = javaClassFile.toJavaSourceCode(javaClassFile.this_class);
+
+        System.out.println(class_name);
 
         String[] packageAndClass = JavaItem.getSimplePackageAndClass(class_name);
 
@@ -32,7 +34,18 @@ public class BasicClass {
         name = packageAndClass[1];
 
         for (JavaField javaField : javaClassFile.fieldContainer.fields)
-            this.fields.add(javaField.toString());
+            this.fields.add(javaField.toJavaSourceCode(javaClassFile.this_class));
+
+        for (JavaMethod javaMethod : javaClassFile.methodContainer.methods) {
+            BasicMethod basicMethod = new BasicMethod();
+            if (javaMethod.getName().equals("<init>")) {
+                basicMethod.name =  name;
+            } else {
+                basicMethod.name = javaMethod.getName();
+            }
+            //basicMethod.
+            //this.methods.add(javaMethod.)
+        }
 
         //System.out.println(flags + name);
     }

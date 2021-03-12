@@ -3,8 +3,6 @@ package decompiler.classfile.pool;
 import decompiler.Result;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 public class ConstantLong extends JavaPoolEntry {
 
@@ -14,5 +12,15 @@ public class ConstantLong extends JavaPoolEntry {
     public Result read() throws IOException {
         value = bytes.readLong();
         return Result.OK;
+    }
+
+    @Override
+    public String toJavaSourceCode(int class_index) {
+        return "" + value;
+    }
+
+    @Override
+    public String toString() {
+        return "{ConstantLong} \t" + value;
     }
 }

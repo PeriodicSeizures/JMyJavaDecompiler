@@ -13,4 +13,14 @@ public class ConstantInteger extends JavaPoolEntry {
         value = bytes.readInt();
         return Result.OK;
     }
+
+    @Override
+    public String toString() {
+        return "{ConstantInteger} \t" + value;
+    }
+
+    @Override
+    public String toJavaSourceCode(int class_index) {
+        return "" + value;
+    }
 }

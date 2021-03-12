@@ -21,7 +21,11 @@ public class ConstantClass extends JavaPoolEntry {
     // returns the name of the class from name_index
     @Override
     public String toString() {
-        return getEntry(name_index).toString();
-        //return "ConstantClass{}";
+        return "{ConstantClass} \tname_index: " + name_index + " (" + getEntry(name_index).toString() + ")";
+    }
+
+    @Override
+    public String toJavaSourceCode(int class_index) {
+        return getEntry(name_index).toJavaSourceCode(class_index);
     }
 }

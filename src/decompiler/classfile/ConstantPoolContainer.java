@@ -49,7 +49,7 @@ public class ConstantPoolContainer extends JavaItem {
             // reads the 1 byte tag
             int tag = bytes.readUnsignedByte();
 
-            System.out.println("tag: " + tag);
+            //System.out.println("tag: " + tag);
 
             switch (tag) {
                 case CONSTANT_CLASS: entry = new ConstantClass(); break;
@@ -72,10 +72,10 @@ public class ConstantPoolContainer extends JavaItem {
                 }
             }
 
-            if (entry == null) {
-                System.out.println("size: " + constant_pool.size());
-                return Result.INVALID_POOL_ENTRY;
-            }
+            //if (entry == null) {
+            //    System.out.println("size: " + constant_pool.size());
+            //    return Result.INVALID_POOL_ENTRY;
+            //}
 
             entry.read();
 
@@ -89,11 +89,27 @@ public class ConstantPoolContainer extends JavaItem {
 
         }
 
-        System.out.println("size: " + constant_pool.size());
+        //System.out.println("size: " + constant_pool.size());
 
         //System.out.println(this.getEntry(14).toString());
 
         return Result.OK;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append("{ConstantPool}: ").append("\n");
+
+        for (int i=1; i<spaced_indexes.size(); i++) {
+            JavaPoolEntry javaPoolEntry = JavaItem.getEntry(i);
+            stringBuilder.append("  ").append(i).append(" : ").append(javaPoolEntry.toString()).append("\n");
+        }
+
+        stringBuilder.append("size: ").append(spaced_indexes.size()).append("\n");
+
+        return stringBuilder.toString();
     }
 
     //public JavaPoolEntry getEntry(int i) {

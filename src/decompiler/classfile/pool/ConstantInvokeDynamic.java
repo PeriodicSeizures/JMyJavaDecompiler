@@ -15,4 +15,15 @@ public class ConstantInvokeDynamic extends JavaPoolEntry {
         name_and_type_index = bytes.readUnsignedShort();
         return Result.OK;
     }
+
+    @Override
+    public String toJavaSourceCode(int class_index) {
+        return super.toJavaSourceCode(class_index);
+    }
+
+    @Override
+    public String toString() {
+        return "{ConstantInvokeDynamic} \tbootstrap_method_attr_index: " + bootstrap_method_attr_index;
+        // + "(" + getEntry(b).toString() + ")";
+    }
 }

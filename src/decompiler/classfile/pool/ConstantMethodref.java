@@ -16,10 +16,13 @@ public class ConstantMethodref extends JavaPoolEntry {
     }
 
     @Override
+    public String toJavaSourceCode(int class_index) {
+        return "";
+    }
+
+    @Override
     public String toString() {
-
-
-
-        return "ConstantMethodref{}";
+        return "{ConstantMethodref} \tclass_index: " + class_index + " (" + getEntry(class_index) + ") " +
+                "name_and_type_index: " + name_and_type_index + " (" + getEntry(name_and_type_index) + ")";
     }
 }

@@ -15,7 +15,12 @@ public class ConstantString extends JavaPoolEntry {
     }
 
     @Override
-    public String toString() {
+    public String toJavaSourceCode(int class_index) {
         return getEntry(string_index).toString();
+    }
+
+    @Override
+    public String toString() {
+        return "{ConstantString} \tstring_index: " + string_index + " (" + getEntry(string_index) + ")";
     }
 }

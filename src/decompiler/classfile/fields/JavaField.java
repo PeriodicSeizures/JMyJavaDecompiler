@@ -38,13 +38,11 @@ public class JavaField extends JavaItem {
 
         attribute_container.read();
 
-        this.getSimpleType();
-
         return Result.OK;
     }
 
-    private String getSimpleType() {
-        String descriptor = getEntry(descriptor_index).toString();
+    private String getSimpleType(int class_index) {
+        String descriptor = getEntry(descriptor_index).toJavaSourceCode(class_index);
 
         StringBuilder builder = new StringBuilder();
         StringBuilder arrayBuilder = new StringBuilder();
@@ -68,21 +66,8 @@ public class JavaField extends JavaItem {
             case 'S': builder.insert(0, "short"); break;
             case 'Z': builder.insert(0, "boolean"); break;
             case 'L': // is of an object
-                // Need to validate the name, ie remove any invalid characters
-                // replace all '/' with '.'
-
-                //JavaItem.getUnqualifiedName()
                 String[] packageAndClass = JavaItem.getSimplePackageAndClass(descriptor.substring(at+1, descriptor.length()-1));
 
-                //String typeName = getQualifiedName(descriptor.substring(at+1, descriptor.length()-1));
-
-
-
-                //System.out.println("  /  " + packageAndClass[1]);
-
-                //String objName = getUnqualifiedName(descriptor);
-
-                //builder.append(typeName);
                 builder.append(packageAndClass[1]);
         }
 
@@ -91,9 +76,8 @@ public class JavaField extends JavaItem {
         return builder.toString();
     }
 
-    // volatile public static final transient Object
     @Override
-    public String toString() {
+    public String toJavaSourceCode(int class_index) {
         StringBuilder s = new StringBuilder();
 
         if ((access_flags & ACC_VOLATILE) == ACC_VOLATILE)
@@ -115,12 +99,16 @@ public class JavaField extends JavaItem {
         else if ((access_flags & ACC_TRANSIENT) == ACC_TRANSIENT)
             s.append("transient ");
 
-        //s.append(getEntry(descriptor_index)).append(" ");
-        s.append(getSimpleType()).append(" ");
-        //s.append(JavaItem.)
-        s.append(JavaItem.getUnqualifiedName(getEntry(name_index).toString())); //.append("\n");
+        s.append(getSimpleType(class_index)).append(" ");
+        s.append(JavaItem.getUnqualifiedName(getEntry(name_index).toJavaSourceCode(class_index)));
 
         return s.toString();
+    }
+
+    // volatile public static final transient Object
+    @Override
+    public String toString() {
+        return "{JavaField} \tname_index: " + name_index;
     }
 
 }

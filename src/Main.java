@@ -1,5 +1,6 @@
 import decompiler.JavaDecompiler;
 import decompiler.Result;
+import decompiler.WatchList;
 import printer.BasicClass;
 
 public class Main {
@@ -12,6 +13,8 @@ public class Main {
         Result result = decompiler.read("SAMPLER.class");
         //Result result = decompiler.read("obf3.class");
         System.out.println(new BasicClass(decompiler.getJavaClassFile()));
+
+        //WatchList.performSearch(decompiler.getJavaClassFile());
 
         System.out.println("Decoding result: " + result.name());
     }

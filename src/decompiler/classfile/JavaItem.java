@@ -17,6 +17,11 @@ public abstract class JavaItem {
 
     public abstract Result read() throws IOException;
 
+    // can be overridden to return the string of the data as readable source code
+    public String toJavaSourceCode(int class_index) {
+        return this.toString();
+    }
+
     /*
         Returns a reformatted string, with only var-name friendly characters
      */
@@ -26,7 +31,8 @@ public abstract class JavaItem {
             if ((pt >= 48 && pt <= 57) ||       // 0 -> 9
                     (pt >= 65 && pt <= 90) ||   // A -> Z
                     (pt >= 97 && pt <= 122) ||  // a -> z
-                    (pt == 95))                 // _
+                    (pt == 95) ||               // _
+                    (pt == 60) || (pt == 62))
             {
                 builder.append((char)pt);
                 continue;

@@ -20,6 +20,7 @@ public class JavaDecompiler {
         }
 
         SAMPLER sampler = new SAMPLER();
+        SAMPLER2 sampler2 = new SAMPLER2();
 
         System.out.println("reading: " + f);
 
