@@ -23,15 +23,26 @@ public class ConstantPoolContainer extends JavaItem {
     private final static int CONSTANT_METHODTYPE =          16;
     private final static int CONSTANT_INVOKEDYNAMIC =       18;
 
-    class PoolConstant {
 
-        // not all constants are fixed size, they depend on the tag
-        byte[] data;
-
-    }
 
     public ArrayList<Integer> spaced_indexes = new ArrayList<>();
     public ArrayList<JavaPoolEntry> constant_pool = new ArrayList<>();
+
+
+
+    /*
+        Some notes (about constants and attributes):
+            - invokedynamic instructions are recorded by BootstrapMethods atr
+
+            - BootstrapMethods (atr) contains:
+                MethodHandle constant
+                ... others ...
+
+            - MethodHandle (pool) can reference:
+                Fieldref, Methodref, InterfaceMethodref
+     */
+
+
 
 
 
@@ -91,7 +102,7 @@ public class ConstantPoolContainer extends JavaItem {
 
         //System.out.println("size: " + constant_pool.size());
 
-        //System.out.println(this.getEntry(14).toString());
+        //System.out.println(this.get(14).toString());
 
         return Result.OK;
     }
@@ -102,7 +113,7 @@ public class ConstantPoolContainer extends JavaItem {
 
         stringBuilder.append("{ConstantPool}: ").append("\n");
 
-        for (int i=1; i<spaced_indexes.size(); i++) {
+        for (int i=1; i<=spaced_indexes.size(); i++) {
             JavaPoolEntry javaPoolEntry = JavaItem.getEntry(i);
             stringBuilder.append("  ").append(i).append(" : ").append(javaPoolEntry.toString()).append("\n");
         }
@@ -112,7 +123,7 @@ public class ConstantPoolContainer extends JavaItem {
         return stringBuilder.toString();
     }
 
-    //public JavaPoolEntry getEntry(int i) {
+    //public JavaPoolEntry get(int i) {
     //    return constant_pool.get(spaced_indexes.get(i-1));
     //}
 

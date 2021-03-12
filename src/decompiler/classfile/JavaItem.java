@@ -109,7 +109,7 @@ public abstract class JavaItem {
     }
 
     public static JavaPoolEntry getEntry(int i) {
-        //return currentClassInstance.constantPoolContainer.getEntry(i);
+        //return currentClassInstance.constantPoolContainer.get(i);
         return currentClassInstance.constantPoolContainer.constant_pool.get(
                 currentClassInstance.constantPoolContainer.spaced_indexes.get(i-1));
     }

@@ -16,7 +16,7 @@ public class ConstantFloat extends JavaPoolEntry {
 
     @Override
     public String toString() {
-        return "{ConstantFloat} \t" + value;
+        return "{Float} \t" + value;
     }
 
     @Override

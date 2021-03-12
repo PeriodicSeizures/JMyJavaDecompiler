@@ -27,7 +27,7 @@ public class ConstantNameAndType extends JavaPoolEntry {
 
     @Override
     public String toString() {
-        return "{ConstantNameAndType} \tname_index: " + name_index + " (" + getEntry(name_index) + ") " +
+        return "{NameAndType} \tname_index: " + name_index + " (" + getEntry(name_index) + ") " +
                 "descriptor_index: " + descriptor_index + " (" + getEntry(descriptor_index) + ")";
     }
 }

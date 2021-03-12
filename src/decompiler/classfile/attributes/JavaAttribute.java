@@ -62,7 +62,7 @@ public abstract class JavaAttribute extends JavaItem {
     //    attribute_name_index = bytes.readUnsignedShort();
     //    attribute_length = bytes.readUnsignedInt();
 
-    //    //ConstantUtf8 entry = (ConstantUtf8) currentClassInstance.constantPoolContainer.getEntry(attribute_name_index);
+    //    //ConstantUtf8 entry = (ConstantUtf8) currentClassInstance.constantPoolContainer.get(attribute_name_index);
 
     //    //assert attribute_name_index <
 

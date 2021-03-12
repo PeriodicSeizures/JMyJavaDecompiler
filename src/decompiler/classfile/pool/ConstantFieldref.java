@@ -21,7 +21,7 @@ public class ConstantFieldref extends JavaPoolEntry {
 
     @Override
     public String toString() {
-        return "{ConstantFieldref} \tclass_index: " + class_index + " (" + getEntry(class_index) + ") " +
+        return "{Fieldref} \tclass_index: " + class_index + " (" + getEntry(class_index) + ") " +
                 "name_and_type_index: " + name_and_type_index + " (" + getEntry(name_and_type_index).toString() + ")";
     }
 

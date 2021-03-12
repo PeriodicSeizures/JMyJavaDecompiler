@@ -21,6 +21,6 @@ public class ConstantMethodType extends JavaPoolEntry {
 
     @Override
     public String toString() {
-        return "{ConstantClass} \tdescriptor_index: " + descriptor_index + " (" + getEntry(descriptor_index) + ")";
+        return "{MethodType} \tdescriptor_index: " + descriptor_index + " (" + getEntry(descriptor_index) + ")";
     }
 }

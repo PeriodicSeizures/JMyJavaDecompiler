@@ -16,7 +16,7 @@ public class ConstantDouble extends JavaPoolEntry {
 
     @Override
     public String toString() {
-        return "{ConstantDouble} \t" + value;
+        return "{Double} \t" + value;
     }
 
     @Override

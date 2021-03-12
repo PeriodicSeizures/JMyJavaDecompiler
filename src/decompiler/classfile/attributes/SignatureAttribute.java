@@ -15,4 +15,9 @@ public class SignatureAttribute extends JavaAttribute {
 
         return Result.OK;
     }
+
+    @Override
+    public String toString() {
+        return "{Signature}";
+    }
 }

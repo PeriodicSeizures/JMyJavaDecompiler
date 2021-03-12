@@ -22,7 +22,7 @@ public class ConstantMethodref extends JavaPoolEntry {
 
     @Override
     public String toString() {
-        return "{ConstantMethodref} \tclass_index: " + class_index + " (" + getEntry(class_index) + ") " +
+        return "{Methodref} \tclass_index: " + class_index + " (" + getEntry(class_index) + ") " +
                 "name_and_type_index: " + name_and_type_index + " (" + getEntry(name_and_type_index) + ")";
     }
 }

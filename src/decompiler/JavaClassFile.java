@@ -53,6 +53,7 @@ public class JavaClassFile extends JavaItem {
         attributeContainer.read();
 
         System.out.println(constantPoolContainer);
+        System.out.println(attributeContainer);
         //System.out.println(methodContainer);
 
         return Result.OK;

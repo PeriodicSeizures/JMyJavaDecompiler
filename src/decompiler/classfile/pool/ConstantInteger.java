@@ -16,7 +16,7 @@ public class ConstantInteger extends JavaPoolEntry {
 
     @Override
     public String toString() {
-        return "{ConstantInteger} \t" + value;
+        return "{Integer} \t" + value;
     }
 
     @Override

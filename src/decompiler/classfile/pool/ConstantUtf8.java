@@ -18,7 +18,7 @@ public class ConstantUtf8 extends JavaPoolEntry {
 
     @Override
     public String toString() {
-        return "{ConstantUtf8} \t" + s;
+        return "{Utf8} \t" + s;
     }
 
     @Override

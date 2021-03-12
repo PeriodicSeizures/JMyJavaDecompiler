@@ -73,7 +73,7 @@ public class JavaMethod extends JavaItem {
     public String toString() {
         StringBuilder s = new StringBuilder();
 
-        //System.out.println("mdescriptor" + getEntry(descriptor_index));
+        //System.out.println("mdescriptor" + get(descriptor_index));
 
         String name = getEntry(name_index).toString();
         // 60, 62 < >

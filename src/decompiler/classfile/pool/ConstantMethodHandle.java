@@ -23,6 +23,6 @@ public class ConstantMethodHandle extends JavaPoolEntry {
 
     @Override
     public String toString() {
-        return "{ConstantMethodHandle} \treference_kind: " + reference_kind;
+        return "{MethodHandle} \treference_kind: " + reference_kind;
     }
 }

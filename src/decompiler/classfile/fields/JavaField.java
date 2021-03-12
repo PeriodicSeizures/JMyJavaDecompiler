@@ -3,6 +3,7 @@ package decompiler.classfile.fields;
 import decompiler.Result;
 import decompiler.classfile.AttributeContainer;
 import decompiler.classfile.JavaItem;
+import decompiler.classfile.attributes.JavaAttribute;
 
 import java.io.IOException;
 
@@ -28,7 +29,7 @@ public class JavaField extends JavaItem {
     private int name_index;
     private int descriptor_index;
 
-    private AttributeContainer attribute_container = new AttributeContainer();
+    private AttributeContainer attributeContainer = new AttributeContainer();
 
     @Override
     public Result read() throws IOException {
@@ -36,7 +37,7 @@ public class JavaField extends JavaItem {
         name_index = bytes.readUnsignedShort();
         descriptor_index = bytes.readUnsignedShort();
 
-        attribute_container.read();
+        attributeContainer.read();
 
         return Result.OK;
     }
@@ -99,8 +100,18 @@ public class JavaField extends JavaItem {
         else if ((access_flags & ACC_TRANSIENT) == ACC_TRANSIENT)
             s.append("transient ");
 
-        s.append(getSimpleType(class_index)).append(" ");
-        s.append(JavaItem.getUnqualifiedName(getEntry(name_index).toJavaSourceCode(class_index)));
+        s.append(getSimpleType(class_index)).append(" "); // Object
+        s.append(JavaItem.getUnqualifiedName(getEntry(name_index).toJavaSourceCode(class_index))); // obj
+
+        /*
+            ONLY STATIC FIELDS CAN HAVE A ConstantValue attribute
+         */
+        JavaAttribute attribute = attributeContainer.get(JavaAttribute.Attribute.ConstantValue);
+        if (((access_flags & ACC_STATIC) == ACC_STATIC) && attribute != null)
+            s.append(" = ").append(attribute.toJavaSourceCode(class_index));
+        //else System.out.println("WAS NULL (value)");
+
+        //System.out.println(attributeContainer.attribute_map.size());
 
         return s.toString();
     }

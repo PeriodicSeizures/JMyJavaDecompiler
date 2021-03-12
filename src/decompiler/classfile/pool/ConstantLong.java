@@ -21,6 +21,6 @@ public class ConstantLong extends JavaPoolEntry {
 
     @Override
     public String toString() {
-        return "{ConstantLong} \t" + value;
+        return "{Long} \t" + value;
     }
 }

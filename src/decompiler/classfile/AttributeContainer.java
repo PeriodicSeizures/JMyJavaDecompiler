@@ -3,13 +3,17 @@ package decompiler.classfile;
 import decompiler.Result;
 import decompiler.classfile.attributes.JavaAttribute;
 import decompiler.classfile.pool.ConstantUtf8;
+import decompiler.classfile.pool.JavaPoolEntry;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AttributeContainer extends JavaItem {
 
-    private ArrayList<JavaAttribute> attributes = new ArrayList<>();
+    //public ArrayList<JavaAttribute> attributes = new ArrayList<>();
+    public HashMap<JavaAttribute.Attribute, JavaAttribute> attribute_map = new HashMap<>();
 
     @Override
     public Result read() throws IOException {
@@ -23,10 +27,11 @@ public class AttributeContainer extends JavaItem {
             long attribute_length = bytes.readUnsignedInt();
 
 
+            String name = getEntry(attribute_name_index).toJavaSourceCode(-1);
+            System.out.println("atr: " + name);
 
             try {
-                String s = getEntry(attribute_name_index).toString();
-                JavaAttribute.Attribute atr = JavaAttribute.Attribute.valueOf(s);
+                JavaAttribute.Attribute atr = JavaAttribute.Attribute.valueOf(name);
 
                 float class_version = Float.parseFloat(currentClassInstance.getClassVersion());
                 float atr_version = Float.parseFloat(atr.major + "." + atr.minor);
@@ -40,20 +45,59 @@ public class AttributeContainer extends JavaItem {
 
                     javaAttribute.read();
 
-                    attributes.add(javaAttribute);
+                    //attributes.add(javaAttribute);
+                    attribute_map.put(atr, javaAttribute);
 
                 } else {
                     // do nothing
-                    System.out.println("attribute being ignored due to class version: " + s);
+                    System.out.println("attribute being ignored due to class version: " + name);
                 }
 
             } catch (Exception e) {
-                 //skip ahead in length bytes
+                 // else, attribute is not recognized (is custom)
+                System.out.println("attribute being ignored: " + name);
                 bytes.skip(attribute_length);
             }
 
         }
 
+        System.out.println(" --- ");
+
         return Result.OK;
+    }
+
+    @Override
+    public String toString() {
+        /*
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append("{Attributes}: ").append("\n");
+
+        for (int i=1; i<attributes.size(); i++) {
+            //JavaPoolEntry javaPoolEntry = JavaItem.get(i);
+            JavaAttribute atr = attributes.get(i);
+            stringBuilder.append("  ").append(i).append(" : ").append(atr.toString()).append("\n");
+        }
+
+        stringBuilder.append("size: ").append(attributes.size()).append("\n");
+
+        return stringBuilder.toString();
+        */
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append("{Attributes}: ").append("\n");
+
+        for (Map.Entry<JavaAttribute.Attribute, JavaAttribute> entry : attribute_map.entrySet()) {
+            stringBuilder.append("  ").append(entry.getKey().name()).append(" : ").
+                    append(entry.getValue().toString()).append("\n");
+        }
+
+        stringBuilder.append("size: ").append(attribute_map.size()).append("\n");
+
+        return stringBuilder.toString();
+    }
+
+    public JavaAttribute get(JavaAttribute.Attribute atr) {
+        return attribute_map.getOrDefault(atr, null);
     }
 }

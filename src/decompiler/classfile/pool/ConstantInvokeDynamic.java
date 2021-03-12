@@ -23,7 +23,7 @@ public class ConstantInvokeDynamic extends JavaPoolEntry {
 
     @Override
     public String toString() {
-        return "{ConstantInvokeDynamic} \tbootstrap_method_attr_index: " + bootstrap_method_attr_index;
-        // + "(" + getEntry(b).toString() + ")";
+        return "{InvokeDynamic} \tbootstrap_method_attr_index: " + bootstrap_method_attr_index;
+        // + "(" + get(b).toString() + ")";
     }
 }

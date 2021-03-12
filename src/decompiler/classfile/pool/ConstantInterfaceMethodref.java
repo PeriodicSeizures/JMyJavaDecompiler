@@ -22,7 +22,7 @@ public class ConstantInterfaceMethodref extends JavaPoolEntry {
 
     @Override
     public String toString() {
-        return "{ConstantIMref} \tclass_index: " + class_index + " (" + getEntry(class_index) + ") " +
+        return "{IMref} \tclass_index: " + class_index + " (" + getEntry(class_index) + ") " +
                 "name_and_type_index: " + name_and_type_index + " (" + getEntry(name_and_type_index) + ")";
     }
 }

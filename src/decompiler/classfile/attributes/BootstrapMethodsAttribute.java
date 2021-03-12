@@ -44,4 +44,9 @@ public class BootstrapMethodsAttribute extends JavaAttribute {
 
         return Result.OK;
     }
+
+    @Override
+    public String toString() {
+        return "{BootstrapMethods}";
+    }
 }
