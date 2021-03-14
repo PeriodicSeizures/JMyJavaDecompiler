@@ -26,7 +26,7 @@ public class JavaDecompiler {
         System.out.println("reading: " + f);
 
         try {
-            bytes = new JavaClassReader(new DataInputStream(new FileInputStream(file)));
+            bytes = new JavaClassReader(new FileInputStream(file));
 
             JavaItem.bytes = this.bytes;
             JavaItem.currentClassInstance = javaClassFile;

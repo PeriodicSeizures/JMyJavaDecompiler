@@ -32,6 +32,8 @@ public class MethodContainer extends JavaItem {
 
         StringBuilder s = new StringBuilder();
 
+        s.append("methods:");
+
         for (JavaMethod javaMethod : methods) {
             s.append(javaMethod.toString()).append("\n");
         }

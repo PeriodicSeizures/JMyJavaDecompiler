@@ -54,7 +54,7 @@ public class JavaClassFile extends JavaItem {
 
         System.out.println(constantPoolContainer);
         System.out.println(attributeContainer);
-        //System.out.println(methodContainer);
+        System.out.println(methodContainer);
 
         return Result.OK;
     }

@@ -2,11 +2,8 @@ package decompiler.classfile;
 
 import decompiler.Result;
 import decompiler.classfile.attributes.JavaAttribute;
-import decompiler.classfile.pool.ConstantUtf8;
-import decompiler.classfile.pool.JavaPoolEntry;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +25,7 @@ public class AttributeContainer extends JavaItem {
 
 
             String name = getEntry(attribute_name_index).toJavaSourceCode(-1);
-            System.out.println("atr: " + name);
+            //System.out.println("atr: " + name);
 
             try {
                 JavaAttribute.Attribute atr = JavaAttribute.Attribute.valueOf(name);
@@ -56,6 +53,7 @@ public class AttributeContainer extends JavaItem {
             } catch (Exception e) {
                  // else, attribute is not recognized (is custom)
                 System.out.println("attribute being ignored: " + name);
+                //noinspection ResultOfMethodCallIgnored
                 bytes.skip(attribute_length);
             }
 

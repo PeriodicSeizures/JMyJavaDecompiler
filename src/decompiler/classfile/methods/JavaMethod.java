@@ -3,6 +3,7 @@ package decompiler.classfile.methods;
 import decompiler.Result;
 import decompiler.classfile.AttributeContainer;
 import decompiler.classfile.JavaItem;
+import decompiler.classfile.attributes.JavaAttribute;
 import decompiler.classfile.pool.ConstantUtf8;
 
 import java.io.IOException;
@@ -71,6 +72,11 @@ public class JavaMethod extends JavaItem {
 
     @Override
     public String toString() {
+        return "{JavaMethod} " + attributeContainer.get(JavaAttribute.Attribute.Code);
+    }
+
+    @Override
+    public String toJavaSourceCode(int class_index) {
         StringBuilder s = new StringBuilder();
 
         //System.out.println("mdescriptor" + get(descriptor_index));
