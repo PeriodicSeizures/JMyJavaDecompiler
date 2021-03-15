@@ -1,15 +1,16 @@
 package decompiler;
 
-import decompiler.classfile.JavaItem;
+import decompiler.reader.ClassReader;
+import decompiler.reader.RawItem;
+import decompiler.reader.RawClassFile;
 
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.file.Paths;
 
 public class JavaDecompiler {
-    private JavaClassFile javaClassFile = new JavaClassFile();
-    private JavaClassReader bytes;
+    private RawClassFile javaClassFile = new RawClassFile();
+    private ClassReader bytes;
 
     public Result read(String f) {
 
@@ -26,12 +27,12 @@ public class JavaDecompiler {
         System.out.println("reading: " + f);
 
         try {
-            bytes = new JavaClassReader(new FileInputStream(file));
+            bytes = new ClassReader(new FileInputStream(file));
 
-            JavaItem.bytes = this.bytes;
-            JavaItem.currentClassInstance = javaClassFile;
+            RawItem.bytes = this.bytes;
+            RawItem.currentClassInstance = javaClassFile;
 
-            if (!JavaItem.bytes.compareNext(4, new byte[] {(byte)0xCA, (byte)0xFE, (byte)0xBA, (byte)0xBE}))
+            if (!RawItem.bytes.compareNext(4, new byte[] {(byte)0xCA, (byte)0xFE, (byte)0xBA, (byte)0xBE}))
                 return Result.NO_MAGIC_HEADER;
 
             Result result = javaClassFile.read();
@@ -48,7 +49,7 @@ public class JavaDecompiler {
         }
     }
 
-    public JavaClassFile getJavaClassFile() {
+    public RawClassFile getRawClassFile() {
         return javaClassFile;
     }
 

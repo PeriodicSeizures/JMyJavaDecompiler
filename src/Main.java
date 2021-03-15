@@ -1,7 +1,7 @@
 import decompiler.JavaDecompiler;
 import decompiler.Result;
-import decompiler.WatchList;
-import printer.BasicClass;
+import decompiler.Util;
+import decompiler.linker.JavaClass;
 
 import java.io.*;
 
@@ -12,13 +12,29 @@ public class Main {
         JavaDecompiler decompiler = new JavaDecompiler();
 
         // "D:\\GitHub\\MyJavaDecompiler\\MyJavaDecompiler\\zz.class\\"
-        Result result = decompiler.read("SAMPLER3.class");
-        //Result result = decompiler.read("obf3.class");
-        System.out.println(new BasicClass(decompiler.getJavaClassFile()));
 
-        //WatchList.performSearch(decompiler.getJavaClassFile());
+        Result result = decompiler.read("SAMPLER3.class");
+
+        System.out.println(decompiler.getRawClassFile());
+
+        //Result result = decompiler.read("obf3.class");
+        //System.out.println(new JavaClass(decompiler.getRawClassFile()));
+
+        //WatchList.performSearch(decompiler.getRawClassFile());
 
         System.out.println("Decoding result: " + result.name());
+
+        System.out.println(new JavaClass(decompiler.getRawClassFile()));
+
+        /*
+            TEST
+         */
+        //String s0 = "(Ljava/util/ArrayList<Ljava/lang/Integer;>;)Ljava/util/ArrayList<Ljava/lang/Object;>;";
+        //String s1 = "Ljava/util/HashMap<Ljava/lang/Integer;Ljava/lang/Integer;>;";
+        //System.out.println(
+        //        Util.getReturnType(
+        //                s1));
+
         //opcodes();
     }
 
@@ -27,6 +43,7 @@ public class Main {
         try {
             BufferedReader reader = new BufferedReader(new FileReader("opcodes.txt"));
             String line = null;
+            int CODE = 0;
             while((line = reader.readLine()) != null) {
 
                 if (line.isEmpty())
@@ -38,12 +55,19 @@ public class Main {
                     line = line.substring(0, comment);
                 }
 
-                String[] split = line.replaceAll(" ", "").replaceAll(";", "").split("=");
+                //String[] split = line.replaceAll(" ", "").replaceAll(";", "").split("=");
+                int firstParen = line.indexOf("(");
+                StringBuilder partA = new StringBuilder(line.substring(0, firstParen + 1));
+                String partB = line.substring(firstParen+1);
+                partA.append(CODE).append(", ").append(partB);
 
-                String s = split[0];
-                int c = Integer.parseInt(split[1]);
+                ordered[CODE] = partA.toString();
 
-                ordered[c] = s;
+                CODE++;
+                //String s = split[0];
+                //int c = Integer.parseInt(split[1]);
+
+                //ordered[c] = s;
             }
             reader.close();
 
@@ -57,13 +81,16 @@ public class Main {
                 if (ordered[i] == null)
                     continue;
 
-                //writer.write("\"");
                 writer.write(ordered[i]);
-                writer.write(", ");
-                //writer.write("\", ");
+                writer.write("\n");
 
-                //if (i != 0 && i % 8 == 0)
-                    writer.newLine();
+                ////writer.write("\"");
+                //writer.write(ordered[i]);
+                //writer.write(", ");
+                ////writer.write("\", ");
+//
+                ////if (i != 0 && i % 8 == 0)
+                //    writer.newLine();
             }
             writer.write(";");
             writer.close();
