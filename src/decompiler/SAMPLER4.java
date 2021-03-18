@@ -2,6 +2,15 @@ package decompiler;
 
 public class SAMPLER4 {
 
+    public float do_float_const(int a, float f) {
+
+        a -= (int)f;
+        f += 4;
+        a = (int)(f + a / f);
+
+        return a;
+    }
+
     public int do_const(int a, int b) {
         a += 4;
         b += 1;
