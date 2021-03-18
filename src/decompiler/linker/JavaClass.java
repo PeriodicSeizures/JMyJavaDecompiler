@@ -3,7 +3,6 @@ package decompiler.linker;
 import decompiler.Util;
 import decompiler.reader.RawClassFile;
 import decompiler.reader.RawField;
-import decompiler.reader.RawMethod;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,19 +32,11 @@ public class JavaClass {
         for (RawField rawField : rawClassFile.fieldContainer.fields) {
             String name = Util.getUnqualifiedName(rawField.getName());
             //this.fields.add(//rawField.toJavaSourceCode(rawClassFile.this_class));
-            mappedFields.put(name, new JavaField());
+            //mappedFields.put(name, new JavaField());
         }
 
-        for (RawMethod javaMethod : rawClassFile.methodContainer.methods) {
-            JavaMethod basicMethod = new JavaMethod();
-            if (javaMethod.getName().equals("<init>")) {
-                basicMethod.name =  name;
-            } else {
-                basicMethod.name = javaMethod.getName();
-            }
-            //basicMethod.
-            //this.methods.add(javaMethod.)
-        }
+        this.methods = new DuplicateMethodHandler(rawClassFile.methodContainer).getJavaMethods();
+
 
         //System.out.println(flags + name);
     }

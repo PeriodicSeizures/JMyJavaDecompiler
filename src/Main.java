@@ -13,7 +13,7 @@ public class Main {
 
         // "D:\\GitHub\\MyJavaDecompiler\\MyJavaDecompiler\\zz.class\\"
 
-        Result result = decompiler.read("SAMPLER3.class");
+        Result result = decompiler.read("SAMPLER4.class");
 
         System.out.println(decompiler.getRawClassFile());
 

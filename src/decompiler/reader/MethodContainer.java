@@ -26,6 +26,14 @@ public class MethodContainer extends RawItem {
         return Result.OK;
     }
 
+    public RawMethod getMethod(int index) {
+        return methods.get(index);
+    }
+
+    //public void renameMethod(int index, String newName) {
+    //    methods.get(index).
+    //}
+
     @Override
     public String toString() {
 
@@ -39,4 +47,5 @@ public class MethodContainer extends RawItem {
 
         return s.toString();
     }
+
 }

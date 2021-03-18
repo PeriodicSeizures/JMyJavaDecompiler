@@ -2,9 +2,12 @@ package decompiler.reader;
 
 import decompiler.Result;
 import decompiler.Util;
+import decompiler.reader.attributes.CodeAttribute;
 import decompiler.reader.attributes.RawAttribute;
+import decompiler.reader.attributes.SignatureAttribute;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class RawMethod extends RawItem {
 
@@ -98,9 +101,18 @@ public class RawMethod extends RawItem {
         return (String) getEntry(descriptor_index).getValue();
     }
 
+    public CodeAttribute getCode() {
+        return (CodeAttribute) attributeContainer.get(RawAttribute.Attribute.Code);
+    }
+
+    public SignatureAttribute getSignature() {
+        return (SignatureAttribute) attributeContainer.get(RawAttribute.Attribute.Signature);
+    }
+
     @Override
     public String toString() {
-        return "{RawMethod} " + attributeContainer.get(RawAttribute.Attribute.Code);
+        return "{RawMethod} " + getEntry(descriptor_index).getValue() + "\n" +
+                attributeContainer;
     }
 
     //@Override

@@ -23,6 +23,7 @@ public class JavaDecompiler {
         SAMPLER sampler = new SAMPLER();
         SAMPLER2 sampler2 = new SAMPLER2();
         SAMPLER3 sampler3 = new SAMPLER3();
+        SAMPLER4 sampler4 = new SAMPLER4();
 
         System.out.println("reading: " + f);
 

@@ -168,4 +168,8 @@ public class RawField extends RawItem {
         return (String)getEntry(name_index).getValue();
     }
 
+    public String getDescriptor() {
+        return (String) getEntry(descriptor_index).getValue();
+    }
+
 }

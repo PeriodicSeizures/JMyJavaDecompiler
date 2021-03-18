@@ -12,7 +12,9 @@ public class Util {
     }
 
     /*
-        Returns a reformatted string
+        Returns a reformatted string:
+            - i0:   a -> Z, _
+            - i1->: a -> Z, 0 -> 9, _
      */
     public static String getValidName(String s) {
         StringBuilder builder = new StringBuilder();
@@ -21,6 +23,34 @@ public class Util {
                     (pt >= 65 && pt <= 90) ||   // A -> Z
                     (pt >= 97 && pt <= 122) ||  // a -> z
                     (pt == 95))                 // _
+            {
+                if (pt >= 48 && pt <= 57) {
+                    builder.append("_");
+                }
+                builder.append((char)pt);
+                continue;
+            }
+            // else, nuke that codepoint
+            if (builder.length() == 0) builder.append("_");
+            builder.append(Integer.toHexString(pt));
+        }
+        return builder.toString();
+    }
+
+    /*
+        Returns a reformatted string:
+            - i0:   a -> Z, _
+            - i1->: a -> Z, 0 -> 9, <, >, _, ., ,
+     */
+    public static String getValidTypeName(String s) {
+        StringBuilder builder = new StringBuilder();
+        for (int pt : s.codePoints().toArray()) {
+            if ((pt >= 48 && pt <= 57) ||       // 0 -> 9
+                    (pt >= 65 && pt <= 90) ||   // A -> Z
+                    (pt >= 97 && pt <= 122) ||  // a -> z
+                    (pt == 95) ||               // _
+                    (pt == 46) || (pt == 60) || (pt ==62) ||    // . < >
+                    (pt == ','))                                // ,
             {
                 if (pt >= 48 && pt <= 57) {
                     builder.append("_");
@@ -158,5 +188,7 @@ public class Util {
         }
         return null;
     }
+
+    //public static String[]
 
 }

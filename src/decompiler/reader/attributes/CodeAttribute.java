@@ -32,9 +32,9 @@ public class CodeAttribute extends RawAttribute {
     private int max_stack;
     private int max_locals;
     //;
-    private ArrayList<Integer> code = new ArrayList<>(); // ???
+    public ArrayList<Integer> code = new ArrayList<>(); // ???
     //private ;
-    private ArrayList<JavaExceptionEntry> exception_table = new ArrayList<>();
+    public ArrayList<JavaExceptionEntry> exception_table = new ArrayList<>();
     //;
     private AttributeContainer attribute_container = new AttributeContainer();
 
@@ -59,6 +59,10 @@ public class CodeAttribute extends RawAttribute {
         attribute_container.read();
 
         return Result.OK;
+    }
+
+    public ArrayList<LocalVariableTableAttribute.LocalVariableEntry> getLocalVariableTable() {
+        return ((LocalVariableTableAttribute) attribute_container.get(Attribute.LocalVariableTable)).local_variable_table;
     }
 
     @Override
@@ -88,6 +92,8 @@ public class CodeAttribute extends RawAttribute {
 
 
         }
+
+        a.append(attribute_container);
 
         return a.toString();
     }

@@ -62,7 +62,7 @@ public class AttributeContainer extends RawItem {
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append("{Attributes}: ").append("\n");
+        stringBuilder.append("{AttributeContainer} ").append("\n");
 
         for (Map.Entry<RawAttribute.Attribute, RawAttribute> entry : attribute_map.entrySet()) {
             stringBuilder.append("  ").append(entry.getKey().name()).append(" : ").

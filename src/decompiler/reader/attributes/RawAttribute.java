@@ -21,7 +21,7 @@ public abstract class RawAttribute extends RawItem {
         //SourceFile(null, 45, 3), // the original file name
         //SourceDebugExtension(null, 49, 0), // debugging information
         //LineNumberTable(null, 45, 3),
-        //LocalVariableTable(null, 45, 3),
+        LocalVariableTable(LocalVariableTableAttribute.class, 45, 3),
         //LocalVariableTypeTable(null, 49, 0),
         //Deprecated(null, 45, 3),
         //RuntimeVisibleAnnotations(null, 49, 0),           // *
