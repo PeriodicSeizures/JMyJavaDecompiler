@@ -1,9 +1,10 @@
 package decompiler.linker;
 
+import decompiler.Util;
 import decompiler.reader.Opcode;
 import decompiler.reader.RawItem;
+import decompiler.reader.RawMethod;
 import decompiler.reader.attributes.CodeAttribute;
-import decompiler.reader.attributes.LocalVariableTableAttribute;
 
 import java.util.ArrayList;
 
@@ -14,15 +15,22 @@ public class JavaMethod {
     private final String returnType;
 
     private final int methodIndex;
+    //private final JavaClass myClass;
 
     //private String[] body;
     private ArrayList<String> generatedCode = new ArrayList<>();
 
-    public JavaMethod(String name, String signature, String returnType, int methodIndex) {
+    public JavaMethod(String name, String signature, String returnType, int methodIndex) {//}, JavaClass myClass) {
         this.name = name;
         this.signature = signature;
+
         this.returnType = returnType;
+
         this.methodIndex = methodIndex;
+
+
+
+        //this.myClass = myClass;
 
         /*
             parse method body
@@ -47,14 +55,15 @@ public class JavaMethod {
         return returnType;
     }
 
-    @Override
-    public String toString() {
-        return "JavaMethod{}";
+    private RawMethod getRawMethod() {
+        return RawItem.currentClassInstance.methodContainer.methods.get(methodIndex);
     }
 
     private void parseRawBody() {
-        CodeAttribute codeAttribute = RawItem.currentClassInstance.methodContainer.methods.get(methodIndex).getCode();
+        CodeAttribute codeAttribute = this.getRawMethod().getCode();
         ArrayList<Integer> code = codeAttribute.code;
+
+
 
         LocalVariable[] LOCALS = LocalVariable.from(codeAttribute);
 
@@ -221,94 +230,67 @@ public class JavaMethod {
                     //v = -v;
                     STACK.push("" + v);
                     continue;
+                case PUTFIELD:
+                    int field_index = (code.get(++index) << 8) | code.get(++index);
+
+                    // set class member field at 'field_index' to popped value
+
+                    // not the best solution below...
+                    generatedCode.add("this." +
+                            Util.toValidName(RawItem.getEntry(field_index).getName()) +
+                                    " = " + STACK.pop() + ";");
+
+                    /*
+                        TODO:
+                        make a static database for retrieving already fixed/corrected
+                        constants fields classes methods ...
+
+                        will be able to be retrieved by 'pool index', 'name', etc...
+                     */
+                case INVOKESPECIAL:
+                    index+=2;
+                    continue;
                 default:
                     System.out.println("opcode " + name + " is not yet implemented");
             }
 
-            //noinspection ControlFlowStatementWithoutBraces
-            if (true)
-                return;
-
-
-
-
-
-
-
-
-
-            int i;
-            if ((i = Opcode.getLoad(code, index)) != -1)
-                STACK.push(LOCALS[i].getName());
-
-            else if ((i = Opcode.getStore(code, index)) != -1) {
-                //LOCALS[i].setValue(STACK.pop());
-                generatedCode.add(LOCALS[i].getName() + " = " + STACK.pop());
-                index += 1;
-                continue;
-            }
-            else if ((i = Opcode.getConst(code, index)) != -9)
-                STACK.push("" + i);
-
-            switch (name.substring(name.length() - 3)) {
-                case "ADD":
-                    STACK.add();
-                    break;
-                case "SUB":
-                    STACK.sub();
-                    break;
-                case "MUL":
-                    STACK.mul();
-                    break;
-                case "DIV":
-                    STACK.div();
-                    break;
-                case "INC":
-
-                    LocalVariable local = LOCALS[code.get(index + 1)];
-
-                    generatedCode.add(local.getName() + " += " + code.get(index + 2));
-                    //LOCALS[code.get(index + 1)].setValue();
-                    index += 2;
-                    continue; // continue the loop
-                    //break;
-                case "ldc": // just "ldc"
-                    STACK.push((String)RawItem.getEntry(code.get(index + 1)).getValue());
-                    break;
-                default:
-                    break;
-            }
-
-            switch (name.substring(name.length() - 2)) {
-                case "2I":
-                    STACK.toInt();
-                    break;
-                case "2F":
-                    STACK.toFloat();
-                    break;
-                case "2D":
-                    STACK.toDouble();
-                    break;
-                case "2L":
-                    STACK.toLong();
-                    break;
-                case "2B":
-                    STACK.toByte();
-                    break;
-                case "2C":
-                    STACK.toChar();
-                    break;
-                default:
-                    break;
-            }
-
-
         }
 
-        for (String line : generatedCode) {
-            System.out.println(line);
-        }
+        //for (String line : generatedCode) {
+        //    System.out.println(line);
+        //}
 
         //codeAttribute.code
+    }
+
+    @Override
+    public String toString() {
+        //System.out.println("DESCRIPTOR: " + getRawMethod().getDescriptor());
+        StringBuilder s = new StringBuilder();
+
+        // access flags
+        s.append(getRawMethod().getAccessFlags());
+
+        // return type
+        if (returnType != null)
+            s.append(returnType);
+
+        // name
+        s.append(name);
+
+        // args
+        s.append("(").append(this.signature).append(") {").append("\n");
+
+        // exceptions
+        // s.append("throws"); ...
+
+        // body
+        for (String line : generatedCode)
+            s.append(line).append("\n");
+
+        // terminal delimiter
+        s.append("}");
+
+        return s.toString();
     }
 }

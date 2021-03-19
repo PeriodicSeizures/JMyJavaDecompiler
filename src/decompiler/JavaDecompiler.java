@@ -3,6 +3,10 @@ package decompiler;
 import decompiler.reader.ClassReader;
 import decompiler.reader.RawItem;
 import decompiler.reader.RawClassFile;
+import test.SAMPLER;
+import test.SAMPLER2;
+import test.SAMPLER3;
+import test.SAMPLER4;
 
 import java.io.File;
 import java.io.FileInputStream;

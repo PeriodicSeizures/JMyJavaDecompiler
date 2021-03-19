@@ -33,4 +33,9 @@ public class ConstantFieldref extends RawConstant {
     //    return declaration;
     //}
 
+
+    @Override
+    public String getName() {
+        return getEntry(name_and_type_index).getName();
+    }
 }

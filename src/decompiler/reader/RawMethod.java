@@ -105,9 +105,9 @@ public class RawMethod extends RawItem {
         return (CodeAttribute) attributeContainer.get(RawAttribute.Attribute.Code);
     }
 
-    public SignatureAttribute getSignature() {
-        return (SignatureAttribute) attributeContainer.get(RawAttribute.Attribute.Signature);
-    }
+    //public SignatureAttribute getSignature() {
+    //    return (SignatureAttribute) attributeContainer.get(RawAttribute.Attribute.Signature);
+    //}
 
     @Override
     public String toString() {

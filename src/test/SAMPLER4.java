@@ -1,4 +1,4 @@
-package decompiler;
+package test;
 
 public class SAMPLER4 {
 

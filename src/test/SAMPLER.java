@@ -1,4 +1,4 @@
-package decompiler;
+package test;
 
 import java.util.ArrayList;
 

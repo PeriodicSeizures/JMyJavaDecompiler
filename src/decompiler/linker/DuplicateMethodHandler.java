@@ -2,11 +2,10 @@ package decompiler.linker;
 
 import decompiler.Util;
 import decompiler.reader.MethodContainer;
+import decompiler.reader.RawItem;
 import decompiler.reader.RawMethod;
 
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 
 public class DuplicateMethodHandler {
@@ -69,7 +68,7 @@ public class DuplicateMethodHandler {
             if (trackedUniques.contains(unique)) {
                 // then is problematic
                 problematicMethods.add(index);
-                System.out.println("found problematic method @" + index);
+                System.out.println("found problematic (duplicate) method");
             } else {
                 trackedUniques.add(unique);
             }
@@ -87,16 +86,38 @@ public class DuplicateMethodHandler {
 
     }
 
-    public ArrayList<JavaMethod> getJavaMethods() {
+    public ArrayList<JavaMethod> getJavaMethods(HashSet<String> retClassImports) {
+
         ArrayList<JavaMethod> javaMethods = new ArrayList<>();
 
         for (int index = 0; index < repairedMethods.size(); index++) {
             RepairedMethod repairedMethod = repairedMethods.get(index);
-            javaMethods.add(new JavaMethod(
-                    Util.getValidName(repairedMethod.name),
-                    Util.getValidTypeName(repairedMethod.signature),
-                    Util.getValidTypeName(repairedMethod.returnType),
-                    index));
+
+
+
+            StringBuilder signature = new StringBuilder();
+            String[] args = Util.getSignature(repairedMethod.signature, null);
+            for (int a=0; a<args.length; a++) {
+                signature.append(args[a]);
+                if (a < args.length - 1) {
+                    signature.append(", ");
+                }
+            }
+
+
+
+            if (repairedMethod.name.equals("<init>"))
+                javaMethods.add(new JavaMethod(
+                        Util.toValidName(Util.getUnqualifiedName(RawItem.currentClassInstance.getName())),
+                        Util.toValidTypeName(signature.toString()),
+                        null,
+                        index));
+            else
+                javaMethods.add(new JavaMethod(
+                        Util.toValidName(Util.getUnqualifiedName(repairedMethod.name)),
+                        Util.toValidTypeName(signature.toString()),
+                        Util.toValidTypeName(repairedMethod.returnType),
+                        index));
         }
 
         return javaMethods;

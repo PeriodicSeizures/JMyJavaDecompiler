@@ -1,5 +1,10 @@
 package decompiler;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Util {
 
 
@@ -16,7 +21,7 @@ public class Util {
             - i0:   a -> Z, _
             - i1->: a -> Z, 0 -> 9, _
      */
-    public static String getValidName(String s) {
+    public static String toValidName(String s) {
         StringBuilder builder = new StringBuilder();
         for (int pt : s.codePoints().toArray()) {
             if ((pt >= 48 && pt <= 57) ||       // 0 -> 9
@@ -42,7 +47,7 @@ public class Util {
             - i0:   a -> Z, _
             - i1->: a -> Z, 0 -> 9, <, >, _, ., ,
      */
-    public static String getValidTypeName(String s) {
+    public static String toValidTypeName(String s) {
         StringBuilder builder = new StringBuilder();
         for (int pt : s.codePoints().toArray()) {
             if ((pt >= 48 && pt <= 57) ||       // 0 -> 9
@@ -86,109 +91,117 @@ public class Util {
         }
     }
 
+    // Given a descriptor of a RawField-like structure
+    // Returns the string being the signature type(s) (unformatted)
+    public static String[] getSignature(String descriptor, HashSet<String> retClassImports) {
 
-    // Given a descriptor of a RawField or a RawMethod
-    // Returns the string being the return type (unformatted)
-    public static String getReturnType(String descriptor) {
-        //String r = getEntry(descriptor_index).toString();
-        int contains = descriptor.indexOf(")");
-        if (contains != -1) { // is a method
-            char c = descriptor.charAt(contains + 1);
-            switch (c) {
-                case 'B':
-                    return "byte";
-                case 'C':
-                    return "char";
-                case 'D':
-                    return "double";
-                case 'F':
-                    return "float";
-                case 'I':
-                    return "int";
-                case 'J':
-                    return "long";
-                case 'S':
-                    return "short";
-                case 'Z':
-                    return "boolean";
-                case 'V':
-                    return "void";
-                case 'L': {
-                    descriptor = descriptor.substring(contains + 2); //.replaceAll("/", ".").replaceAll(";", "");
+        //StringBuilder descriptor = new StringBuilder(desc.substring(1, desc.indexOf(")")));
+        //descriptor = descriptor.substring(1, descriptor.indexOf(")"));
 
-                    int d1 = descriptor.indexOf("<");
-                    if (d1 != -1) {
-                        int d2 = descriptor.lastIndexOf(">");
-                        // then is more complicated
-                        // can recursively get the type
-                        String innerDescriptor = descriptor.substring(d1 + 1, d2);
-                        innerDescriptor = getReturnType(innerDescriptor);
+        /*
+            blank out everything within demiliters
+         */
+        //StringBuilder descriptor = new StringBuilder(descriptor.substring(1, descriptor.indexOf(")")));
 
-                        descriptor = descriptor.substring(0, d1 + 1) +
-                                innerDescriptor +
-                                descriptor.substring(d2);
-                    }
+        ArrayList<String> args = new ArrayList<>();
 
-                    //return Util.getUnqualifiedName(
-                    //        descriptor.substring(contains + 2));
-                    return descriptor.replaceAll("/", ".").replaceAll(";", "");
+        int start = 0;
+        int i = 0;
+
+        int openDelimiters = 0;
+        for (; i < descriptor.length(); i++ ) {
+
+            if (descriptor.charAt(i) == '<') {
+                openDelimiters++;
+            } else if (descriptor.charAt(i) == '>') {
+                openDelimiters--;
+                if (openDelimiters == 0) {
+                    // then record
+                    args.add(descriptor.substring(start, i + 2));
+                    start = i + 2;
                 }
             }
-        } else { // is a field
-            char c = descriptor.charAt(0);
-            switch (c) {
-                case 'B':
-                    return "byte";
-                case 'C':
-                    return "char";
-                case 'D':
-                    return "double";
-                case 'F':
-                    return "float";
-                case 'I':
-                    return "int";
-                case 'J':
-                    return "long";
-                case 'S':
-                    return "short";
-                case 'Z':
-                    return "boolean";
-                case 'V':
-                    return "void";
-                case 'L': {
 
-                    descriptor = descriptor.substring(1); //.replaceAll("/", ".").replaceAll(";", "");
+            //if (openDelimiters > 0) {
+            //    blankedDescriptor.setCharAt(i, ' ');
+            //}
+        }
 
-                    int d1 = descriptor.indexOf("<");
-                    if (d1 != -1) {
-                        int d2 = descriptor.lastIndexOf(">");
-                        // then is more complicated
-                        // can recursively get the type
-                        StringBuilder finalInner = new StringBuilder();
-                        String[] innerDescriptors = descriptor.substring(d1 + 1, d2).split(";");
-                        for (int at=0; at < innerDescriptors.length; at++) {
-                            String innerDescriptor = innerDescriptors[at];
-                            //innerDescriptor = descriptor.substring(d1 + 1, d2);
-                            finalInner.append(getReturnType(innerDescriptor));
-                            if (at < innerDescriptors.length-1) {
-                                finalInner.append(", ");
-                            }
-                        }
-                        descriptor = descriptor.substring(0, d1 + 1) +
-                                finalInner +
-                                descriptor.substring(d2);
+        for (String s : args) {
+            System.out.println(s);
+        }
+
+        //String[] split = new String[]descriptor.split(";");
+
+        //for (i=0; i < split.length; i++) {
+        //    split[i] = getType(split[i], retClassImports);
+        //}
+
+        for (i=0; i < args.size(); i++) {
+            args.set(i, getType(args.get(i), retClassImports));
+        }
+
+        return args.toArray(new String[0]);
+    }
+
+    // Given a fieldlike descriptor
+    // Returns the string being the return type (unformatted)
+    public static String getType(String descriptor, HashSet<String> retClassImports) {
+        char c = descriptor.charAt(0);
+        switch (c) {
+            case 'B':
+                return "byte";
+            case 'C':
+                return "char";
+            case 'D':
+                return "double";
+            case 'F':
+                return "float";
+            case 'I':
+                return "int";
+            case 'J':
+                return "long";
+            case 'S':
+                return "short";
+            case 'Z':
+                return "boolean";
+            case 'V':
+                return "void";
+            case 'L': {
+                descriptor = descriptor.substring(1, descriptor.length() - 1)
+                        .replaceAll("<L", "<")
+                        .replaceAll(";L", ",")
+                        .replaceAll(";>", ">")
+                        .replaceAll("java/lang/", "")
+                        .replaceAll("/", ".");
+
+                if (retClassImports != null) {
+                    // thanks @Fried Rice On Ice
+                    Pattern pattern = Pattern.compile("(.*?)(?=<)(?:.+?[\\s<])?");
+                    Matcher matcher = pattern.matcher(descriptor);
+                    while (matcher.find()) {
+                        retClassImports.add(matcher.group(1));
                     }
-
-
-                    //return Util.getUnqualifiedName(
-                    //        descriptor);
-                    return descriptor.replaceAll("/", ".").replaceAll(";", "");
                 }
+
+                return descriptor.replaceAll(",", ", ");
             }
         }
+
         return null;
     }
 
-    //public static String[]
+    // Given a descriptor of a RawField or a RawMethod
+    // Returns the string being the return type (unformatted)
+    public static String getReturnType(String descriptor, HashSet<String> retClassImports) {
+        //String r = getEntry(descriptor_index).toString();
+        {
+            int contains = descriptor.indexOf(")");
+            if (contains != -1) // is a method
+                descriptor = descriptor.substring(contains + 2);
+        }
+
+        return getType(descriptor, retClassImports);
+    }
 
 }

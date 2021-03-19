@@ -29,4 +29,9 @@ public class ConstantNameAndType extends RawConstant {
     public String toString() {
         return "{NameAndType} \t" + getEntry(name_index).getValue() + ", " + getEntry(descriptor_index).getValue();
     }
+
+    @Override
+    public String getName() {
+        return (String)getEntry(name_index).getValue();
+    }
 }
