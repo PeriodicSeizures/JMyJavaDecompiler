@@ -1,4 +1,4 @@
-package decompiler.linker;
+package decompiler.interpreter;
 
 import java.util.ArrayList;
 
@@ -6,8 +6,18 @@ public class OperandStack {
 
     private ArrayList<String> stack = new ArrayList<>();
 
+    String get() {
+        return stack.get(stack.size() - 1);
+    }
+
     void push(String s) {
         stack.add(s);
+    }
+
+    void push(String s, int depth) {
+        // depth must be greater or equal to 0
+
+        stack.add(stack.size() - depth, s);
     }
 
     String pop() {

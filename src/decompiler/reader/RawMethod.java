@@ -94,7 +94,7 @@ public class RawMethod extends RawItem {
         if (isAbstract())
             s.append("abstract ");
 
-        return s.toString();
+        return s.toString().trim();
     }
 
     public String getDescriptor() {

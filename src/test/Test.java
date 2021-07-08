@@ -15,7 +15,7 @@ public class Test {
 
         HashSet<String> set = new HashSet<>();
 
-        for (String s : Util.getSignature(s4, set)) {
+        for (String s : Util.getSignature(s4, set, false)) {
             System.out.println(s);
         }
 

@@ -1,11 +1,6 @@
 package decompiler.reader.pool;
 
-import decompiler.Result;
-import decompiler.linker.JavaClass;
-import decompiler.reader.RawClassFile;
 import decompiler.reader.RawItem;
-
-import java.io.IOException;
 
 public abstract class RawConstant extends RawItem {
 
@@ -17,20 +12,8 @@ public abstract class RawConstant extends RawItem {
 
     //public abstract Result read() throws IOException;
 
-    //private RawClassFile rawClassFile;
+    //private RawClass rawClassFile;
 
-    public Object getValue() {
-        return null;
-    }
 
-    //protected abstract void read() throws IOException;
-
-    //public RawClassFile getRawClass() {
-    //    return rawClassFile;
-    //}
-
-    public String getName() {
-        return null;
-    }
 
 }

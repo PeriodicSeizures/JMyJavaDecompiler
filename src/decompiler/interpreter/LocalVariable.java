@@ -1,4 +1,4 @@
-package decompiler.linker;
+package decompiler.interpreter;
 
 import decompiler.Util;
 import decompiler.reader.attributes.CodeAttribute;

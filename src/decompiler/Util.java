@@ -93,7 +93,9 @@ public class Util {
 
     // Given a descriptor of a RawField-like structure
     // Returns the string being the signature type(s) (unformatted)
-    public static String[] getSignature(String descriptor, HashSet<String> retClassImports) {
+    public static String[] getSignature(String descriptor, HashSet<String> retClassImports, boolean concat) {
+
+        System.out.println("DESC: " + descriptor);
 
         //StringBuilder descriptor = new StringBuilder(desc.substring(1, desc.indexOf(")")));
         //descriptor = descriptor.substring(1, descriptor.indexOf(")"));
@@ -110,7 +112,6 @@ public class Util {
 
         int openDelimiters = 0;
         for (; i < descriptor.length(); i++ ) {
-
             if (descriptor.charAt(i) == '<') {
                 openDelimiters++;
             } else if (descriptor.charAt(i) == '>') {
@@ -121,15 +122,17 @@ public class Util {
                     start = i + 2;
                 }
             }
-
-            //if (openDelimiters > 0) {
-            //    blankedDescriptor.setCharAt(i, ' ');
-            //}
         }
 
-        for (String s : args) {
-            System.out.println(s);
-        }
+        //for (i=0; i < descriptor.length(); i++) {
+        //    descriptor.charAt(i)
+        //}
+
+        System.out.println(args);
+
+        //for (String s : args) {
+        //    System.out.println(s);
+        //}
 
         //String[] split = new String[]descriptor.split(";");
 
@@ -141,12 +144,23 @@ public class Util {
             args.set(i, getType(args.get(i), retClassImports));
         }
 
+        if (concat) {
+            StringBuilder c = new StringBuilder();
+            for (i=0; i<args.size(); i++) {
+                c.append(args.get(i));
+                if (i < args.size() - 1)
+                    c.append(", ");
+            }
+            return new String[] {c.toString()};
+        }
+
         return args.toArray(new String[0]);
     }
 
     // Given a fieldlike descriptor
     // Returns the string being the return type (unformatted)
     public static String getType(String descriptor, HashSet<String> retClassImports) {
+        //System.out.println("Type: " + descriptor);
         char c = descriptor.charAt(0);
         switch (c) {
             case 'B':
@@ -167,6 +181,11 @@ public class Util {
                 return "boolean";
             case 'V':
                 return "void";
+            //case '[':
+            //    // count the amount
+            //    int count = 1;
+            //    int at=0;
+            //    while ()
             case 'L': {
                 descriptor = descriptor.substring(1, descriptor.length() - 1)
                         .replaceAll("<L", "<")
@@ -180,14 +199,29 @@ public class Util {
                     Pattern pattern = Pattern.compile("(.*?)(?=<)(?:.+?[\\s<])?");
                     Matcher matcher = pattern.matcher(descriptor);
                     while (matcher.find()) {
-                        retClassImports.add(matcher.group(1));
+                        String match = matcher.group(1);
+
+                        if (match.isEmpty()) continue;
+
+                        retClassImports.add(match);
+
+                        descriptor = descriptor.replaceAll(
+                                match.substring(
+                                        0, match.lastIndexOf('.') + 1), "");
                     }
+
+                    // then remove all package references
+
                 }
 
                 return descriptor.replaceAll(",", ", ");
             }
         }
 
+        return null;
+    }
+
+    public static String getMethodSignature(String methodDescriptor) {
         return null;
     }
 
@@ -198,7 +232,7 @@ public class Util {
         {
             int contains = descriptor.indexOf(")");
             if (contains != -1) // is a method
-                descriptor = descriptor.substring(contains + 2);
+                descriptor = descriptor.substring(contains + 1);
         }
 
         return getType(descriptor, retClassImports);

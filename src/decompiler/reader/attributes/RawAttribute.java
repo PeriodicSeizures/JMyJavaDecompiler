@@ -7,21 +7,25 @@ public abstract class RawAttribute extends RawItem {
     public enum Attribute {
 
         /*
-            all useless attributes used for debugging have been omitted
+            only JVM required attributes are included
+            - whatever the machine requires to run is needed to reverse engineer
+              a program
          */
 
         ConstantValue(ConstantValueAttribute.class, 45, 3),   // required
         Code(CodeAttribute.class, 45, 3),            // required
-        //StackMapTable(null, 50, 0),
+        StackMapTable(null, 50, 0),
         Exceptions(ExceptionsAttribute.class, 45, 3),      // required
-        InnerClasses(InnerClassesAttribute.class, 45, 3),
-        EnclosingMethod(EnclosingMethodAttribute.class, 49, 0),
+        BootstrapMethods(BootstrapMethodsAttribute.class, 51, 0),
+
         //Synthetic(null, 45, 3),
-        Signature(SignatureAttribute.class, 49, 0),
         //SourceFile(null, 45, 3), // the original file name
         //SourceDebugExtension(null, 49, 0), // debugging information
         //LineNumberTable(null, 45, 3),
         LocalVariableTable(LocalVariableTableAttribute.class, 45, 3),
+        //InnerClasses(InnerClassesAttribute.class, 45, 3),
+        //EnclosingMethod(EnclosingMethodAttribute.class, 49, 0),
+        Signature(SignatureAttribute.class, 49, 0),
         //LocalVariableTypeTable(null, 49, 0),
         //Deprecated(null, 45, 3),
         //RuntimeVisibleAnnotations(null, 49, 0),           // *
@@ -29,7 +33,7 @@ public abstract class RawAttribute extends RawItem {
         //RuntimeVisibleParameterAnnotations(null, 49, 0),  // *
         //RuntimeInvisibleParameterAnnotations(null, 49, 0),// *
         //AnnotationDefault(null, 49, 0),                   // *
-        BootstrapMethods(BootstrapMethodsAttribute.class, 51, 0)
+        //MethodParameters(null, 52, 0) // JAVA SE 8
         ;
 
         public final Class clazz;
@@ -42,25 +46,4 @@ public abstract class RawAttribute extends RawItem {
             this.minor = minor;
         }
     }
-
-
-
-    //private int attribute_name_index;
-    //protected long attribute_length;
-    //private ArrayList<Integer> info = new ArrayList<>();
-
-
-
-    //@Override
-    //public Result read() throws IOException {
-
-    //    attribute_name_index = bytes.readUnsignedShort();
-    //    attribute_length = bytes.readUnsignedInt();
-
-    //    //ConstantUtf8 entry = (ConstantUtf8) currentClassInstance.constantPoolContainer.get(attribute_name_index);
-
-    //    //assert attribute_name_index <
-
-    //    return Result.OK;
-    //}
 }

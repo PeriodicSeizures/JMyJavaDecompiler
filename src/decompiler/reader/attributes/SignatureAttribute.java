@@ -21,9 +21,8 @@ public class SignatureAttribute extends RawAttribute {
         return "{Signature} " + signature_index + " (" + getEntry(signature_index).getValue() + ")";
     }
 
-    //@Override
-    //public String toJavaSourceCode(Object context) {
-    //    String signature = getEntry(signature_index).toJavaSourceCode(context);
-    //    return signature;
-    //}
+    @Override
+    public Object getValue() {
+        return getEntry(signature_index).getValue();
+    }
 }

@@ -1,4 +1,4 @@
-package decompiler.linker;
+package decompiler.interpreter;
 
 import decompiler.Util;
 import decompiler.reader.Opcode;
@@ -47,14 +47,6 @@ public class JavaMethod {
         return name;
     }
 
-    public String getSignature() {
-        return signature;
-    }
-
-    public String getReturnType() {
-        return returnType;
-    }
-
     private RawMethod getRawMethod() {
         return RawItem.currentClassInstance.methodContainer.methods.get(methodIndex);
     }
@@ -76,7 +68,7 @@ public class JavaMethod {
         for (int index=0; index<code.size(); index++) {
             int c = code.get(index);
             Opcode opcode = Opcode.getOpcode(c);
-            int varargs = Opcode.getVarArgs(code, index);
+            //int varargs = Opcode.getVarArgs(code, index);
 
             String name = opcode.name();
 
@@ -162,7 +154,24 @@ public class JavaMethod {
                 case L2D:
                     STACK.toDouble();
                     continue;
-                case RET:           // return from function (void)
+                case POP:
+                    STACK.pop();
+                    continue;
+                case POP2:
+                    System.out.println(name + " is not completely supported!");
+                    STACK.pop2();
+                    continue;
+                case DUP:
+                    STACK.push(STACK.get());
+                    continue;
+                case DUP_X1:
+                    STACK.push(STACK.get(), 2);
+                    continue;
+
+                //case DUP_X2:
+                //    System.out.println(name + " is not completely supported!");
+
+                case RETURN:           // return from function (void)
                     generatedCode.add("return;");
                     continue;
                 case IRETURN:       // return value from function
@@ -205,11 +214,14 @@ public class JavaMethod {
                 case ICONST_M1:     // push -1
                     STACK.push("-1");
                     continue;
+                case FCONST_0:
                 case ICONST_0:      // add '0' ? useless
                     continue;
+                case FCONST_1:
                 case ICONST_1:
                     STACK.push("1");
                     continue;
+                case FCONST_2:
                 case ICONST_2:
                     STACK.push("2");
                     continue;
@@ -221,6 +233,9 @@ public class JavaMethod {
                     continue;
                 case ICONST_5:
                     STACK.push("5");
+                    continue;
+                case LDC:           // push constant
+                    STACK.push("" + RawItem.getEntry(code.get(++index)).getValue());
                     continue;
                 case BIPUSH:
                     int v = (byte)(int)code.get(++index); // two's complement
@@ -239,7 +254,7 @@ public class JavaMethod {
                     generatedCode.add("this." +
                             Util.toValidName(RawItem.getEntry(field_index).getName()) +
                                     " = " + STACK.pop() + ";");
-
+                    continue;
                     /*
                         TODO:
                         make a static database for retrieving already fixed/corrected
@@ -247,11 +262,35 @@ public class JavaMethod {
 
                         will be able to be retrieved by 'pool index', 'name', etc...
                      */
-                case INVOKESPECIAL:
+                case INVOKESPECIAL: {
+                    //generatedCode.add("super();");
+                    //System.out.println("\nindex: " + index);
+                    int constIndex = (code.get(++index) << 8) | code.get(++index);
+                    //System.out.println("INVOKE_SPECIAL: " +
+                    //        RawItem.getEntry(constIndex).getValue());
+                    //System.out.println();
+                    continue;
+                } case NEW: {
+                    int constIndex = (code.get(++index) << 8) | code.get(++index);
+                    String newName = Util.toValidTypeName(
+                            Util.getUnqualifiedName((String)RawItem.getEntry(constIndex).getValue()));
+
+                    STACK.push("new " + newName + "()");
+                    //index += 2;
+                    continue;
+                } case NOP:
+                    continue;
+                case ANEWARRAY: {
+                    String count = STACK.pop();
+                    int constIndex = (code.get(++index) << 8) | code.get(++index);
+                    //STACK.push("new " + RawItem.getEntry(constIndex).getValue());
+                    continue;
+                } case CHECKCAST:
                     index+=2;
                     continue;
                 default:
                     System.out.println("opcode " + name + " is not yet implemented");
+
             }
 
         }
@@ -273,10 +312,10 @@ public class JavaMethod {
 
         // return type
         if (returnType != null)
-            s.append(returnType);
+            s.append(" ").append(returnType);
 
         // name
-        s.append(name);
+        s.append(" ").append(name);
 
         // args
         s.append("(").append(this.signature).append(") {").append("\n");
@@ -285,8 +324,14 @@ public class JavaMethod {
         // s.append("throws"); ...
 
         // body
-        for (String line : generatedCode)
+        for (int i=0; i<generatedCode.size(); i++) {
+            String line = generatedCode.get(i);
+
+            if (i == generatedCode.size()-1 && line.equals("return;")) break;
+
             s.append(line).append("\n");
+        }
+
 
         // terminal delimiter
         s.append("}");

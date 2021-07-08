@@ -427,6 +427,7 @@ public enum Opcode {
         //bytecode = ++lastByteCode;
     }
 
+
     public static int getVarArgs(ArrayList<Integer> code, int index) {
         Opcode c = VALUES[code.get(index)];
         if (c.varargs != -1 ) {
@@ -445,7 +446,7 @@ public enum Opcode {
 
         return -1;
     }
-
+    /*
     // determines whether a specific instruction is
     public static int getLoad(ArrayList<Integer> code, int index) {
         Opcode op = getOpcode(code.get(index));
@@ -481,6 +482,7 @@ public enum Opcode {
         }
         return -9;
     }
+     */
 
     public static Opcode getOpcode(int i) {
         return VALUES[i];

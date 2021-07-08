@@ -9,7 +9,9 @@ public abstract class RawItem {
 
     public static ClassReader bytes;
 
-    public static RawClassFile currentClassInstance;
+    public static RawClass currentClassInstance;
+
+    //public static
 
     //public static DataInputStream bytes;//
 
@@ -22,9 +24,18 @@ public abstract class RawItem {
 
 
     public static RawConstant getEntry(int i) {
+        System.out.println(i);
         //return currentClassInstance.constantPoolContainer.get(i);
         return currentClassInstance.constantPoolContainer.constants.get(
                 currentClassInstance.constantPoolContainer.spaced_indexes.get(i-1));
+    }
+
+    public Object getValue() {
+        return null;
+    }
+
+    public String getName() {
+        return null;
     }
 
 }

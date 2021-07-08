@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class InnerClassesAttribute extends RawAttribute {
 
-    private class InnerClassEntry extends RawItem {
+    public class InnerClassEntry extends RawItem {
 
 
 
@@ -39,6 +39,22 @@ public class InnerClassesAttribute extends RawAttribute {
 
             return Result.OK;
         }
+
+        public int getInnerClassInfoIndex() {
+            return inner_class_info_index;
+        }
+
+        public int getOuterClassInfoIndex() {
+            return outer_class_info_index;
+        }
+
+        public int getInnerNameIndex() {
+            return inner_name_index;
+        }
+
+        public int getInnerClassAccessFlags() {
+            return inner_class_access_flags;
+        }
     }
 
     private ArrayList<InnerClassEntry> classes = new ArrayList<>();
@@ -61,5 +77,9 @@ public class InnerClassesAttribute extends RawAttribute {
     @Override
     public String toString() {
         return "{InnerClasses}";
+    }
+
+    public ArrayList<InnerClassEntry> getClasses() {
+        return classes;
     }
 }

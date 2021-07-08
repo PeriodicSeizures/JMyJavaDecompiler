@@ -36,4 +36,11 @@ public class SAMPLER4 {
         return (int) (d * f * d + 2);
     }
 
+    public static int static_something(int t, int z) {
+        int y = t + z + 4; // locals
+        int u = y * t;
+
+        return t + z + u * u;
+    }
+
 }

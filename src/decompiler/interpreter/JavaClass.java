@@ -1,7 +1,7 @@
-package decompiler.linker;
+package decompiler.interpreter;
 
 import decompiler.Util;
-import decompiler.reader.RawClassFile;
+import decompiler.reader.RawClass;
 import decompiler.reader.RawField;
 
 import java.util.ArrayList;
@@ -14,8 +14,10 @@ public class JavaClass {
     private String name;
     private String superClassName;
     private String flags;
-    private HashMap<String, JavaClass> nestedClasses = new HashMap<>();
-    private HashMap<String, JavaField> mappedFields = new HashMap<>();
+    //private HashMap<String, JavaClass> nestedClasses = new HashMap<>();
+    //private HashMap<String, JavaField> mappedFields = new HashMap<>();
+    //private HashMap<Integer, JavaField> mappedFields = new HashMap<>();         // ordered by constant pool
+    //private HashMap<Integer, JavaMethod> mappedMethods = new HashMap<>();       // same ^
     private ArrayList<JavaField> fields = new ArrayList<>();
     private ArrayList<JavaMethod> methods; // methods should be stored as signatures with names
     private HashMap<String, JavaClass> interfaces = new HashMap<>(); // super interfaces of this class
@@ -28,23 +30,22 @@ public class JavaClass {
     /*
         dump data of javaClassFile into this where needed
      */
-    public JavaClass(RawClassFile rawClassFile) {
+    public JavaClass(RawClass rawClassFile) {
         flags = rawClassFile.getAccessFlags();
 
         String[] packageAndClass = Util.getPackageAndClass(rawClassFile.getName());
 
         packageName = packageAndClass[0];
-        name = packageAndClass[1];
+        name = Util.toValidName(packageAndClass[1]);
 
-        superClassName = Util.getUnqualifiedName(rawClassFile.getSuperClassName());
+        superClassName = Util.toValidTypeName(Util.getUnqualifiedName(rawClassFile.getSuperClassName()));
 
         for (RawField rawField : rawClassFile.fieldContainer.fields) {
-            //String name = Util.getUnqualifiedName(rawField.getName());
             this.fields.add(new JavaField(rawField, imports));
-            //mappedFields.put(name, new JavaField());
+            //this.mappedFields.put(rawClassFile.fnew JavaField(rawField, imports));
         }
 
-        this.methods = new DuplicateMethodHandler(rawClassFile.methodContainer).getJavaMethods(imports);
+        this.methods = new DuplicateMethodHandler(rawClassFile.methodContainer, imports).getJavaMethods();
 
 
         //System.out.println(flags + name);
@@ -54,19 +55,35 @@ public class JavaClass {
     public String toString() {
         StringBuilder s = new StringBuilder();
 
-        for (String imp : imports) {
-            s.append("import ").append(imp).append(";").append("\n");
-        }
+
 
         if (packageName != null)
             s.append("package ").append(packageName).append(";\n\n");
 
+
+
+        for (String imp : imports) {
+            s.append("import ").append(imp).append(";").append("\n");
+        }
+
+        s.append("\n");
+
         // public class TestClass
-        s.append(flags).append(name);
+        s.append(flags).append(" ").append(name);
 
         // super class
         if (!superClassName.equals("Object"))
             s.append(" extends ").append(superClassName);
+
+        if (!interfaces.isEmpty()){
+            JavaClass[] ord = interfaces.values().toArray(new JavaClass[0]);
+            for (int i=0; i < ord.length; i++) {
+                s.append(" implements ").append(ord[i].name);
+                if (i < ord.length - 1) {
+                    s.append(", ");
+                }
+            }
+        }
 
         s.append(" {\n");
 

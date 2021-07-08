@@ -1,8 +1,8 @@
 package decompiler;
 
 import decompiler.reader.ClassReader;
+import decompiler.reader.RawClass;
 import decompiler.reader.RawItem;
-import decompiler.reader.RawClassFile;
 import test.SAMPLER;
 import test.SAMPLER2;
 import test.SAMPLER3;
@@ -13,7 +13,7 @@ import java.io.FileInputStream;
 import java.nio.file.Paths;
 
 public class JavaDecompiler {
-    private RawClassFile javaClassFile = new RawClassFile();
+    private RawClass javaClassFile = new RawClass();
     private ClassReader bytes;
 
     public Result read(String f) {
@@ -23,11 +23,6 @@ public class JavaDecompiler {
         if (!file.exists()) {
             return Result.FILE_NOT_FOUND;
         }
-
-        SAMPLER sampler = new SAMPLER();
-        SAMPLER2 sampler2 = new SAMPLER2();
-        SAMPLER3 sampler3 = new SAMPLER3();
-        SAMPLER4 sampler4 = new SAMPLER4();
 
         System.out.println("reading: " + f);
 
@@ -54,7 +49,7 @@ public class JavaDecompiler {
         }
     }
 
-    public RawClassFile getRawClassFile() {
+    public RawClass getRawClassFile() {
         return javaClassFile;
     }
 

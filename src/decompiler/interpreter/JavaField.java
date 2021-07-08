@@ -1,4 +1,4 @@
-package decompiler.linker;
+package decompiler.interpreter;
 
 import decompiler.Util;
 import decompiler.reader.RawField;
@@ -18,7 +18,11 @@ public class JavaField {
     public JavaField(RawField rawField, HashSet<String> retClassImports) {
         this.flags = rawField.getAccessFlags();
         this.name = Util.toValidName(rawField.getName());
-        this.type = Util.getType(rawField.getDescriptor(), retClassImports);
+        if (rawField.getSignature() != null) {
+            this.type = Util.getType(rawField.getSignature(), retClassImports);
+        } else {
+            this.type = Util.getType(rawField.getDescriptor(), retClassImports);
+        }
     }
 
     @Override

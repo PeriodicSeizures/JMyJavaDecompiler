@@ -5,7 +5,7 @@ import decompiler.Result;
 import java.io.IOException;
 
 @SuppressWarnings("FieldCanBeLocal")
-public class RawClassFile extends RawItem {
+public class RawClass extends RawItem {
 
     private static final int ACC_PUBLIC =        0x0001;
     private static final int ACC_FINAL =         0x0010;
@@ -91,7 +91,7 @@ public class RawClassFile extends RawItem {
         else
             s.append("class ");
 
-        return s.toString();
+        return s.toString().trim();
     }
 
     public int getMinorVersion() {
@@ -130,7 +130,7 @@ public class RawClassFile extends RawItem {
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append("{RawClassFile} ").append("\n");
+        stringBuilder.append("{RawClass} ").append("\n");
         stringBuilder.append("class version: ").append(class_version).append("\n");
         stringBuilder.append("class: ").append(getName()).append("\n");
         stringBuilder.append("super class: ").append(getSuperClassName()).append("\n");

@@ -1,4 +1,4 @@
-package decompiler.linker;
+package decompiler.interpreter;
 
 import decompiler.Util;
 import decompiler.reader.MethodContainer;
@@ -32,13 +32,15 @@ public class DuplicateMethodHandler {
         private final String name;          // original name for matching / reference
         private final String signature;
         private final String returnType;
+        //private final String descriptor;
 
         private String newName;             // new signature unique name
 
-        RepairedMethod(String name, String descriptor) {
+        RepairedMethod(String name, String descriptor, HashSet<String> retClassImports) {
             this.name = name;
-            this.signature = descriptor.substring(descriptor.indexOf("(") + 1, descriptor.lastIndexOf(")"));
-            this.returnType = descriptor.substring(descriptor.indexOf("(") + 1);
+            this.signature = Util.getSignature(descriptor, retClassImports, true)[0];
+            this.returnType = Util.getReturnType(descriptor, retClassImports);
+            //this.descriptor = descriptor;
             this.newName = name;
         }
 
@@ -52,14 +54,16 @@ public class DuplicateMethodHandler {
     //public HashMap<String, RepairedMethod> mappedMutatedMethods = new HashMap<>();
     private ArrayList<RepairedMethod> repairedMethods = new ArrayList<>();
 
-    public DuplicateMethodHandler(MethodContainer methodContainer) {
+    //private HashSet<String> imports = new St;
+
+    public DuplicateMethodHandler(MethodContainer methodContainer, HashSet<String> imports) {
 
         HashSet<Integer> problematicMethods = new HashSet<>();
         HashSet<String> trackedUniques = new HashSet<>();
         for (int index = 0; index < methodContainer.methods.size(); index++) {
             RawMethod rawMethod = methodContainer.methods.get(index);
             // returns reference not copy
-            //ArrayList<EMethod> matches = mappedMethods.getOrDefault(rawMethod.getName(), new ArrayList<>());
+            //ArrayList<EMethod> matches = mappedMethods.getOrDefault(rawMethod.getNewName(), new ArrayList<>());
 
             //matches.add(new EMethod(rawMethod, index));
 
@@ -73,7 +77,7 @@ public class DuplicateMethodHandler {
                 trackedUniques.add(unique);
             }
 
-            repairedMethods.add(new RepairedMethod(rawMethod.getName(), rawMethod.getDescriptor()));
+            repairedMethods.add(new RepairedMethod(rawMethod.getName(), rawMethod.getDescriptor(), imports));
         }
 
         /*
@@ -81,12 +85,12 @@ public class DuplicateMethodHandler {
          */
         for (int index : problematicMethods) {
             RepairedMethod m = repairedMethods.get(index);
-            m.replaceName(m.name + "_" + m.returnType);
+            m.replaceName(m.name + "_" + Util.toValidTypeName(m.returnType));
         }
 
     }
 
-    public ArrayList<JavaMethod> getJavaMethods(HashSet<String> retClassImports) {
+    public ArrayList<JavaMethod> getJavaMethods() {
 
         ArrayList<JavaMethod> javaMethods = new ArrayList<>();
 
@@ -95,27 +99,16 @@ public class DuplicateMethodHandler {
 
 
 
-            StringBuilder signature = new StringBuilder();
-            String[] args = Util.getSignature(repairedMethod.signature, null);
-            for (int a=0; a<args.length; a++) {
-                signature.append(args[a]);
-                if (a < args.length - 1) {
-                    signature.append(", ");
-                }
-            }
-
-
-
             if (repairedMethod.name.equals("<init>"))
                 javaMethods.add(new JavaMethod(
                         Util.toValidName(Util.getUnqualifiedName(RawItem.currentClassInstance.getName())),
-                        Util.toValidTypeName(signature.toString()),
+                        Util.toValidTypeName(repairedMethod.signature),
                         null,
                         index));
             else
                 javaMethods.add(new JavaMethod(
                         Util.toValidName(Util.getUnqualifiedName(repairedMethod.name)),
-                        Util.toValidTypeName(signature.toString()),
+                        Util.toValidTypeName(repairedMethod.signature),
                         Util.toValidTypeName(repairedMethod.returnType),
                         index));
         }
