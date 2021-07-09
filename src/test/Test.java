@@ -1,9 +1,8 @@
 package test;
 
-import decompiler.Util;
+import decompiler.reader.JavaUtil;
 
 import java.io.*;
-import java.util.HashSet;
 
 public class Test {
     public static void main(String[] args) {
@@ -11,13 +10,26 @@ public class Test {
         String s0 = "(Ljava/util/ArrayList<Ljava/lang/Integer;>;)Ljava/util/ArrayList<Ljava/lang/Object;>;";
         String s1 = "Ljava/util/HashMap<Ljava/lang/Integer;Ljava/lang/Integer;>;";
         String s2 = "Ljava/util/HashMap<Ljava/lang/Integer;Ljava/util/HashMap<Ljava/lang/Integer;Ljava/lang/Integer;>;>;";
-        String s4 = "(Ljava/util/ArrayList<Ljava/lang/Integer;>;Ljava/util/HashMap<Ljava/lang/Integer;Ljava/lang/Integer;>;)Ljava/util/ArrayList<Ljava/lang/Object;>;";
+        String s4 = "(Ljava/util/ArrayList<Ljava/lang/Integer;>;" +
+                "Ljava/util/HashMap<Ljava/lang/Integer;Ljava/lang/Integer;>;)" +
+                "Ljava/util/ArrayList<Ljava/lang/Object;>;";
+        //String s5 = "Ljava/lang/Integer;";
+        String s6 = "(Ljava/lang/Integer;Ljava/lang/Float;)Ljava/lang/Integer;";
+        String s7 = "(FILjava/util/ArrayList<Ljava/lang/Integer;>;)Ljava/lang/Integer;";
+        String s8 = "Ljava/util/ArrayList<Ljava/lang/Integer;>;FI";
+        String s9 = "IF";
 
-        HashSet<String> set = new HashSet<>();
+        //HashSet<String> set = new HashSet<>();
+        //for (String s : JavaUtil.getMethodArguments(s7, set)) {
+        //    System.out.println(s);
+        //}
+        //for (String s : set) {
+        //    System.out.println("import: " + s);
+        //}
 
-        for (String s : Util.getSignature(s4, set, false)) {
-            System.out.println(s);
-        }
+        //System.out.println(JavaUtil.getFirstType(s2));
+
+        System.out.println(JavaUtil.getMethodArguments(s4));
 
         //opcodes();
     }

@@ -1,7 +1,5 @@
 package decompiler.reader.pool;
 
-import decompiler.Result;
-
 import java.io.IOException;
 
 public class ConstantClass extends RawConstant {
@@ -9,13 +7,9 @@ public class ConstantClass extends RawConstant {
     private int name_index;
 
     @Override
-    public Result read() throws IOException {
+    public void read() throws IOException {
         // read name index
         name_index = bytes.readUnsignedShort();
-
-        //System.out.println(", name_index: " + name_index);
-
-        return Result.OK;
     }
 
     // returns the name of the class from name_index
@@ -31,7 +25,7 @@ public class ConstantClass extends RawConstant {
 
 
     @Override
-    public Object getValue() {
-        return getEntry(name_index).getValue();
+    public String getName() {
+        return (String) getEntry(name_index).getValue();
     }
 }

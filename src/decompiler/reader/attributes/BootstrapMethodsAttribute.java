@@ -1,21 +1,20 @@
 package decompiler.reader.attributes;
 
-import decompiler.Result;
-import decompiler.reader.RawItem;
+import decompiler.reader.RItem;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class BootstrapMethodsAttribute extends RawAttribute {
 
-    private class BootstrapMethod extends RawItem {
+    private class BootstrapMethod extends RItem {
 
         public int bootstrap_method_ref;
         //public int num_bootstrap_arguments;
         public ArrayList<Integer> bootstrap_arguments = new ArrayList<>();
 
         @Override
-        public Result read() throws IOException {
+        public void read() throws IOException {
 
             bootstrap_method_ref = bytes.readUnsignedShort();
             int num_bootstrap_arguments = bytes.readUnsignedShort();
@@ -23,15 +22,13 @@ public class BootstrapMethodsAttribute extends RawAttribute {
             for (; num_bootstrap_arguments > 0; num_bootstrap_arguments--) {
                 bootstrap_arguments.add(bytes.readUnsignedShort());
             }
-
-            return Result.OK;
         }
     }
 
     private ArrayList<BootstrapMethod> bootstrap_methods = new ArrayList<>();
 
     @Override
-    public Result read() throws IOException {
+    public void read() throws IOException {
         int num_bootstrap_methods = bytes.readUnsignedShort();
 
         for (;num_bootstrap_methods > 0; num_bootstrap_methods--) {
@@ -41,8 +38,6 @@ public class BootstrapMethodsAttribute extends RawAttribute {
 
             bootstrap_methods.add(bootstrapMethod);
         }
-
-        return Result.OK;
     }
 
     @Override

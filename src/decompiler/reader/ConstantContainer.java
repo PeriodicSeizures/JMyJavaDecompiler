@@ -1,12 +1,12 @@
 package decompiler.reader;
 
-import decompiler.Result;
+import decompiler.except.InvalidConstantPoolEntryException;
 import decompiler.reader.pool.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ConstantContainer extends RawItem {
+public class ConstantContainer extends RItem {
 
     private final static int CONSTANT_CLASS =               7;
     private final static int CONSTANT_FIELDREF =            9;
@@ -46,21 +46,15 @@ public class ConstantContainer extends RawItem {
 
 
 
-    public Result read() throws IOException {
+    public void read() throws IOException {
         // -1 is intentional according to oracle jvm docs
-        int constant_pool_count = bytes.readUnsignedShort() - 1;
+        final int constant_pool_count = bytes.readUnsignedShort() - 1;
 
-        //System.out.println("constant_pool_count: " + constant_pool_count);
-        //System.out.println("pool count: " + --constant_pool_count);
-        //spaced_indexes.add(0); // dummy add so it starts at 1
-
-        for(; constant_pool_count > 0; constant_pool_count--) {
-            RawConstant entry = null;
+        while (spaced_indexes.size() < constant_pool_count) {
+            RawConstant entry;
 
             // reads the 1 byte tag
             int tag = bytes.readUnsignedByte();
-
-            //System.out.println("tag: " + tag);
 
             switch (tag) {
                 case CONSTANT_CLASS: entry = new ConstantClass(); break;
@@ -78,20 +72,19 @@ public class ConstantContainer extends RawItem {
                 case CONSTANT_METHODTYPE: entry = new ConstantMethodType(); break;
                 case CONSTANT_INVOKEDYNAMIC: entry = new ConstantInvokeDynamic(); break;
                 default: {
-                    //return Result.INVALID_POOL_ENTRY; // error
-                    break;
+                    throw new InvalidConstantPoolEntryException("constant tagged " + tag + " is invalid");
+                    //break;
                 }
             }
-
-            //if (entry == null) {
-            //    System.out.println("size: " + constants.size());
-            //    return Result.INVALID_POOL_ENTRY;
-            //}
 
             entry.read();
 
             spaced_indexes.add(constants.size());
 
+            /*
+             * Long and Double take up 2 spaces,
+             * so add it again to the spaced array
+             */
             if (entry instanceof ConstantLong || entry instanceof ConstantDouble) {
                 spaced_indexes.add(constants.size());
             }
@@ -99,12 +92,6 @@ public class ConstantContainer extends RawItem {
             constants.add(entry);
 
         }
-
-        //System.out.println("size: " + constants.size());
-
-        //System.out.println(this.get(14).toString());
-
-        return Result.OK;
     }
 
     @Override
@@ -114,7 +101,7 @@ public class ConstantContainer extends RawItem {
         stringBuilder.append("{ConstantPool}: ").append("\n");
 
         for (int i=1; i<=spaced_indexes.size(); i++) {
-            RawConstant javaPoolEntry = RawItem.getEntry(i);
+            RawConstant javaPoolEntry = RItem.getEntry(i);
             stringBuilder.append("  \t").append(i).append(" : ").append(javaPoolEntry.toString()).append("\n");
         }
 
@@ -122,9 +109,5 @@ public class ConstantContainer extends RawItem {
 
         return stringBuilder.toString();
     }
-
-    //public RawConstant get(int i) {
-    //    return constants.get(spaced_indexes.get(i-1));
-    //}
 
 }

@@ -1,8 +1,8 @@
 package decompiler.reader.attributes;
 
-import decompiler.reader.RawItem;
+import decompiler.reader.RItem;
 
-public abstract class RawAttribute extends RawItem {
+public abstract class RawAttribute extends RItem {
 
     public enum Attribute {
 
@@ -14,7 +14,7 @@ public abstract class RawAttribute extends RawItem {
 
         ConstantValue(ConstantValueAttribute.class, 45, 3),   // required
         Code(CodeAttribute.class, 45, 3),            // required
-        StackMapTable(null, 50, 0),
+        //StackMapTable(null, 50, 0),
         Exceptions(ExceptionsAttribute.class, 45, 3),      // required
         BootstrapMethods(BootstrapMethodsAttribute.class, 51, 0),
 
@@ -22,10 +22,10 @@ public abstract class RawAttribute extends RawItem {
         //SourceFile(null, 45, 3), // the original file name
         //SourceDebugExtension(null, 49, 0), // debugging information
         //LineNumberTable(null, 45, 3),
-        LocalVariableTable(LocalVariableTableAttribute.class, 45, 3),
+        //LocalVariableTable(LocalVariableTableAttribute.class, 45, 3),
         //InnerClasses(InnerClassesAttribute.class, 45, 3),
         //EnclosingMethod(EnclosingMethodAttribute.class, 49, 0),
-        Signature(SignatureAttribute.class, 49, 0),
+        //Signature(SignatureAttribute.class, 49, 0),
         //LocalVariableTypeTable(null, 49, 0),
         //Deprecated(null, 45, 3),
         //RuntimeVisibleAnnotations(null, 49, 0),           // *

@@ -1,55 +1,45 @@
 package decompiler;
 
+import decompiler.except.NoMagicHeaderException;
 import decompiler.reader.ClassReader;
-import decompiler.reader.RawClass;
-import decompiler.reader.RawItem;
-import test.SAMPLER;
-import test.SAMPLER2;
-import test.SAMPLER3;
-import test.SAMPLER4;
+import decompiler.reader.RClass;
+import decompiler.reader.RItem;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Paths;
 
 public class JavaDecompiler {
-    private RawClass javaClassFile = new RawClass();
+    private RClass javaClassFile = new RClass();
     private ClassReader bytes;
 
-    public Result read(String f) {
+    public void read(String f) throws IOException {
 
         File file = Paths.get(f).toFile();
 
         if (!file.exists()) {
-            return Result.FILE_NOT_FOUND;
+            throw new FileNotFoundException();
         }
 
         System.out.println("reading: " + f);
 
-        try {
-            bytes = new ClassReader(new FileInputStream(file));
+        bytes = new ClassReader(new FileInputStream(file));
 
-            RawItem.bytes = this.bytes;
-            RawItem.currentClassInstance = javaClassFile;
+        RItem.bytes = this.bytes;
+        RItem.currentClassInstance = javaClassFile;
 
-            if (!RawItem.bytes.compareNext(4, new byte[] {(byte)0xCA, (byte)0xFE, (byte)0xBA, (byte)0xBE}))
-                return Result.NO_MAGIC_HEADER;
+        if (!RItem.bytes.compareNext(4, new byte[] {(byte)0xCA, (byte)0xFE, (byte)0xBA, (byte)0xBE}))
+            throw new NoMagicHeaderException("class file " + f + " has no magic header");
 
-            Result result = javaClassFile.read();
+        javaClassFile.read();
 
-            bytes.close();
+        bytes.close();
 
-            //javaClassFile.printMethods();
-
-            return result;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Result.UNKNOWN;
-        }
     }
 
-    public RawClass getRawClassFile() {
+    public RClass getRClass() {
         return javaClassFile;
     }
 

@@ -1,7 +1,5 @@
 package decompiler.reader.pool;
 
-import decompiler.Result;
-
 import java.io.IOException;
 
 public class ConstantUtf8 extends RawConstant {
@@ -9,11 +7,9 @@ public class ConstantUtf8 extends RawConstant {
     private String s;
 
     @Override
-    public Result read() throws IOException {
+    public void read() throws IOException {
 
         s = bytes.readUTF(); // works as intended
-
-        return Result.OK;
     }
 
     @Override

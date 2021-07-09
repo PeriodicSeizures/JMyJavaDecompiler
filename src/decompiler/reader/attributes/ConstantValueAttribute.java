@@ -1,7 +1,5 @@
 package decompiler.reader.attributes;
 
-import decompiler.Result;
-
 import java.io.IOException;
 
 public class ConstantValueAttribute extends RawAttribute {
@@ -9,9 +7,8 @@ public class ConstantValueAttribute extends RawAttribute {
     private int constantvalue_index;
 
     @Override
-    public Result read() throws IOException {
+    public void read() throws IOException {
         constantvalue_index = bytes.readUnsignedShort();
-        return Result.OK;
     }
 
     @Override

@@ -1,7 +1,5 @@
 package decompiler.reader.pool;
 
-import decompiler.Result;
-
 import java.io.IOException;
 
 public class ConstantMethodType extends RawConstant {
@@ -9,9 +7,8 @@ public class ConstantMethodType extends RawConstant {
     private int descriptor_index;
 
     @Override
-    public Result read() throws IOException {
+    public void read() throws IOException {
         descriptor_index = bytes.readUnsignedShort();
-        return Result.OK;
     }
 
     //@Override

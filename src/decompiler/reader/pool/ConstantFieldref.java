@@ -1,7 +1,5 @@
 package decompiler.reader.pool;
 
-import decompiler.Result;
-
 import java.io.IOException;
 
 public class ConstantFieldref extends RawConstant {
@@ -12,11 +10,10 @@ public class ConstantFieldref extends RawConstant {
     //static int count = 0;
 
     @Override
-    public Result read() throws IOException {
+    public void read() throws IOException {
         class_index = bytes.readUnsignedShort();
         name_and_type_index = bytes.readUnsignedShort();
         //count++;
-        return Result.OK;
     }
 
     @Override

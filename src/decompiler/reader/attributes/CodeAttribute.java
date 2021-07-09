@@ -1,8 +1,7 @@
 package decompiler.reader.attributes;
 
-import decompiler.Result;
 import decompiler.reader.AttributeContainer;
-import decompiler.reader.RawItem;
+import decompiler.reader.RItem;
 import decompiler.reader.Opcode;
 
 import java.io.IOException;
@@ -10,7 +9,7 @@ import java.util.ArrayList;
 
 public class CodeAttribute extends RawAttribute {
 
-    private static class JavaExceptionEntry extends RawItem {
+    private static class JavaExceptionEntry extends RItem {
 
         public int start_pc;
         public int end_pc;
@@ -18,14 +17,12 @@ public class CodeAttribute extends RawAttribute {
         public int catch_type;
 
         @Override
-        public Result read() throws IOException {
+        public void read() throws IOException {
 
             start_pc = bytes.readUnsignedShort();
             end_pc = bytes.readUnsignedShort();
             handler_pc = bytes.readUnsignedShort();
             catch_type = bytes.readUnsignedShort();
-
-            return Result.OK;
         }
     }
 
@@ -40,7 +37,7 @@ public class CodeAttribute extends RawAttribute {
 
 
     @Override
-    public Result read() throws IOException {
+    public void read() throws IOException {
         max_stack = bytes.readUnsignedShort();
         max_locals = bytes.readUnsignedShort();
 
@@ -57,13 +54,11 @@ public class CodeAttribute extends RawAttribute {
         }
 
         attribute_container.read();
-
-        return Result.OK;
     }
 
-    public ArrayList<LocalVariableTableAttribute.LocalVariableEntry> getLocalVariableTable() {
-        return ((LocalVariableTableAttribute) attribute_container.get(Attribute.LocalVariableTable)).local_variable_table;
-    }
+    //public ArrayList<LocalVariableTableAttribute.LocalVariableEntry> getLocalVariableTable() {
+    //    return ((LocalVariableTableAttribute) attribute_container.get(Attribute.LocalVariableTable)).local_variable_table;
+    //}
 
     @Override
     public String toString() {
@@ -80,18 +75,16 @@ public class CodeAttribute extends RawAttribute {
         for (int index=0; index<code.size(); index++) {
             int c = code.get(index);
             Opcode opcode = Opcode.getOpcode(c);
-            int varargs = opcode.getVarArgs(code, index);
-            if (varargs == 0) {// as long as instruction has no arguments, then
-                a.append(opcode.name()).append("\n");
-            } else {
-                a.append(opcode.name()).append("\n"); // has arguments, which should be printed
+            int varargs = Opcode.getVarArgs(code, index);
+            a.append(opcode.name()).append("\n");// has arguments, which should be printed
+            if (varargs != 0) {// as long as instruction has no arguments, then
                 int end = index + varargs;
                 while (index < end)
                     a.append("  ").append(code.get(++index)).append("\n");
             }
-
-
         }
+
+        a.append("\n");
 
         a.append(attribute_container);
 

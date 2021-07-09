@@ -1,18 +1,19 @@
 package decompiler.reader;
 
-import decompiler.Result;
 import decompiler.reader.attributes.RawAttribute;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AttributeContainer extends RawItem {
+public class AttributeContainer extends RItem {
 
     private HashMap<RawAttribute.Attribute, RawAttribute> attribute_map = new HashMap<>();
+    private ArrayList<String> ignored = new ArrayList<>();
 
     @Override
-    public Result read() throws IOException {
+    public void read() throws IOException {
 
         // read the count first
         int attributes_count = bytes.readUnsignedShort();
@@ -24,7 +25,6 @@ public class AttributeContainer extends RawItem {
 
 
             String name = (String)(getEntry(attribute_name_index).getValue());
-            //System.out.println("atr: " + name);
 
             try {
                 RawAttribute.Attribute atr = RawAttribute.Attribute.valueOf(name);
@@ -39,23 +39,23 @@ public class AttributeContainer extends RawItem {
                     javaAttribute.read();
                     attribute_map.put(atr, javaAttribute);
 
+                    //System.out.println("attribute (valid): " + name);
+
                 } else {
                     // do nothing
-                    System.out.println("attribute being ignored due to class version: " + name);
+                    ignored.add(name + " (ver)");
+                    //System.out.println("attribute (ver ignored): " + name);
                 }
 
             } catch (Exception e) {
                  // else, attribute is not recognized (is custom)
-                System.out.println("attribute being ignored: " + name);
+                //System.out.println("attribute (ignored): " + name);
+                ignored.add(name + "(insig)");
                 //noinspection ResultOfMethodCallIgnored
                 bytes.skip(attribute_length);
             }
 
         }
-
-        //System.out.println(" --- ");
-
-        return Result.OK;
     }
 
     @Override
@@ -67,6 +67,12 @@ public class AttributeContainer extends RawItem {
         for (Map.Entry<RawAttribute.Attribute, RawAttribute> entry : attribute_map.entrySet()) {
             stringBuilder.append("  ").append(entry.getKey().name()).append(" : ").
                     append(entry.getValue().toString()).append("\n");
+        }
+
+        stringBuilder.append("ignored: \n");
+
+        for (String s_ignored : ignored) {
+            stringBuilder.append("  ").append(s_ignored).append("\n");
         }
 
         stringBuilder.append("size: ").append(attribute_map.size()).append("\n");

@@ -1,7 +1,5 @@
 package decompiler.reader.pool;
 
-import decompiler.Result;
-
 import java.io.IOException;
 
 public class ConstantDouble extends RawConstant {
@@ -9,9 +7,8 @@ public class ConstantDouble extends RawConstant {
     private double value;
 
     @Override
-    public Result read() throws IOException {
+    public void read() throws IOException {
         value = bytes.readDouble();
-        return Result.OK;
     }
 
     @Override

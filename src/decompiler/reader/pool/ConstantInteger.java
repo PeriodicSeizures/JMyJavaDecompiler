@@ -1,7 +1,5 @@
 package decompiler.reader.pool;
 
-import decompiler.Result;
-
 import java.io.IOException;
 
 public class ConstantInteger extends RawConstant {
@@ -9,9 +7,8 @@ public class ConstantInteger extends RawConstant {
     private int value;
 
     @Override
-    public Result read() throws IOException {
+    public void read() throws IOException {
         value = bytes.readInt();
-        return Result.OK;
     }
 
     @Override

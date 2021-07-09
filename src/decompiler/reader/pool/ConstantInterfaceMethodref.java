@@ -1,7 +1,5 @@
 package decompiler.reader.pool;
 
-import decompiler.Result;
-
 import java.io.IOException;
 
 public class ConstantInterfaceMethodref extends RawConstant {
@@ -9,10 +7,9 @@ public class ConstantInterfaceMethodref extends RawConstant {
     private int name_and_type_index;
 
     @Override
-    public Result read() throws IOException {
+    public void read() throws IOException {
         class_index = bytes.readUnsignedShort();
         name_and_type_index = bytes.readUnsignedShort();
-        return Result.OK;
     }
 
     //@Override

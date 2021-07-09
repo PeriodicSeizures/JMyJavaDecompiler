@@ -416,15 +416,14 @@ public enum Opcode {
     };
     */
 
-    private static Opcode[] VALUES = Opcode.values();
+    private static final Opcode[] VALUES = Opcode.values();
 
-    private final int code;
-    private final int varargs;
+    private final int code;     // numeric id
+    private final int varargs;  // variable arguments for opcode
 
     Opcode(int code, int varargs) {
         this.code = code;
         this.varargs = varargs;
-        //bytecode = ++lastByteCode;
     }
 
 
