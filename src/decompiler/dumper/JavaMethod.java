@@ -26,7 +26,11 @@ public class JavaMethod {
     //private String new_signature;
     //private String new_returnType;
 
+    //ArrayList<>
+
     private ArrayList<String> generatedCode = new ArrayList<>();
+
+    // wrap and abstract localvariabletable
 
     public JavaMethod(RMethod rMethod, JavaClass parentJavaClass) {
 
@@ -66,6 +70,8 @@ public class JavaMethod {
         return this.myRMethod;
     }
 
+
+    // https://stackoverflow.com/questions/61000749/local-variable-table-in-jvm-stack
     private void parseRawBody() {
         CodeAttribute codeAttribute = this.getRMethod().getCode();
         ArrayList<Integer> code = codeAttribute.code;
@@ -153,6 +159,12 @@ public class JavaMethod {
                 case DDIV:
                 case LDIV:
                     STACK.div();
+                    continue;
+                case IREM:
+                case LREM:
+                case FREM:
+                case DREM:
+                    STACK.rem();
                     continue;
                 case IINC:          // increment by next byte
                     LocalVariable local = LOCALS[code.get(++index)];

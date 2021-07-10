@@ -85,7 +85,11 @@ public class OperandStack {
         this.push(popped[0] + " / " + popped[1]);
     }
 
-
+    // % operator
+    void rem() {
+        String[] popped = this.pop2();
+        this.push(popped[0] + " % " + popped[1]);
+    }
 
 
     //void executeNext(CodeAttribute codeAttribute, int index) {

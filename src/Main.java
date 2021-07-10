@@ -17,16 +17,15 @@ public class Main {
      *
      *      }
      *
-     *  -
+     *  - LocalVariableTableAttribute contains
      */
 
     public static void main(String[] args) {
 
-        //String path = "samples/ConstructorMembersGetSet.class";
+        String path = "samples/ConstructorMembersGetSet.class";
         //String path = "samples/ConstantClass.class";
         //String path = "samples/StaticInitializerConstructor.class";
-        String path = "samples/obfnofall.class";
-
+        //String path = "samples/obfnofall.class";
         //String path = "samples/MathOperations.class";
 
         JavaDecompiler decompiler = new JavaDecompiler();
