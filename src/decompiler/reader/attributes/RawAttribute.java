@@ -22,7 +22,7 @@ public abstract class RawAttribute extends RItem {
         //SourceFile(null, 45, 3), // the original file name
         //SourceDebugExtension(null, 49, 0), // debugging information
         //LineNumberTable(null, 45, 3),
-        //LocalVariableTable(LocalVariableTableAttribute.class, 45, 3),
+        LocalVariableTable(LocalVariableTableAttribute.class, 45, 3),
         //InnerClasses(InnerClassesAttribute.class, 45, 3),
         //EnclosingMethod(EnclosingMethodAttribute.class, 49, 0),
         //Signature(SignatureAttribute.class, 49, 0),

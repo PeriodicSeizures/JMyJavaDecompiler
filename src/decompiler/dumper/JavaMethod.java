@@ -54,6 +54,8 @@ public class JavaMethod {
         //System.out.println(this.signature + " " + rMethod.getDescriptor());
 
         this.myRMethod = rMethod;
+
+        parseRawBody();
     }
 
     public String getMethodName() {
@@ -68,7 +70,7 @@ public class JavaMethod {
         CodeAttribute codeAttribute = this.getRMethod().getCode();
         ArrayList<Integer> code = codeAttribute.code;
 
-
+        System.out.println(codeAttribute.getLocalVariableTable());
 
         LocalVariable[] LOCALS = LocalVariable.from(codeAttribute);
 
@@ -85,6 +87,8 @@ public class JavaMethod {
 
             String name = opcode.name();
 
+            //System.out.println(name);
+
             // then this opcode appends to the stack
 
             switch (opcode) {
@@ -93,7 +97,10 @@ public class JavaMethod {
                 case DLOAD:
                 case LLOAD:
                 case ALOAD:         // push ref
-                    STACK.push(LOCALS[code.get(++index)].getName());
+                    STACK.push(
+                            LOCALS[
+                            code.get(++index)].
+                                    getName());
                     continue;
                 case ILOAD_0:       // push local@0
                 case FLOAD_0:

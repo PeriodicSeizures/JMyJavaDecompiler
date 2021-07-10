@@ -27,6 +27,8 @@ public class Main {
         //String path = "samples/StaticInitializerConstructor.class";
         String path = "samples/obfnofall.class";
 
+        //String path = "samples/MathOperations.class";
+
         JavaDecompiler decompiler = new JavaDecompiler();
 
         try {

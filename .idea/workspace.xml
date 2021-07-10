@@ -211,6 +211,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Rico\Documents\JMyJavaDecompiler\src\decompiler\reader\attributes" />
       <recent name="C:\Users\Rico\Documents\JMyJavaDecompiler\samples" />
       <recent name="C:\Users\Rico\Documents\JMyJavaDecompiler\src\decompiler\dumper" />
       <recent name="C:\Users\Rico\Documents\JMyJavaDecompiler\src\UNUSED" />
@@ -296,7 +297,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/decompiler/dumper/JavaClass.java</url>
-          <line>119</line>
+          <line>121</line>
           <option name="timeStamp" value="21" />
         </line-breakpoint>
       </breakpoints>

@@ -1,6 +1,10 @@
 package decompiler.dumper;
 
+import decompiler.reader.JavaUtil;
 import decompiler.reader.attributes.CodeAttribute;
+import decompiler.reader.attributes.LocalVariableTableAttribute;
+
+import java.util.ArrayList;
 
 public class LocalVariable {
 
@@ -27,17 +31,14 @@ public class LocalVariable {
     }
 
     public static LocalVariable[] from(CodeAttribute atr) {
-        //ArrayList<LocalVariableTableAttribute.LocalVariableEntry> _locals = atr.getLocalVariableTable();
+        ArrayList<LocalVariableTableAttribute.Var> _locals = atr.getLocalVariableTable();
 
-        //LocalVariable[] localVariables = new LocalVariable[_locals.size()];
+        LocalVariable[] localVariables = new LocalVariable[_locals.size()];
 
-        //for (LocalVariableTableAttribute.LocalVariableEntry entry : _locals) {
-
-        //    localVariables[entry.getIndex()] = new LocalVariable(
-        //            Util.getUnqualifiedName(entry.getDescriptor()), entry.getName(), "");
-
-        //}
-        //return localVariables;
-        return null;
+        for (LocalVariableTableAttribute.Var entry : _locals) {
+            localVariables[entry.getIndex()] = new LocalVariable(
+                    JavaUtil.getUnqualifiedName(entry.getDescriptor()), entry.getName(), "");
+        }
+        return localVariables;
     }
 }

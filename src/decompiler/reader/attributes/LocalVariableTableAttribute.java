@@ -1,14 +1,13 @@
 package decompiler.reader.attributes;
 
-import decompiler.Result;
-import decompiler.reader.RawItem;
+import decompiler.reader.RItem;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class LocalVariableTableAttribute extends RawAttribute {
 
-    public class LocalVariableEntry extends RawItem {
+    public static class Var extends RItem {
 
         int start_pc;
         int length;
@@ -17,14 +16,12 @@ public class LocalVariableTableAttribute extends RawAttribute {
         int index;
 
         @Override
-        public Result read() throws IOException {
+        public void read() throws IOException {
             start_pc = bytes.readUnsignedShort();
             length = bytes.readUnsignedShort();
             name_index = bytes.readUnsignedShort();
             descriptor_index = bytes.readUnsignedShort();
             index = bytes.readUnsignedShort();
-
-            return Result.OK;
         }
 
         @Override
@@ -35,6 +32,7 @@ public class LocalVariableTableAttribute extends RawAttribute {
                     index;
         }
 
+        @Override
         public String getName() {
             return (String) getEntry(name_index).getValue();
         }
@@ -48,19 +46,17 @@ public class LocalVariableTableAttribute extends RawAttribute {
         }
     }
 
-    ArrayList<LocalVariableEntry> local_variable_table = new ArrayList<>();
+    ArrayList<Var> local_variable_table = new ArrayList<>();
 
     @Override
-    public Result read() throws IOException {
+    public void read() throws IOException {
         int local_variable_table_length = bytes.readUnsignedShort();
 
         for (; local_variable_table_length > 0; local_variable_table_length--) {
-            LocalVariableEntry localVariableEntry = new LocalVariableEntry();
-            localVariableEntry.read();
-            local_variable_table.add(localVariableEntry);
+            Var var = new Var();
+            var.read();
+            local_variable_table.add(var);
         }
-
-        return Result.OK;
     }
 
     @Override

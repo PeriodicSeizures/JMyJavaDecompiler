@@ -56,9 +56,9 @@ public class CodeAttribute extends RawAttribute {
         attribute_container.read();
     }
 
-    //public ArrayList<LocalVariableTableAttribute.LocalVariableEntry> getLocalVariableTable() {
-    //    return ((LocalVariableTableAttribute) attribute_container.get(Attribute.LocalVariableTable)).local_variable_table;
-    //}
+    public ArrayList<LocalVariableTableAttribute.Var> getLocalVariableTable() {
+        return ((LocalVariableTableAttribute) attribute_container.get(Attribute.LocalVariableTable)).local_variable_table;
+    }
 
     @Override
     public String toString() {

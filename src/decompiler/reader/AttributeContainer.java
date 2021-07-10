@@ -56,6 +56,7 @@ public class AttributeContainer extends RItem {
             }
 
         }
+        //System.out.println();
     }
 
     @Override
