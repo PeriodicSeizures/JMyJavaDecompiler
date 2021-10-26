@@ -51,8 +51,13 @@ public class JavaMethod {
         System.out.println("method desc: " + rMethod.getDescriptor());
 
         this.args = new ArrayList<>();
-        for (String arg : JavaUtil.getMethodArguments(rMethod.getDescriptor()).args) {
-            this.args.add(NameUtil.toValidTypeName(arg));
+        var typedArgs = JavaUtil.getMethodArguments(rMethod.getDescriptor()).args;
+        var locals = rMethod.getCode().getLocalVariableTable();
+        for (int i=0; i < typedArgs.size(); i++) {
+            //System.out.println("Descriptor: " + rMethod.getDescriptor());
+            // how to manage field
+            // how to append method local name
+            this.args.add(NameUtil.toValidTypeName(typedArgs.get(i)) + " " + locals.get(i + (!rMethod.isStatic() ? 1 : 0)).getName());
         }
         System.out.println("args: " + this.args);
         //System.out.println(this.signature + " " + rMethod.getDescriptor());
@@ -69,7 +74,6 @@ public class JavaMethod {
     private RMethod getRMethod() {
         return this.myRMethod;
     }
-
 
     // https://stackoverflow.com/questions/61000749/local-variable-table-in-jvm-stack
     private void parseRawBody() {

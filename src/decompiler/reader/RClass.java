@@ -107,19 +107,16 @@ public class RClass extends RItem {
 
     @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append("{RawClass} ").append("\n");
-        stringBuilder.append("class version: ").append(class_version).append("\n");
-        stringBuilder.append("class: ").append(getName()).append("\n");
-        stringBuilder.append("super class: ").append(getSuperClassName()).append("\n");
-        stringBuilder.append(interfaceContainer).append("\n");
-        stringBuilder.append(constantPoolContainer).append("\n");
-        stringBuilder.append(fieldContainer).append("\n");
-        stringBuilder.append(methodContainer).append("\n");
-        stringBuilder.append(attributeContainer).append("\n");
-
-        return stringBuilder.toString();
+        return "{RawClass} " + "\n" +
+                "class version: " + class_version + "\n" +
+                "class: " + getName() + "\n" +
+                "super class: " + getSuperClassName() + "\n" +
+                interfaceContainer + "\n" +
+                constantPoolContainer + "\n" +
+                fieldContainer + "\n" +
+                methodContainer + "\n" +
+                attributeContainer + "\n";
     }
 
 

@@ -46,7 +46,7 @@ public class LocalVariableTableAttribute extends RawAttribute {
         }
     }
 
-    ArrayList<Var> local_variable_table = new ArrayList<>();
+    public ArrayList<Var> local_variable_table = new ArrayList<>();
 
     @Override
     public void read() throws IOException {

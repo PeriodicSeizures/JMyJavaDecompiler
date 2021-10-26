@@ -19,6 +19,6 @@ public class ConstantMethodref extends RawConstant {
 
     @Override
     public String toString() {
-        return "{Methodref} \tclass: " + getEntry(class_index).getValue() + ", " + getEntry(name_and_type_index);
+        return "{Methodref} \tclass: " + getEntry(class_index).getName() + ", " + getEntry(name_and_type_index);
     }
 }

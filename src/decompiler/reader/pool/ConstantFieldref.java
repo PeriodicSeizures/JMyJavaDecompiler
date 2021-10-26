@@ -18,7 +18,7 @@ public class ConstantFieldref extends RawConstant {
 
     @Override
     public String toString() {
-        return "{Fieldref} \tclass: " + getEntry(class_index).getValue() + ", " + getEntry(name_and_type_index);
+        return "{Fieldref} \tclass: " + getEntry(class_index).getName() + ", " + getEntry(name_and_type_index);
     }
 
     //@Override

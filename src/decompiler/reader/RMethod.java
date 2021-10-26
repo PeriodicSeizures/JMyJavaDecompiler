@@ -1,6 +1,7 @@
 package decompiler.reader;
 
 import decompiler.reader.attributes.CodeAttribute;
+import decompiler.reader.attributes.LocalVariableTableAttribute;
 import decompiler.reader.attributes.RawAttribute;
 
 import java.io.IOException;

@@ -1,6 +1,5 @@
 package decompiler.reader;
 
-import com.sun.istack.internal.NotNull;
 import decompiler.except.InvalidTypeException;
 
 import java.util.HashSet;
@@ -42,10 +41,12 @@ public class JavaUtil {
      * @return ReturnInfo structure, containing the method arguments in valid Java
      */
     // TODO
-    // java sucks for not using references
+    // java sucks for not allowing POD references (ptrs to ints...)
     // so the ReturnInfo object is needed to return many types
     // (this is why c++ is better in every way)
-    public static ReturnInfo getMethodArguments(@NotNull String descriptor) {
+    public static ReturnInfo getMethodArguments(String descriptor) {
+
+        assert descriptor != null : "descriptor must be null";
 
         assert descriptor.contains("(") : "Must be a method descriptor";
 
@@ -67,12 +68,9 @@ public class JavaUtil {
         //    returnInfo.classImports.addAll(loopRet.classImports);
         //}
 
-        while(true) {
+        while (!loopRet.remaining.isEmpty()) {
 
             //System.out.println(loopRet);
-
-            if (loopRet.remaining.isEmpty())
-                break;
 
             loopRet = getFirstType(loopRet.remaining);
             returnInfo.args.add(loopRet.type);
@@ -87,7 +85,9 @@ public class JavaUtil {
      * @param descriptor A field-like String descriptor, "Ljava/util/ArrayList<Ljava/lang/Integer;>;"
      * @return A valid Java type, "java.util.ArrayList<Integer>"
      */
-    public static ReturnInfo getFirstType(@NotNull String descriptor) {
+    public static ReturnInfo getFirstType(String descriptor) {
+
+        assert descriptor != null : "descriptor must not be null";
 
         assert !descriptor.contains("(") : "Must be a field descriptor or stripped method (arg only) descriptor";
 
@@ -97,25 +97,16 @@ public class JavaUtil {
 
         char c = descriptor.charAt(0);
         switch (c) {
-            case 'B':
-                returnInfo.type = "byte"; break;
-            case 'C':
-                returnInfo.type = "char"; break;
-            case 'D':
-                returnInfo.type = "double"; break;
-            case 'F':
-                returnInfo.type = "float"; break;
-            case 'I':
-                returnInfo.type = "int"; break;
-            case 'J':
-                returnInfo.type = "long"; break;
-            case 'S':
-                returnInfo.type = "short"; break;
-            case 'Z':
-                returnInfo.type = "boolean"; break;
-            case 'V':
-                returnInfo.type = "void"; break;
-            case 'L': {
+            case 'B' -> returnInfo.type = "byte";
+            case 'C' -> returnInfo.type = "char";
+            case 'D' -> returnInfo.type = "double";
+            case 'F' -> returnInfo.type = "float";
+            case 'I' -> returnInfo.type = "int";
+            case 'J' -> returnInfo.type = "long";
+            case 'S' -> returnInfo.type = "short";
+            case 'Z' -> returnInfo.type = "boolean";
+            case 'V' -> returnInfo.type = "void";
+            case 'L' -> {
 
                 /*
                  * Remove the first family of delimiters if they are present
@@ -175,11 +166,8 @@ public class JavaUtil {
 
                 returnInfo.type = descriptor.replaceAll(";", "").
                         replaceAll(",", ", ");
-                break;
             }
-            default: {
-                throw new InvalidTypeException("type " + c + " is invalid");
-            }
+            default -> throw new InvalidTypeException("type " + c + " is invalid; class might be corrupted");
         }
 
         return returnInfo;

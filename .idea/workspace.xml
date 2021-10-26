@@ -4,7 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2aa1f88b-4a65-413c-9ca1-3b71e37228f9" name="Default Changelist" comment="" />
+    <list default="true" id="2aa1f88b-4a65-413c-9ca1-3b71e37228f9" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/SingleConstructor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/dumper/JavaMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/decompiler/dumper/JavaMethod.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/ConstantContainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/decompiler/reader/ConstantContainer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/JavaUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/decompiler/reader/JavaUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/RClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/decompiler/reader/RClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/RMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/decompiler/reader/RMethod.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/attributes/LocalVariableTableAttribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/decompiler/reader/attributes/LocalVariableTableAttribute.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/pool/ConstantFieldref.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/decompiler/reader/pool/ConstantFieldref.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/pool/ConstantMethodref.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/decompiler/reader/pool/ConstantMethodref.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -202,12 +216,13 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="project.structure.last.edited" value="Project" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
-    <property name="restartRequiresConfirmation" value="false" />
+    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -291,6 +306,18 @@
       <window_info anchor="right" id="Maven" order="4" />
       <window_info anchor="right" id="Palette&#9;" order="5" />
     </layout>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/test/SAMPLER.java">

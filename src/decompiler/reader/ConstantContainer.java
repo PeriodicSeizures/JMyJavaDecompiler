@@ -57,24 +57,21 @@ public class ConstantContainer extends RItem {
             int tag = bytes.readUnsignedByte();
 
             switch (tag) {
-                case CONSTANT_CLASS: entry = new ConstantClass(); break;
-                case CONSTANT_FIELDREF: entry = new ConstantFieldref(); break;
-                case CONSTANT_METHODREF: entry = new ConstantMethodref(); break;
-                case CONSTANT_INTERFACEMETHODREF: entry = new ConstantInterfaceMethodref(); break;
-                case CONSTANT_STRING: entry = new ConstantString(); break;
-                case CONSTANT_INTEGER: entry = new ConstantInteger(); break;
-                case CONSTANT_FLOAT: entry = new ConstantFloat(); break;
-                case CONSTANT_LONG: entry = new ConstantLong(); break;
-                case CONSTANT_DOUBLE: entry = new ConstantDouble(); break;
-                case CONSTANT_NAMEANDTYPE: entry = new ConstantNameAndType(); break;
-                case CONSTANT_UTF8: entry = new ConstantUtf8(); break;
-                case CONSTANT_METHODHANDLE: entry = new ConstantMethodHandle(); break;
-                case CONSTANT_METHODTYPE: entry = new ConstantMethodType(); break;
-                case CONSTANT_INVOKEDYNAMIC: entry = new ConstantInvokeDynamic(); break;
-                default: {
-                    throw new InvalidConstantPoolEntryException("constant tagged " + tag + " is invalid");
-                    //break;
-                }
+                case CONSTANT_CLASS -> entry = new ConstantClass();
+                case CONSTANT_FIELDREF -> entry = new ConstantFieldref();
+                case CONSTANT_METHODREF -> entry = new ConstantMethodref();
+                case CONSTANT_INTERFACEMETHODREF -> entry = new ConstantInterfaceMethodref();
+                case CONSTANT_STRING -> entry = new ConstantString();
+                case CONSTANT_INTEGER -> entry = new ConstantInteger();
+                case CONSTANT_FLOAT -> entry = new ConstantFloat();
+                case CONSTANT_LONG -> entry = new ConstantLong();
+                case CONSTANT_DOUBLE -> entry = new ConstantDouble();
+                case CONSTANT_NAMEANDTYPE -> entry = new ConstantNameAndType();
+                case CONSTANT_UTF8 -> entry = new ConstantUtf8();
+                case CONSTANT_METHODHANDLE -> entry = new ConstantMethodHandle();
+                case CONSTANT_METHODTYPE -> entry = new ConstantMethodType();
+                case CONSTANT_INVOKEDYNAMIC -> entry = new ConstantInvokeDynamic();
+                default -> throw new InvalidConstantPoolEntryException("constant tagged " + tag + " is invalid");
             }
 
             entry.read();
