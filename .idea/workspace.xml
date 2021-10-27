@@ -5,19 +5,74 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2aa1f88b-4a65-413c-9ca1-3b71e37228f9" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/SingleConstructor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/JRipper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/DecompiledItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/IAttr.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/IPoolConstant.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/attributes/EnumAttr.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/pool/ConstantClass.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/pool/ConstantDouble.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/pool/ConstantFieldref.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/pool/ConstantFloat.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/pool/ConstantInteger.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/pool/ConstantInterfaceMethodref.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/pool/ConstantInvokeDynamic.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/pool/ConstantLong.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/pool/ConstantMethodHandle.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/pool/ConstantMethodType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/pool/ConstantMethodref.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/pool/ConstantNameAndType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/pool/ConstantString.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/pool/ConstantUtf8.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JMyJavaDecompiler.iml" beforeDir="false" afterPath="$PROJECT_DIR$/JMyJavaDecompiler.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/decompiler/dumper/JavaMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/decompiler/dumper/JavaMethod.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/ConstantContainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/decompiler/reader/ConstantContainer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/JavaUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/decompiler/reader/JavaUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/RClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/decompiler/reader/RClass.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/RMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/decompiler/reader/RMethod.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/attributes/LocalVariableTableAttribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/decompiler/reader/attributes/LocalVariableTableAttribute.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/pool/ConstantFieldref.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/decompiler/reader/pool/ConstantFieldref.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/pool/ConstantMethodref.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/decompiler/reader/pool/ConstantMethodref.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/ItemType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/JavaDecompiler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/dumper/JavaClass.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/dumper/JavaField.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/dumper/JavaMethod.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/dumper/LocalVariable.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/dumper/NameUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/dumper/OperandStack.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/except/InvalidConstantPoolEntryException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/except/InvalidConstantPoolEntryException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/except/InvalidTypeException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/except/InvalidTypeException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/except/NoMagicHeaderException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/except/NoMagicHeaderException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/AttributeContainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/AttributeContainer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/ClassReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/ByteReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/ConstantContainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/ConstantContainer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/FieldContainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/FieldContainer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/InterfaceContainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/InterfaceContainer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/JavaUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/Util.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/MethodContainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/MethodContainer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/Opcode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/Opcode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/RClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/DecompiledClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/RField.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/DecompiledField.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/RItem.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/RMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/DecompiledMethod.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/ReturnInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/ReturnInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/attributes/BootstrapMethodsAttribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/attributes/BootstrapMethodsAttr.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/attributes/CodeAttribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/attributes/CodeAttr.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/attributes/ConstantValueAttribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/attributes/ConstantValueAttr.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/attributes/ExceptionsAttribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/attributes/ExceptionsAttr.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/attributes/LocalVariableTableAttribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UNUSED/LocalVariableTableAttribute.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/attributes/RawAttribute.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/pool/ConstantClass.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/pool/ConstantDouble.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/pool/ConstantFieldref.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/pool/ConstantFloat.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/pool/ConstantInteger.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/pool/ConstantInterfaceMethodref.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/pool/ConstantInvokeDynamic.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/pool/ConstantLong.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/pool/ConstantMethodHandle.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/pool/ConstantMethodType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/pool/ConstantMethodref.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/pool/ConstantNameAndType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/pool/ConstantString.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/pool/ConstantUtf8.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decompiler/reader/pool/RawConstant.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,8 +86,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Interface" />
-        <option value="Enum" />
         <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -223,6 +278,7 @@
     <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="project.propCompiler" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -318,6 +374,17 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/MethodContainer.java</url>
+          <line>21</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/test/SAMPLER.java">

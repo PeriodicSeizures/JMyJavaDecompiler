@@ -1,6 +1,6 @@
 package test;
 
-import decompiler.reader.JavaUtil;
+import com.crazicrafter1.jripper.Util;
 
 import java.io.*;
 
@@ -29,7 +29,7 @@ public class Test {
 
         //System.out.println(JavaUtil.getFirstType(s2));
 
-        System.out.println(JavaUtil.getMethodArguments(s4));
+        System.out.println(Util.getMethodArguments(s4));
 
         //opcodes();
     }

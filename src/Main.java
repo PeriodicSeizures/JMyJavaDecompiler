@@ -1,5 +1,9 @@
-import decompiler.JavaDecompiler;
-import decompiler.dumper.JavaClass;
+import com.crazicrafter1.jripper.JRipper;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.nio.file.Paths;
 
 public class Main {
 
@@ -32,6 +36,8 @@ public class Main {
      *  --> LocalVariableTypeTable Attribute
      *      - provides signature information
      *      - important for generics (or templates in C++)
+     *
+     *  -->
      */
 
     public static void main(String[] args) {
@@ -43,36 +49,21 @@ public class Main {
         String path = "samples/obfnofall.class";
         //String path = "samples/MathOperations.class";
 
-        JavaDecompiler decompiler = new JavaDecompiler();
 
         try {
-            decompiler.read(path);
 
-            System.out.println("Decoding was successful");
+            File file = Paths.get(path).toFile();
 
-            var rClass = decompiler.getRClass();
+            if (!file.exists()) {
+                throw new FileNotFoundException();
+            }
 
-            System.out.println(rClass);
+            var decompiledClass = JRipper.decompileClass(new FileInputStream(file));
 
-            var myJavaClass = new JavaClass(rClass);
-
-            //System.out.println(decompiler.getRClass().attributeContainer.);
-
-            // will output generated data to the specified stream
-            //myJavaClass.dump()
-
-            System.out.println(myJavaClass);
+            System.out.println(decompiledClass);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        //System.out.println(decompiler.getRClass());
-
-        //System.out.println(decompiler.getJClass().attributeContainer.);
-
-
-
-
 
     }
 
