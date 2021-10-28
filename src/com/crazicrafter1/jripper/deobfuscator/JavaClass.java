@@ -1,16 +1,15 @@
 package com.crazicrafter1.jripper.deobfuscator;
 
-import com.crazicrafter1.jripper.JavaUtil;
+import com.crazicrafter1.jripper.Util;
 import com.crazicrafter1.jripper.decompiler.DecompiledClass;
 import com.crazicrafter1.jripper.decompiler.except.InvalidTypeException;
 import com.crazicrafter1.jripper.decompiler.DecompiledField;
 import com.crazicrafter1.jripper.decompiler.DecompiledMethod;
+import com.crazicrafter1.jripper.decompiler.pool.ConstantFieldref;
 import com.crazicrafter1.jripper.decompiler.pool.ConstantInterfaceMethodref;
 import com.crazicrafter1.jripper.decompiler.pool.ConstantMethodref;
 import com.crazicrafter1.jripper.decompiler.IPoolConstant;
-import com.crazicrafter1.jripper.deobfuscator.valid.ValidatedMethod;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -26,9 +25,12 @@ public class JavaClass {
 
     //private HashMap<String, ValidatedMethod> validatedMethods;// = new LinkedHashMap<>();
 
-    private ArrayList<JavaField> fields = new ArrayList<>();
+    //private ArrayList<JavaField> fields = new ArrayList<>();
+    private HashMap<String, JavaField> fields = new LinkedHashMap<>();
     //private ArrayList<JavaMethod> methods = new ArrayList<>(); // methods should be stored as signatures with names
     private LinkedHashMap<String, JavaMethod> methods = new LinkedHashMap<>();
+
+    private HashSet<String> uniqueMethodNames = new HashSet<>();
 
     private HashMap<String, JavaClass> interfaces = new HashMap<>(); // super interfaces of this class
 
@@ -44,9 +46,7 @@ public class JavaClass {
 
         this.myDecompiledClass = decompiledClass;
 
-        System.out.println(decompiledClass.getPackageAndName());
-
-        String[] packageAndClass = JavaUtil.getPackageAndClass(decompiledClass.getPackageAndName());
+        String[] packageAndClass = Util.getPackageAndClass(decompiledClass.getPackageAndName());
         if (packageAndClass[0] != null)
             packageName = NameUtil.toValidTypeName(packageAndClass[0].replace('/', '.'));
         else packageName = null;
@@ -54,32 +54,29 @@ public class JavaClass {
         className = NameUtil.toValidTypeName(packageAndClass[1]);
 
         superClassName = NameUtil.toValidTypeName(
-                JavaUtil.getUnqualifiedName(decompiledClass.getSuperClassPackageAndName()));
+                Util.getUnqualifiedName(decompiledClass.getSuperClassPackageAndName()));
         flags = decompiledClass.getAccessFlags();
 
-        for (DecompiledField decompiledField : decompiledClass.fieldContainer.fields) {
-            this.fields.add(new JavaField(decompiledField, imports));
+        for (DecompiledField decompiledField : decompiledClass.fieldContainer.getFields()) {
+            this.fields.put(decompiledField.getName(), new JavaField(decompiledField, imports));
             //this.mappedFields.put(rawClassFile.fnew JavaField(rawField, imports));
         }
 
-
-        for (DecompiledMethod decompiledMethod : decompiledClass.methodContainer.methods) {
-            //validatedMethods.
-            var v
-            if (methods.get(decompiledMethod.getName())) {
-
+        for (DecompiledMethod decompiledMethod : decompiledClass.methodContainer.getMethods()) {
+            // If a duplicate method already exists, then rename
+            String erasureDescriptor = decompiledMethod.getErasureDescriptor();
+            int rename = 0;
+            String newName = decompiledMethod.getMethodName();
+            while (uniqueMethodNames.contains(erasureDescriptor)) {
+                // generate a unique name
+                newName = "renamed_" + (rename++);
             }
-            // test for a collision between name and signatures
-            this.methods.add(new JavaMethod(decompiledMethod, this));
+            String identifier = decompiledMethod.UID();
+            JavaMethod javaMethod = new JavaMethod(decompiledMethod, this);
+            javaMethod.setMutatedMethodName(newName);
+            methods.put(identifier, javaMethod);
+            uniqueMethodNames.add(newName);
         }
-
-        validatedMethods = new LinkedHashMap<>(this.methods);
-
-        for ()
-        validatedMethods
-
-        //this.methods = new DuplicateMethodHandler(rawClassFile.methodContainer,
-        // imports).getJavaMethods();
     }
 
     /**
@@ -89,11 +86,18 @@ public class JavaClass {
      */
     public JavaMethod getMethodByMethodRef(IPoolConstant ref) {
         if (ref instanceof ConstantMethodref mr) {
-            return methods.get(mr.name_and_type_index)
+            return methods.get(mr.UID());
         } else if (ref instanceof ConstantInterfaceMethodref imr) {
-
-        } else
+            throw new UnsupportedOperationException("Not yet implemented");
+            //return methods.get(imr.getDescriptor());
+        }// else
             throw new InvalidTypeException("ref must be some kind of method ref");
+    }
+
+    public JavaField getMappedField(int constant_pool_index) {
+        String originalName = ((ConstantFieldref)myDecompiledClass.getEntry(constant_pool_index)).getFieldName();
+
+        return fields.get(originalName);
     }
 
     public String getPackageName() {
@@ -145,15 +149,15 @@ public class JavaClass {
         s.append(" {\n");
 
         // fields
-        for (JavaField javaField : fields) {
-            s.append(javaField).append(";\n");
+        for (var entry : fields.entrySet()) {
+            s.append(entry.getKey()).append(";\n");
         }
 
         s.append("\n");
 
-        for (JavaMethod javaMethod : methods) {
-            s.append(javaMethod).append("\n\n");
-        }
+        //for (JavaMethod javaMethod : methods) {
+        //    s.append(javaMethod).append("\n\n");
+        //}
 
         s.append("}");
 

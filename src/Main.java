@@ -1,4 +1,5 @@
 import com.crazicrafter1.jripper.JRipper;
+import com.crazicrafter1.jripper.Util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,13 +43,16 @@ public class Main {
 
     public static void main(String[] args) {
 
+        //String path = "samples/inherit/SubClass.class";
+        String path = "out/production/JMyJavaDecompiler/test/virtual/ChildClass.class";
+
+        //String path = "samples/MethodWithFields.class";
         //String path = "samples/SingleConstructor.class";
         //String path = "samples/ConstructorMembersGetSet.class";
         //String path = "samples/ConstantClass.class";
         //String path = "samples/StaticInitializerConstructor.class";
-        String path = "samples/obfnofall.class";
+        //String path = "samples/obfnofall.class";
         //String path = "samples/MathOperations.class";
-
 
         try {
 
@@ -59,8 +63,10 @@ public class Main {
             }
 
             var decompiledClass = JRipper.decompileClass(new FileInputStream(file));
-
             System.out.println(decompiledClass);
+
+            var deObfuscatedClass = JRipper.deobfuscateClass(decompiledClass);
+            System.out.println(deObfuscatedClass);
         } catch (Exception e) {
             e.printStackTrace();
         }

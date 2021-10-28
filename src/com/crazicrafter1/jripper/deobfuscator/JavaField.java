@@ -1,6 +1,6 @@
 package com.crazicrafter1.jripper.deobfuscator;
 
-import com.crazicrafter1.jripper.JavaUtil;
+import com.crazicrafter1.jripper.Util;
 import com.crazicrafter1.jripper.decompiler.DecompiledField;
 
 import java.util.HashSet;
@@ -22,7 +22,7 @@ public class JavaField {
         //    this.type = Util.getType(rawField.getSignature(), retClassImports);
         //} else {
             this.type = NameUtil.toValidName(
-                    JavaUtil.getType(decompiledField.getDescriptor(), retClassImports));
+                    Util.getFieldType(decompiledField.getDescriptor(), retClassImports));
         //}
     }
 

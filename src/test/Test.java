@@ -3,6 +3,8 @@ package test;
 import com.crazicrafter1.jripper.Util;
 
 import java.io.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Test {
     public static void main(String[] args) {
@@ -29,7 +31,9 @@ public class Test {
 
         //System.out.println(JavaUtil.getFirstType(s2));
 
-        System.out.println(Util.getMethodArguments(s4));
+        Set<String> imports = new HashSet<>();
+        System.out.println(Util.getParameterTypes(s7, imports, null));
+        System.out.println(imports);
 
         //opcodes();
     }

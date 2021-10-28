@@ -3,7 +3,7 @@ package com.crazicrafter1.jripper.decompiler;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class MethodContainer extends DecompiledItem {
+public class MethodContainer extends IDecompiled {
 
     private ArrayList<DecompiledMethod> methods = new ArrayList<>();
 
@@ -27,6 +27,10 @@ public class MethodContainer extends DecompiledItem {
 
     public DecompiledMethod getMethod(int index) {
         return methods.get(index);
+    }
+
+    public ArrayList<DecompiledMethod> getMethods() {
+        return methods;
     }
 
     // or get method by

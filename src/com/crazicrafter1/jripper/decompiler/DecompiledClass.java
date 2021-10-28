@@ -4,7 +4,7 @@ import com.crazicrafter1.jripper.Util;
 
 import java.io.IOException;
 
-public class DecompiledClass extends DecompiledItem {
+public class DecompiledClass extends IDecompiled {
 
     private static final int ACC_PUBLIC =        0x0001;
     private static final int ACC_FINAL =         0x0010;
@@ -105,7 +105,7 @@ public class DecompiledClass extends DecompiledItem {
         return (String) getEntry(this_class).get();
     }
 
-    public String getName() {
+    public String getClassName() {
         var pk = Util.getPackageAndClass(getPackageAndName());
         return pk[1];
     }

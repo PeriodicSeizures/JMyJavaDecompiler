@@ -3,9 +3,9 @@ package com.crazicrafter1.jripper.decompiler;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class FieldContainer extends DecompiledItem {
+public class FieldContainer extends IDecompiled {
 
-    public ArrayList<DecompiledField> fields = new ArrayList<>();
+    private ArrayList<DecompiledField> fields = new ArrayList<>();
 
     public FieldContainer(DecompiledClass belongingClass) {
         super(belongingClass);
@@ -13,7 +13,6 @@ public class FieldContainer extends DecompiledItem {
 
     @Override
     public void read(ByteReader bytes) throws IOException {
-
         int fields_count = bytes.readUnsignedShort();
 
         for (; fields_count > 0; fields_count--) {
@@ -23,6 +22,10 @@ public class FieldContainer extends DecompiledItem {
 
             fields.add(field);
         }
+    }
+
+    public ArrayList<DecompiledField> getFields() {
+        return fields;
     }
 
     @Override

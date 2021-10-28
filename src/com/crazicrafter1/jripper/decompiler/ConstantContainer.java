@@ -6,7 +6,7 @@ import com.crazicrafter1.jripper.decompiler.pool.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ConstantContainer extends DecompiledItem {
+public class ConstantContainer extends IDecompiled {
 
     private final static int CONSTANT_CLASS =               7;
     private final static int CONSTANT_FIELDREF =            9;

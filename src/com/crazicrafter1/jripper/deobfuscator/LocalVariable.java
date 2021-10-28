@@ -1,7 +1,6 @@
 package com.crazicrafter1.jripper.deobfuscator;
 
-import com.crazicrafter1.jripper.JavaUtil;
-import com.crazicrafter1.jripper.decompiler.attributes.LocalVariableTableAttribute;
+import com.crazicrafter1.jripper.decompiler.attributes.CodeAttr;
 
 import java.util.ArrayList;
 
@@ -29,15 +28,15 @@ public class LocalVariable {
         return value;
     }
 
-    public static LocalVariable[] from(CodeAttribute atr) {
-        ArrayList<LocalVariableTableAttribute.Var> _locals = atr.getLocalVariableTable();
+    //public static LocalVariable[] from(CodeAttr atr) {
+    //    ArrayList<LocalVariableTableAttribute.Var> _locals = atr.getLocalVariableTable();
 
-        LocalVariable[] localVariables = new LocalVariable[_locals.size()];
+    //    LocalVariable[] localVariables = new LocalVariable[_locals.size()];
 
-        for (LocalVariableTableAttribute.Var entry : _locals) {
-            localVariables[entry.getIndex()] = new LocalVariable(
-                    JavaUtil.getUnqualifiedName(entry.getDescriptor()), entry.getName(), "");
-        }
-        return localVariables;
-    }
+    //    for (LocalVariableTableAttribute.Var entry : _locals) {
+    //        localVariables[entry.getIndex()] = new LocalVariable(
+    //                JavaUtil.getUnqualifiedName(entry.getDescriptor()), entry.getName(), "");
+    //    }
+    //    return localVariables;
+    //}
 }

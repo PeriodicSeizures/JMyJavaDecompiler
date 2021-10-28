@@ -1,11 +1,12 @@
 package com.crazicrafter1.jripper.deobfuscator;
 
-import com.crazicrafter1.jripper.JavaUtil;
+import com.crazicrafter1.jripper.Util;
 import com.crazicrafter1.jripper.decompiler.Opcode;
-import com.crazicrafter1.jripper.decompiler.DecompiledItem;
 import com.crazicrafter1.jripper.decompiler.DecompiledMethod;
+import com.crazicrafter1.jripper.decompiler.attributes.CodeAttr;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class JavaMethod {
 
@@ -13,60 +14,67 @@ public class JavaMethod {
     /*
      * Bytecode parsed
      */
-    private final String methodName;
+    private String mutatedMethodName;
     private final ArrayList<String> args;
-    private final String returnType;
+    private String mutatedReturnType;       /// TODO this MUST NOT MUTATE
+                                            /// should point to a return type,
+                                            /// Return type is easy to mutate for validity
+                                            /// just validating should be it
 
-    private DecompiledMethod myDecompiledMethod;
+    private DecompiledMethod decompiledMethod;
 
     private ArrayList<String> generatedCode = new ArrayList<>();
 
     public JavaMethod(DecompiledMethod decompiledMethod, JavaClass parentJavaClass) {
 
-        if (decompiledMethod.getName().equals("<init>")) {
-            methodName = parentJavaClass.getClassName();
-            this.returnType = null;
+        this.decompiledMethod = decompiledMethod;
+
+        HashSet<String> inImports = new HashSet<>();
+        StringBuilder inReturnType = new StringBuilder();
+        ArrayList<String> parameterTypes = Util.getParameterTypes(decompiledMethod.getMethodDescriptor(), inImports, inReturnType);
+
+        if (decompiledMethod.isInstanceInitializer()) {
+            setMutatedMethodName(parentJavaClass.getClassName());
+            this.mutatedReturnType = null;
         }
-        else if (decompiledMethod.getName().equals("<clinit>")) {
-            methodName = null;
-            returnType = null;
+        else if (decompiledMethod.isStaticInitializer()) {
+            mutatedMethodName = null;
+            mutatedReturnType = null;
         } else {
             //this.methodName = NameUtil.toValidName(
             //        JavaUtil.getUnqualifiedName(rMethod.getName()));
-            this.methodName = decompiledMethod
-            this.returnType = NameUtil.toValidName(
-                    JavaUtil.getReturnType(decompiledMethod.getDescriptor(), null));
+
+            setMutatedMethodName(decompiledMethod.getMethodName());
+            //this.returnType;
+
+            this.mutatedReturnType = inReturnType.toString();
         }
 
         this.args = new ArrayList<>();
-        var typedArgs = JavaUtil.getMethodArguments(decompiledMethod.getDescriptor()).args;
-        for (int i=0; i < typedArgs.size(); i++) {
-            this.args.add(NameUtil.toValidTypeName(typedArgs.get(i)));
+        for (String parameterType : parameterTypes) {
+            //TODO independent wrapper for both TYPE and NAME for locals
+            this.args.add(NameUtil.toValidTypeName(parameterType));
         }
 
-        this.myDecompiledMethod = decompiledMethod;
+        this.decompiledMethod = decompiledMethod;
 
         parseRawBody();
     }
 
-    public void setUniqueMethodName(String uniqueMethodName) {
-        this.uniqueMethodName = uniqueMethodName;
+    public DecompiledMethod getDecompiledMethod() {
+        return this.decompiledMethod;
     }
 
-    public String getMethodName() {
-        return methodName;
-    }
-
-    private DecompiledMethod getRMethod() {
-        return this.myDecompiledMethod;
+    public void setMutatedMethodName(String newName) {
+        this.mutatedMethodName = Util.toValidName(newName);
     }
 
     // https://stackoverflow.com/questions/61000749/local-variable-table-in-jvm-stack
     private void parseRawBody() {
-        CodeAttribute codeAttribute = this.getRMethod().getCode();
+        CodeAttr codeAttribute = this.getDecompiledMethod().getCode();
         ArrayList<Integer> code = codeAttribute.code;
 
-        LocalVariable[] LOCALS = LocalVariable.from(codeAttribute);
+        LocalVariable[] LOCALS = null; //LocalVariable.from(codeAttribute);
 
         //ArrayList<String> OPERAND_STACK = new ArrayList<>(); // changes as operations are performed on the stack
 
@@ -255,7 +263,7 @@ public class JavaMethod {
                     STACK.push("5");
                     continue;
                 case LDC:           // push constant
-                    STACK.push("" + DecompiledItem.getEntry(code.get(++index)).getValue());
+                    STACK.push("" + decompiledMethod.getBelongingClass().getEntry(code.get(++index)));
                     continue;
                 case BIPUSH:
                     int v = (byte) (int) code.get(++index); // two's complement
@@ -271,9 +279,9 @@ public class JavaMethod {
                     // set class member field at 'field_index' to popped value
 
                     // not the best solution below...
-                    generatedCode.add("this." +
-                            NameUtil.toValidName(DecompiledItem.getEntry(field_index).getName()) +
-                            " = " + STACK.pop() + ";");
+                    //generatedCode.add("this." +
+                    //        NameUtil.toValidName(IDecompiled.getEntry(field_index).getName()) +
+                    //        " = " + STACK.pop() + ";");
                     continue;
                 /*
                     TODO:
@@ -293,10 +301,10 @@ public class JavaMethod {
                 }
                 case NEW: {
                     int constIndex = (code.get(++index) << 8) | code.get(++index);
-                    String newName = NameUtil.toValidTypeName(
-                            JavaUtil.getUnqualifiedName((String) DecompiledItem.getEntry(constIndex).getValue()));
+                    //String newName = NameUtil.toValidTypeName(
+                    //        JavaUtil.getUnqualifiedName((String) IDecompiled.getEntry(constIndex).getValue()));
 
-                    STACK.push("new " + newName + "()");
+                    //STACK.push("new " + newName + "()");
                     //index += 2;
                     continue;
                 }
@@ -329,25 +337,25 @@ public class JavaMethod {
         /*
          * static initializer
          */
-        if (methodName == null && returnType == null) {
+        if (mutatedMethodName == null && mutatedReturnType == null) {
             s.append("//<clinit>\n");
             s.append("static {");
             s.append("\n");
             s.append("}");
             return s.toString();
-        } else if (returnType == null) {
+        } else if (mutatedReturnType == null) {
             s.append("//<init>\n");
         }
 
         // access flags
-        s.append(getRMethod().getAccessFlags());
+        s.append(getDecompiledMethod().getAccessFlags());
 
         // return type
-        if (returnType != null)
-            s.append(" ").append(returnType);
+        if (mutatedReturnType != null)
+            s.append(" ").append(mutatedReturnType);
 
         // name
-        s.append(" ").append(methodName);
+        s.append(" ").append(mutatedMethodName);
 
         // args
         s.append("(");

@@ -24,12 +24,24 @@ public class ConstantMethodref extends IPoolConstant {
         return (ConstantClass) getEntry(class_index);
     }
 
-    public String getDescriptor() {
+    public String getUid() {
+        return getMethodDescriptor();
+    }
+
+    public String getMethodDescriptor() {
         return ((ConstantNameAndType) getEntry(name_and_type_index)).getDescriptor();
+    }
+
+    public String getMethodName() {
+        return ((ConstantNameAndType) getEntry(name_and_type_index)).getName();
+    }
+
+    public String UID() {
+        return getBelongingClass().getClassName() + "::" + getMethodName() + getMethodDescriptor();
     }
 
     @Override
     public String toString() {
-        return "{Methodref} \tclass: " + getPointingClass().get() + ", " + getDescriptor();
+        return "{Methodref} \tclass: " + getPointingClass().get() + ", " + getMethodDescriptor() + " " + getMethodName();
     }
 }

@@ -5,7 +5,7 @@ import com.crazicrafter1.jripper.decompiler.attributes.EnumAttr;
 
 import java.io.IOException;
 
-public class DecompiledMethod extends DecompiledItem {
+public class DecompiledMethod extends IDecompiled {
 
     /*
         method access flags
@@ -48,6 +48,32 @@ public class DecompiledMethod extends DecompiledItem {
         attributeContainer.read(bytes);
 
         //this.myRClass = currentClassInstance;
+    }
+
+    /**
+     * Get the name + parameter descriptor
+     * @return methodName(ILjava/lang/String;)
+     */
+    public String getErasureDescriptor() {
+        if (!isInstanceInitializer() && !isStaticInitializer()) {
+            var methodDescriptor = getMethodDescriptor();
+            var parameterDescriptor = methodDescriptor.substring(0, methodDescriptor.indexOf(")") + 1);
+            return getMethodName() + parameterDescriptor;
+        }
+        return getMethodName();
+    }
+
+    public String UID() {
+        /// DecompiledMethod::UID()Ljava/lang/String;
+        return getBelongingClass().getClassName() + "::" + getMethodName() + getMethodDescriptor();
+    }
+
+    public boolean isInstanceInitializer() {
+        return getMethodName().equals("<init>");
+    }
+
+    public boolean isStaticInitializer() {
+        return getMethodName().equals("<clinit>");
     }
 
     public boolean isStatic() {
@@ -101,7 +127,7 @@ public class DecompiledMethod extends DecompiledItem {
         return s.toString().trim();
     }
 
-    public String getDescriptor() {
+    public String getMethodDescriptor() {
         return (String) getEntry(descriptor_index).get();
     }
 
@@ -115,7 +141,7 @@ public class DecompiledMethod extends DecompiledItem {
                 attributeContainer;
     }
 
-    public String getName() {
+    public String getMethodName() {
         return (String) getEntry(name_index).get();
     }
 }

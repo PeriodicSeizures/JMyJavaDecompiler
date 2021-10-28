@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AttributeContainer extends DecompiledItem {
+public class AttributeContainer extends IDecompiled {
 
     private final HashMap<EnumAttr, IAttr> attribute_map = new HashMap<>();
     private final ArrayList<String> ignored = new ArrayList<>();
@@ -37,7 +37,7 @@ public class AttributeContainer extends DecompiledItem {
                 float atr_version = Float.parseFloat(atr.major + "." + atr.minor);
 
                 if (class_version >= atr_version) {
-                    IAttr javaAttribute = atr.clazz.getConstructor().newInstance();
+                    IAttr javaAttribute = atr.clazz.getConstructor(DecompiledClass.class).newInstance(belongingClass);
 
                     javaAttribute.read(bytes);
                     attribute_map.put(atr, javaAttribute);

@@ -25,16 +25,16 @@ public class ConstantFieldref extends IPoolConstant {
         return (ConstantClass) getEntry(class_index);
     }
 
-    public String getName() {
+    public String getFieldName() {
         return ((ConstantNameAndType)getEntry(name_and_type_index)).getName();
     }
 
-    public String getDescriptor() {
+    public String getFieldDescriptor() {
         return ((ConstantNameAndType) getEntry(name_and_type_index)).getDescriptor();
     }
 
     @Override
     public String toString() {
-        return "{Fieldref} \tclass: " + getPointingClass() + ", " + getDescriptor();
+        return "{Fieldref} \tclass: " + getPointingClass() + ", " + getFieldDescriptor() + " " + getFieldName();
     }
 }

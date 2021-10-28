@@ -3,7 +3,7 @@ package com.crazicrafter1.jripper.decompiler;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class InterfaceContainer extends DecompiledItem {
+public class InterfaceContainer extends IDecompiled {
 
     private ArrayList<Integer> interfaces = new ArrayList<>();
 

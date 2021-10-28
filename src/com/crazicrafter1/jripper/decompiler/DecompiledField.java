@@ -4,7 +4,7 @@ import com.crazicrafter1.jripper.Util;
 
 import java.io.IOException;
 
-public class DecompiledField extends DecompiledItem {
+public class DecompiledField extends IDecompiled {
 
     /*
         field access flags

@@ -3,6 +3,7 @@ package com.crazicrafter1.jripper;
 import com.crazicrafter1.jripper.decompiler.ByteReader;
 import com.crazicrafter1.jripper.decompiler.DecompiledClass;
 import com.crazicrafter1.jripper.decompiler.except.NoMagicHeaderException;
+import com.crazicrafter1.jripper.deobfuscator.JavaClass;
 
 import java.io.*;
 import java.util.Enumeration;
@@ -43,5 +44,9 @@ public class JRipper {
         }
 
         return classes;
+    }
+
+    public static JavaClass deobfuscateClass(DecompiledClass decompiledClass) {
+        return new JavaClass(decompiledClass);
     }
 }

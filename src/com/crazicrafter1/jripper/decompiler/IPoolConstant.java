@@ -1,6 +1,6 @@
 package com.crazicrafter1.jripper.decompiler;
 
-public abstract class IPoolConstant extends DecompiledItem {
+public abstract class IPoolConstant extends IDecompiled {
 
     public IPoolConstant(DecompiledClass belongingClass) {
         super(belongingClass);
