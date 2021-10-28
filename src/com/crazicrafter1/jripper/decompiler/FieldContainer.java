@@ -16,7 +16,7 @@ public class FieldContainer extends IDecompiled {
         int fields_count = bytes.readUnsignedShort();
 
         for (; fields_count > 0; fields_count--) {
-            DecompiledField field = new DecompiledField(belongingClass);
+            DecompiledField field = new DecompiledField(getMainClass());
 
             field.read(bytes);
 

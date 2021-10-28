@@ -5,60 +5,95 @@ import com.crazicrafter1.jripper.decompiler.Opcode;
 import com.crazicrafter1.jripper.decompiler.DecompiledMethod;
 import com.crazicrafter1.jripper.decompiler.attributes.CodeAttr;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.*;
 
-public class JavaMethod {
+public class JavaMethod extends IDeobfuscated {
 
+    static class Parameter {
+        String mutatedType;
+        String mutatedName;
+
+        public Parameter(String mutatedType, String mutatedName) {
+            this.mutatedType = mutatedType;
+            this.mutatedName = mutatedName;
+        }
+    }
 
     /*
      * Bytecode parsed
      */
     private String mutatedMethodName;
-    private final ArrayList<String> args;
-    private String mutatedReturnType;       /// TODO this MUST NOT MUTATE
-                                            /// should point to a return type,
-                                            /// Return type is easy to mutate for validity
-                                            /// just validating should be it
+    //private final ArrayList<String> args = new ArrayList<>();
 
-    private DecompiledMethod decompiledMethod;
+    // Locals are referenced in method by INDEX,
+    // But names have to be unique
+    //private final Map<String, Local> locals = new LinkedHashMap<>();
+    private final Set<String> locals = new LinkedHashSet<>();
+    private String mutatedReturnType;
 
-    private ArrayList<String> generatedCode = new ArrayList<>();
+    private Map<String, Parameter> parameterMap = new LinkedHashMap<>();
 
-    public JavaMethod(DecompiledMethod decompiledMethod, JavaClass parentJavaClass) {
+    private final DecompiledMethod decompiledMethod;
 
+    private final ArrayList<String> generatedCode = new ArrayList<>();
+
+    public JavaMethod(JavaClass parentJavaClass, DecompiledMethod decompiledMethod) {
+        super(parentJavaClass);
         this.decompiledMethod = decompiledMethod;
+    }
 
+    @Override
+    public void process() {
         HashSet<String> inImports = new HashSet<>();
         StringBuilder inReturnType = new StringBuilder();
-        ArrayList<String> parameterTypes = Util.getParameterTypes(decompiledMethod.getMethodDescriptor(), inImports, inReturnType);
 
-        if (decompiledMethod.isInstanceInitializer()) {
-            setMutatedMethodName(parentJavaClass.getClassName());
-            this.mutatedReturnType = null;
-        }
-        else if (decompiledMethod.isStaticInitializer()) {
-            mutatedMethodName = null;
-            mutatedReturnType = null;
+        ArrayList<String> parameterTypes =
+                Util.getParameterTypes(
+                        decompiledMethod.getMethodDescriptor(),
+                        inImports,
+                        inReturnType);
+
+        /**
+         * Parameter types will not this reference,
+         * so add this to locals only if
+         */
+
+        // Only completely empty initializer
+        if (decompiledMethod.isStaticInitializer()) {
+            // Nothing
         } else {
-            //this.methodName = NameUtil.toValidName(
-            //        JavaUtil.getUnqualifiedName(rMethod.getName()));
+            // if instance method or constructor
+            if (decompiledMethod.isInstanceInitializer() || !decompiledMethod.isStatic()) {
+
+                locals.add("this");
+
+                // No return type
+                if (decompiledMethod.isInstanceInitializer()) {
+                    mutatedReturnType = null;
+                } else {
+                    mutatedReturnType = Util.toValidTypeName(inReturnType.toString());
+                }
+            } else
+                mutatedReturnType = Util.toValidTypeName(inReturnType.toString());
 
             setMutatedMethodName(decompiledMethod.getMethodName());
-            //this.returnType;
 
-            this.mutatedReturnType = inReturnType.toString();
+            // Has parameters
+            parameterTypes.forEach(parameterType -> {
+                String validatedType = Util.toValidTypeName(parameterType);
+                final String localMutatedName = validatedType.substring(0, 1).toLowerCase() + validatedType.substring(1);
+
+                String end = localMutatedName;
+                int id = 0;
+                while (locals.contains(end))
+                    end = localMutatedName + (id++);
+
+                locals.add(end);
+                this.parameterMap.put(end, new Parameter(validatedType, end));
+            });
         }
 
-        this.args = new ArrayList<>();
-        for (String parameterType : parameterTypes) {
-            //TODO independent wrapper for both TYPE and NAME for locals
-            this.args.add(NameUtil.toValidTypeName(parameterType));
-        }
-
-        this.decompiledMethod = decompiledMethod;
-
-        parseRawBody();
+        ((JavaClass)getParentDeobfuscator()).addClassImports(inImports);
     }
 
     public DecompiledMethod getDecompiledMethod() {
@@ -69,12 +104,26 @@ public class JavaMethod {
         this.mutatedMethodName = Util.toValidName(newName);
     }
 
+    public String getLocal(int index) {
+        int i = 0;
+        for (String entry : locals) {
+            if (i == index) {
+                return entry;
+            }
+            i++;
+        }
+        throw new IndexOutOfBoundsException("Index " + index + " exceeds local size");
+    }
+
+    //private ArrayList<String>
+
     // https://stackoverflow.com/questions/61000749/local-variable-table-in-jvm-stack
-    private void parseRawBody() {
+    private void generateMethodBody() {
         CodeAttr codeAttribute = this.getDecompiledMethod().getCode();
         ArrayList<Integer> code = codeAttribute.code;
 
-        LocalVariable[] LOCALS = null; //LocalVariable.from(codeAttribute);
+
+        //LocalVariable[] LOCALS = null; //LocalVariable.from(codeAttribute);
 
         //ArrayList<String> OPERAND_STACK = new ArrayList<>(); // changes as operations are performed on the stack
 
@@ -100,37 +149,36 @@ public class JavaMethod {
                 case LLOAD:
                 case ALOAD:         // push ref
                     STACK.push(
-                            LOCALS[
-                            code.get(++index)].
-                                    getName());
+                            getLocal(
+                            code.get(++index)));
                     continue;
                 case ILOAD_0:       // push local@0
                 case FLOAD_0:
                 case DLOAD_0:
                 case LLOAD_0:
                 case ALOAD_0:       // push ref
-                    STACK.push(LOCALS[0].getName());
+                    STACK.push(getLocal(0));
                     continue;
                 case ILOAD_1:       // push local@1
                 case FLOAD_1:
                 case DLOAD_1:
                 case LLOAD_1:
                 case ALOAD_1:       // push ref
-                    STACK.push(LOCALS[1].getName());
+                    STACK.push(getLocal(1));
                     continue;
                 case ILOAD_2:       // push local@2
                 case FLOAD_2:
                 case DLOAD_2:
                 case LLOAD_2:
                 case ALOAD_2:       // push ref
-                    STACK.push(LOCALS[2].getName());
+                    STACK.push(getLocal(2));
                     continue;
                 case ILOAD_3:       // push local@3
                 case FLOAD_3:
                 case DLOAD_3:
                 case LLOAD_3:
                 case ALOAD_3:       // push ref
-                    STACK.push(LOCALS[3].getName());
+                    STACK.push(getLocal(3));
                     continue;
                 case IADD:          // add
                 case FADD:
@@ -163,9 +211,9 @@ public class JavaMethod {
                     STACK.rem();
                     continue;
                 case IINC:          // increment by next byte
-                    LocalVariable local = LOCALS[code.get(++index)];
+                    String first = getLocal(++index);
 
-                    generatedCode.add(local.getName() + " += " + code.get(++index) + ";");
+                    generatedCode.add(first + " += " + getLocal(++index) + ";");
                     continue;
                 case F2I:           // cast to int
                 case D2I:
@@ -213,31 +261,31 @@ public class JavaMethod {
                 case FSTORE:
                 case DSTORE:
                 case LSTORE:
-                    generatedCode.add(LOCALS[code.get(++index)].getName() + " = " + STACK.pop() + ";");
+                    generatedCode.add(getLocal(++index) + " = " + STACK.pop() + ";");
                     continue;
                 case ISTORE_0:      // pop and assign to local@0
                 case FSTORE_0:
                 case DSTORE_0:
                 case LSTORE_0:
-                    generatedCode.add(LOCALS[0].getName() + " = " + STACK.pop() + ";");
+                    generatedCode.add(getLocal(0) + " = " + STACK.pop() + ";");
                     continue;
                 case ISTORE_1:      // pop and assign to local@1
                 case FSTORE_1:
                 case DSTORE_1:
                 case LSTORE_1:
-                    generatedCode.add(LOCALS[1].getName() + " = " + STACK.pop() + ";");
+                    generatedCode.add(getLocal(1) + " = " + STACK.pop() + ";");
                     continue;
                 case ISTORE_2:      // pop and assign to local@2
                 case FSTORE_2:
                 case DSTORE_2:
                 case LSTORE_2:
-                    generatedCode.add(LOCALS[2].getName() + " = " + STACK.pop() + ";");
+                    generatedCode.add(getLocal(2) + " = " + STACK.pop() + ";");
                     continue;
                 case ISTORE_3:      // pop and assign to local@3
                 case FSTORE_3:
                 case DSTORE_3:
                 case LSTORE_3:
-                    generatedCode.add(LOCALS[3].getName() + " = " + STACK.pop() + ";");
+                    generatedCode.add(getLocal(3) + " = " + STACK.pop() + ";");
                     continue;
                 case ICONST_M1:     // push -1
                     STACK.push("-1");
@@ -263,7 +311,7 @@ public class JavaMethod {
                     STACK.push("5");
                     continue;
                 case LDC:           // push constant
-                    STACK.push("" + decompiledMethod.getBelongingClass().getEntry(code.get(++index)));
+                    STACK.push("" + decompiledMethod.getMainClass().getEntry(code.get(++index)));
                     continue;
                 case BIPUSH:
                     int v = (byte) (int) code.get(++index); // two's complement
@@ -360,10 +408,12 @@ public class JavaMethod {
         // args
         s.append("(");
 
-        if (args != null) {
-            for (int i = 0; i < args.size(); i++) {
-                s.append(args.get(i));
-                if (i != args.size() - 1) {
+
+        if (!parameterMap.isEmpty()) {
+            int i = 0;
+            for (Map.Entry<String, Parameter> entry : parameterMap.entrySet()) {
+                s.append(entry.getValue().mutatedType).append(" ").append(entry.getValue().mutatedName);
+                if (i != parameterMap.size() - 1) {
                     s.append(", ");
                 }
             }
@@ -373,6 +423,8 @@ public class JavaMethod {
 
         // exceptions
         // s.append("throws"); ...
+
+        generateMethodBody();
 
         // body
         for (int i=0; i<generatedCode.size(); i++) {

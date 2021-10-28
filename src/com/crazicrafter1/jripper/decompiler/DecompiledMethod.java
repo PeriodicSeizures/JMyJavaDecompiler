@@ -35,19 +35,15 @@ public class DecompiledMethod extends IDecompiled {
         super(belongingClass);
     }
 
-    //private RClass myRClass;
-
     @Override
     public void read(ByteReader bytes) throws IOException {
-        attributeContainer = new AttributeContainer(belongingClass);
+        attributeContainer = new AttributeContainer(getMainClass());
 
         access_flags = bytes.readUnsignedShort();
         name_index = bytes.readUnsignedShort();
         descriptor_index = bytes.readUnsignedShort();
 
         attributeContainer.read(bytes);
-
-        //this.myRClass = currentClassInstance;
     }
 
     /**
@@ -56,16 +52,25 @@ public class DecompiledMethod extends IDecompiled {
      */
     public String getErasureDescriptor() {
         if (!isInstanceInitializer() && !isStaticInitializer()) {
-            var methodDescriptor = getMethodDescriptor();
-            var parameterDescriptor = methodDescriptor.substring(0, methodDescriptor.indexOf(")") + 1);
+            String methodDescriptor = getMethodDescriptor();
+            String parameterDescriptor = methodDescriptor.substring(0, methodDescriptor.indexOf(")") + 1);
             return getMethodName() + parameterDescriptor;
         }
         return getMethodName();
     }
 
+    //public String getParameterDescriptor() {
+    //    var methodDescriptor = getMethodDescriptor();
+    //    return methodDescriptor.substring(1, methodDescriptor.indexOf(")"));
+    //}
+
+    public String getMethodDescriptor() {
+        return (String) getEntry(descriptor_index).get();
+    }
+
     public String UID() {
         /// DecompiledMethod::UID()Ljava/lang/String;
-        return getBelongingClass().getClassName() + "::" + getMethodName() + getMethodDescriptor();
+        return getMainClass().getClassName() + "::" + getMethodName() + getMethodDescriptor();
     }
 
     public boolean isInstanceInitializer() {
@@ -127,21 +132,17 @@ public class DecompiledMethod extends IDecompiled {
         return s.toString().trim();
     }
 
-    public String getMethodDescriptor() {
-        return (String) getEntry(descriptor_index).get();
-    }
-
     public CodeAttr getCode() {
         return (CodeAttr) attributeContainer.get(EnumAttr.Code);
     }
 
-    @Override
-    public String toString() {
-        return "{RawMethod} " + getEntry(descriptor_index).get() + "\n" +
-                attributeContainer;
-    }
-
     public String getMethodName() {
         return (String) getEntry(name_index).get();
+    }
+
+    @Override
+    public String toString() {
+        return "{RawMethod} " + getMethodDescriptor() + "\n" +
+                attributeContainer;
     }
 }

@@ -43,7 +43,7 @@ public class CodeAttr extends IAttr {
 
     @Override
     public void read(ByteReader bytes) throws IOException {
-        attribute_container = new AttributeContainer(belongingClass);
+        attribute_container = new AttributeContainer(getMainClass());
 
         max_stack = bytes.readUnsignedShort();
         max_locals = bytes.readUnsignedShort();
@@ -55,7 +55,7 @@ public class CodeAttr extends IAttr {
 
         int exception_table_length = bytes.readUnsignedShort();
         for (; exception_table_length > 0; exception_table_length--) {
-            JExcept entry = new JExcept(belongingClass);
+            JExcept entry = new JExcept(getMainClass());
             entry.read(bytes);
             exception_table.add(entry);
         }

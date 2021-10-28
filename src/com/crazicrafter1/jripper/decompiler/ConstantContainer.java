@@ -52,21 +52,21 @@ public class ConstantContainer extends IDecompiled {
             int tag = bytes.readUnsignedByte();
 
             switch (tag) {
-                case CONSTANT_CLASS -> entry = new ConstantClass(belongingClass);
-                case CONSTANT_FIELDREF -> entry = new ConstantFieldref(belongingClass);
-                case CONSTANT_METHODREF -> entry = new ConstantMethodref(belongingClass);
-                case CONSTANT_INTERFACEMETHODREF -> entry = new ConstantInterfaceMethodref(belongingClass);
-                case CONSTANT_STRING -> entry = new ConstantString(belongingClass);
-                case CONSTANT_INTEGER -> entry = new ConstantInteger(belongingClass);
-                case CONSTANT_FLOAT -> entry = new ConstantFloat(belongingClass);
-                case CONSTANT_LONG -> entry = new ConstantLong(belongingClass);
-                case CONSTANT_DOUBLE -> entry = new ConstantDouble(belongingClass);
-                case CONSTANT_NAMEANDTYPE -> entry = new ConstantNameAndType(belongingClass);
-                case CONSTANT_UTF8 -> entry = new ConstantUtf8(belongingClass);
-                case CONSTANT_METHODHANDLE -> entry = new ConstantMethodHandle(belongingClass);
-                case CONSTANT_METHODTYPE -> entry = new ConstantMethodType(belongingClass);
-                case CONSTANT_INVOKEDYNAMIC -> entry = new ConstantInvokeDynamic(belongingClass);
-                default -> throw new InvalidConstantPoolEntryException("constant tagged " + tag + " does not exist");
+                case CONSTANT_CLASS: entry = new ConstantClass(getMainClass()); break;
+                case CONSTANT_FIELDREF: entry = new ConstantFieldref(getMainClass()); break;
+                case CONSTANT_METHODREF: entry = new ConstantMethodref(getMainClass()); break;
+                case CONSTANT_INTERFACEMETHODREF: entry = new ConstantInterfaceMethodref(getMainClass()); break;
+                case CONSTANT_STRING: entry = new ConstantString(getMainClass()); break;
+                case CONSTANT_INTEGER: entry = new ConstantInteger(getMainClass()); break;
+                case CONSTANT_FLOAT: entry = new ConstantFloat(getMainClass()); break;
+                case CONSTANT_LONG: entry = new ConstantLong(getMainClass()); break;
+                case CONSTANT_DOUBLE: entry = new ConstantDouble(getMainClass()); break;
+                case CONSTANT_NAMEANDTYPE: entry = new ConstantNameAndType(getMainClass()); break;
+                case CONSTANT_UTF8: entry = new ConstantUtf8(getMainClass()); break;
+                case CONSTANT_METHODHANDLE: entry = new ConstantMethodHandle(getMainClass()); break;
+                case CONSTANT_METHODTYPE: entry = new ConstantMethodType(getMainClass()); break;
+                case CONSTANT_INVOKEDYNAMIC: entry = new ConstantInvokeDynamic(getMainClass()); break;
+                default: throw new InvalidConstantPoolEntryException("constant tagged " + tag + " does not exist");
             }
 
             entry.read(bytes);
@@ -87,8 +87,8 @@ public class ConstantContainer extends IDecompiled {
     }
 
     public IPoolConstant getEntry(int i) {
-        return belongingClass.constantPoolContainer.constants.get(
-                belongingClass.constantPoolContainer.spaced_indexes.get(i-1));
+        return getMainClass().constantPoolContainer.constants.get(
+                getMainClass().constantPoolContainer.spaced_indexes.get(i-1));
     }
 
     @Override

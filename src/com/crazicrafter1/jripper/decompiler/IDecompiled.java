@@ -4,19 +4,19 @@ import java.io.IOException;
 
 public abstract class IDecompiled {
 
-    protected final DecompiledClass belongingClass;
+    private final DecompiledClass mainClass;
 
-    public IDecompiled(DecompiledClass belongingClass) {
-        this.belongingClass = belongingClass;
+    public IDecompiled(DecompiledClass mainClass) {
+        this.mainClass = mainClass;
     }
 
     public abstract void read(ByteReader bytes) throws IOException;
 
-    public DecompiledClass getBelongingClass() {
-        return belongingClass;
+    public DecompiledClass getMainClass() {
+        return mainClass;
     }
 
     public IPoolConstant getEntry(int i) {
-        return belongingClass.constantPoolContainer.getEntry(i);
+        return mainClass.constantPoolContainer.getEntry(i);
     }
 }

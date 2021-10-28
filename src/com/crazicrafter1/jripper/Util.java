@@ -50,7 +50,7 @@ public class Util {
         StringBuilder remaining = new StringBuilder(
                 methodDescriptor.substring(1, methodDescriptor.indexOf(")")));
 
-        while (!remaining.isEmpty()) {
+        while (remaining.length() != 0) {
             args.add(getNextFieldType(remaining.toString(), outImports, remaining));
         }
 
@@ -145,8 +145,9 @@ public class Util {
                                     0, match.lastIndexOf('.') + 1), "");
                 }
 
-                return parameterDescriptor.replaceAll(";", "").
-                        replaceAll(",", ", ");
+                return toValidTypeName(
+                        parameterDescriptor.replaceAll(";", "").
+                        replaceAll(",", ", "));
             }
             default: throw new InvalidTypeException("type is invalid; class might be corrupted");
         }
@@ -198,7 +199,8 @@ public class Util {
                     }
                 }
 
-                return fieldDescriptor.replaceAll(",", ", ");
+                return toValidTypeName(
+                        fieldDescriptor.replaceAll(",", ", "));
             }
             default: {
                 throw new InvalidTypeException("type " + c + " is invalid");

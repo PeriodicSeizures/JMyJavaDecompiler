@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/JMyJavaDecompiler.iml" filepath="$PROJECT_DIR$/JMyJavaDecompiler.iml" />
+      <module fileurl="file://$PROJECT_DIR$/JRipper.iml" filepath="$PROJECT_DIR$/JRipper.iml" />
     </modules>
   </component>
 </project>

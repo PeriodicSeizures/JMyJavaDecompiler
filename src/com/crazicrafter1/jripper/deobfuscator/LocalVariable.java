@@ -4,13 +4,14 @@ import com.crazicrafter1.jripper.decompiler.attributes.CodeAttr;
 
 import java.util.ArrayList;
 
-public class LocalVariable {
+public class LocalVariable  {
 
     private final String type;
     private final String name;
     private String value;
 
     public LocalVariable(String type, String name, String value) {
+
         this.type = type;
         this.name = name;
         this.value = value;

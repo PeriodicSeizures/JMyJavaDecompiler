@@ -33,11 +33,11 @@ public class AttributeContainer extends IDecompiled {
             try {
                 EnumAttr atr = EnumAttr.valueOf(name);
 
-                float class_version = Float.parseFloat(belongingClass.getClassVersion());
+                float class_version = Float.parseFloat(getMainClass().getClassVersion());
                 float atr_version = Float.parseFloat(atr.major + "." + atr.minor);
 
                 if (class_version >= atr_version) {
-                    IAttr javaAttribute = atr.clazz.getConstructor(DecompiledClass.class).newInstance(belongingClass);
+                    IAttr javaAttribute = atr.clazz.getConstructor(DecompiledClass.class).newInstance(getMainClass());
 
                     javaAttribute.read(bytes);
                     attribute_map.put(atr, javaAttribute);

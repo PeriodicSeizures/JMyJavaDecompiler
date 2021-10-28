@@ -106,7 +106,7 @@ public class DecompiledClass extends IDecompiled {
     }
 
     public String getClassName() {
-        var pk = Util.getPackageAndClass(getPackageAndName());
+        String[] pk = Util.getPackageAndClass(getPackageAndName());
         return pk[1];
     }
 
@@ -121,7 +121,7 @@ public class DecompiledClass extends IDecompiled {
     }
 
     public String getSuperClassName() {
-        var pk =  Util.getPackageAndClass((getSuperClassPackageAndName()));
+        String[] pk =  Util.getPackageAndClass((getSuperClassPackageAndName()));
         return pk[1];
     }
 

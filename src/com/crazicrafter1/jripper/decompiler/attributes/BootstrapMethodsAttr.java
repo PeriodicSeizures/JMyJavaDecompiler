@@ -41,7 +41,7 @@ public class BootstrapMethodsAttr extends IAttr {
         int num_bootstrap_methods = bytes.readUnsignedShort();
 
         for (;num_bootstrap_methods > 0; num_bootstrap_methods--) {
-            BootstrapMethod bootstrapMethod = new BootstrapMethod(belongingClass);
+            BootstrapMethod bootstrapMethod = new BootstrapMethod(getMainClass());
 
             bootstrapMethod.read(bytes);
 

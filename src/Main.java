@@ -1,5 +1,6 @@
 import com.crazicrafter1.jripper.JRipper;
 import com.crazicrafter1.jripper.Util;
+import com.crazicrafter1.jripper.decompiler.DecompiledClass;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,15 +45,15 @@ public class Main {
     public static void main(String[] args) {
 
         //String path = "samples/inherit/SubClass.class";
-        String path = "out/production/JMyJavaDecompiler/test/virtual/ChildClass.class";
+        //String path = "out/production/JMyJavaDecompiler/test/virtual/ChildClass.class";
 
-        //String path = "samples/MethodWithFields.class";
-        //String path = "samples/SingleConstructor.class";
-        //String path = "samples/ConstructorMembersGetSet.class";
-        //String path = "samples/ConstantClass.class";
-        //String path = "samples/StaticInitializerConstructor.class";
-        //String path = "samples/obfnofall.class";
-        //String path = "samples/MathOperations.class";
+        String path = "out/production/JMyJavaDecompiler/test/MethodWithFields.class";
+        //String path = "out/production/JMyJavaDecompiler/test/SingleConstructor.class";
+        //String path = "out/production/JMyJavaDecompiler/test/ConstructorMembersGetSet.class";
+        //String path = "out/production/JMyJavaDecompiler/test/ConstantClass.class";
+        //String path = "out/production/JMyJavaDecompiler/test/StaticInitializerConstructor.class";
+        //String path = "out/production/JMyJavaDecompiler/test/obfnofall.class";
+        //String path = "out/production/JMyJavaDecompiler/test/MathOperations.class";
 
         try {
 
@@ -62,11 +63,11 @@ public class Main {
                 throw new FileNotFoundException();
             }
 
-            var decompiledClass = JRipper.decompileClass(new FileInputStream(file));
+            DecompiledClass decompiledClass = JRipper.decompileClass(new FileInputStream(file));
             System.out.println(decompiledClass);
 
-            var deObfuscatedClass = JRipper.deobfuscateClass(decompiledClass);
-            System.out.println(deObfuscatedClass);
+            //var deObfuscatedClass = JRipper.deobfuscateClass(decompiledClass);
+            //System.out.println(deObfuscatedClass);
         } catch (Exception e) {
             e.printStackTrace();
         }

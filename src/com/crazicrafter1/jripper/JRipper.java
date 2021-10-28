@@ -4,6 +4,8 @@ import com.crazicrafter1.jripper.decompiler.ByteReader;
 import com.crazicrafter1.jripper.decompiler.DecompiledClass;
 import com.crazicrafter1.jripper.decompiler.except.NoMagicHeaderException;
 import com.crazicrafter1.jripper.deobfuscator.JavaClass;
+import com.crazicrafter1.jripper.deobfuscator.JavaJar;
+//import com.crazicrafter1.jripper.deobfuscator.JavaClass;
 
 import java.io.*;
 import java.util.Enumeration;
@@ -30,23 +32,11 @@ public class JRipper {
         return javaClassFile;
     }
 
-    public static HashMap<String, DecompiledClass> decompileJar(String path) throws IOException {
-        JarFile jarFile = new JarFile(path);
+    public static JavaJar deobfuscateJar(String path) {
+        JavaJar jar = new JavaJar(path);
 
-        HashMap<String, DecompiledClass> classes = new HashMap<>();
+        jar.process();
 
-        for (Enumeration<JarEntry> enumEntry = jarFile.entries(); enumEntry.hasMoreElements();) {
-            var entry = enumEntry.nextElement();
-
-            DecompiledClass decompiledClass = decompileClass(jarFile.getInputStream(entry));
-
-            classes.put(decompiledClass.getPackageAndName(), decompiledClass);
-        }
-
-        return classes;
-    }
-
-    public static JavaClass deobfuscateClass(DecompiledClass decompiledClass) {
-        return new JavaClass(decompiledClass);
+        return jar;
     }
 }

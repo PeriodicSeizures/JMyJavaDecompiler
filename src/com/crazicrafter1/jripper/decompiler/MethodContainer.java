@@ -17,7 +17,7 @@ public class MethodContainer extends IDecompiled {
         int methods_count = bytes.readUnsignedShort();
 
         for (; methods_count > 0; methods_count--) {
-            DecompiledMethod javaMethod = new DecompiledMethod(belongingClass);
+            DecompiledMethod javaMethod = new DecompiledMethod(getMainClass());
 
             javaMethod.read(bytes);
 

@@ -26,7 +26,7 @@ public class DecompiledField extends IDecompiled {
     private int name_index;
     private int descriptor_index;
 
-    private AttributeContainer attributeContainer = new AttributeContainer(belongingClass);
+    private AttributeContainer attributeContainer = new AttributeContainer(getMainClass());
 
     public DecompiledField(DecompiledClass belongingClass) {
         super(belongingClass);
