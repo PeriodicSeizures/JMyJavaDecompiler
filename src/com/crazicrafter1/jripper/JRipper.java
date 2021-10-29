@@ -3,15 +3,10 @@ package com.crazicrafter1.jripper;
 import com.crazicrafter1.jripper.decompiler.ByteReader;
 import com.crazicrafter1.jripper.decompiler.DecompiledClass;
 import com.crazicrafter1.jripper.decompiler.except.NoMagicHeaderException;
-import com.crazicrafter1.jripper.deobfuscator.JavaClass;
 import com.crazicrafter1.jripper.deobfuscator.JavaJar;
 //import com.crazicrafter1.jripper.deobfuscator.JavaClass;
 
 import java.io.*;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 public class JRipper {
 
@@ -35,7 +30,7 @@ public class JRipper {
     public static JavaJar deobfuscateJar(String path) {
         JavaJar jar = new JavaJar(path);
 
-        jar.process();
+        jar.validationPhase();
 
         return jar;
     }

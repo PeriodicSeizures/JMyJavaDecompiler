@@ -3,21 +3,16 @@ package com.crazicrafter1.jripper.deobfuscator;
 import com.crazicrafter1.jripper.Util;
 import com.crazicrafter1.jripper.decompiler.DecompiledField;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class JavaField extends IDeobfuscated {
+public class JavaField extends IObfuscate {
 
-    /*
-        fields are class members, not *JUST* variables
-     */
+    private final DecompiledField decompiledField;
 
+    public String flags; // aka static final public private volatile etc...
     public String type;
     public String name;
-    public String flags; // aka static final public private volatile etc...
-
-    private DecompiledField decompiledField;
 
     public JavaField(JavaClass parentJavaClass, DecompiledField decompiledField) {
         super(parentJavaClass);
@@ -26,20 +21,24 @@ public class JavaField extends IDeobfuscated {
     }
 
     @Override
-    public void process() {
+    public void validationPhase() {
         this.flags = decompiledField.getAccessFlags();
-        this.name = Util.toValidName(decompiledField.getName());
-        //if (rawField.getSignature() != null) {
-        //    this.type = Util.getType(rawField.getSignature(), retClassImports);
-        //} else {
+
         Set<String> imports = new LinkedHashSet<>();
         this.type = Util.toValidName(
                 Util.getFieldType(decompiledField.getDescriptor(), imports));
-        ((JavaClass)getParentDeobfuscator()).addClassImports(imports);
+        ((JavaClass) getParentObfuscate()).addClassImports(imports);
+
+        this.name = Util.toValidName(decompiledField.getName());
+    }
+
+    @Override
+    public void linkingPhase() {
+
     }
 
     @Override
     public String toString() {
-        return flags + " " + type + " " + name;
+        return (flags + " " + type + " " + name + ";").trim();
     }
 }

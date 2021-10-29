@@ -36,7 +36,7 @@ public class ConstantMethodref extends IPoolConstant {
         return ((ConstantNameAndType) getEntry(name_and_type_index)).getName();
     }
 
-    public String UID() {
+    public String GUID() {
         return getMainClass().getClassName() + "::" + getMethodName() + getMethodDescriptor();
     }
 

@@ -4,10 +4,11 @@ import com.crazicrafter1.jripper.Util;
 import com.crazicrafter1.jripper.decompiler.Opcode;
 import com.crazicrafter1.jripper.decompiler.DecompiledMethod;
 import com.crazicrafter1.jripper.decompiler.attributes.CodeAttr;
+import com.crazicrafter1.jripper.decompiler.pool.ConstantFieldref;
 
 import java.util.*;
 
-public class JavaMethod extends IDeobfuscated {
+public class JavaMethod extends IObfuscate {
 
     static class Parameter {
         String mutatedType;
@@ -19,21 +20,15 @@ public class JavaMethod extends IDeobfuscated {
         }
     }
 
+    private final DecompiledMethod decompiledMethod;
     /*
      * Bytecode parsed
      */
     private String mutatedMethodName;
-    //private final ArrayList<String> args = new ArrayList<>();
-
-    // Locals are referenced in method by INDEX,
-    // But names have to be unique
-    //private final Map<String, Local> locals = new LinkedHashMap<>();
     private final Set<String> locals = new LinkedHashSet<>();
     private String mutatedReturnType;
 
     private Map<String, Parameter> parameterMap = new LinkedHashMap<>();
-
-    private final DecompiledMethod decompiledMethod;
 
     private final ArrayList<String> generatedCode = new ArrayList<>();
 
@@ -43,7 +38,7 @@ public class JavaMethod extends IDeobfuscated {
     }
 
     @Override
-    public void process() {
+    public void validationPhase() {
         HashSet<String> inImports = new HashSet<>();
         StringBuilder inReturnType = new StringBuilder();
 
@@ -70,6 +65,7 @@ public class JavaMethod extends IDeobfuscated {
                 // No return type
                 if (decompiledMethod.isInstanceInitializer()) {
                     mutatedReturnType = null;
+                    mutatedMethodName = ((JavaClass) getParentObfuscate()).getClassName();
                 } else {
                     mutatedReturnType = Util.toValidTypeName(inReturnType.toString());
                 }
@@ -83,17 +79,26 @@ public class JavaMethod extends IDeobfuscated {
                 String validatedType = Util.toValidTypeName(parameterType);
                 final String localMutatedName = validatedType.substring(0, 1).toLowerCase() + validatedType.substring(1);
 
-                String end = localMutatedName;
-                int id = 0;
-                while (locals.contains(end))
-                    end = localMutatedName + (id++);
+                String name = localMutatedName;
+                int ordinal = 0;
+                while (locals.contains(name))
+                    name = localMutatedName + (ordinal++);
 
-                locals.add(end);
-                this.parameterMap.put(end, new Parameter(validatedType, end));
+                if (name.equals(validatedType))
+                    name = "_" + name;
+
+                locals.add(name);
+
+                this.parameterMap.put(name, new Parameter(validatedType, name));
             });
         }
 
-        ((JavaClass)getParentDeobfuscator()).addClassImports(inImports);
+        ((JavaClass) getParentObfuscate()).addClassImports(inImports);
+    }
+
+    @Override
+    public void linkingPhase() {
+        generateMethodBody();
     }
 
     public DecompiledMethod getDecompiledMethod() {
@@ -101,12 +106,13 @@ public class JavaMethod extends IDeobfuscated {
     }
 
     public void setMutatedMethodName(String newName) {
-        this.mutatedMethodName = Util.toValidName(newName);
+        if (!decompiledMethod.isInstanceInitializer() && !decompiledMethod.isStaticInitializer())
+            this.mutatedMethodName = Util.toValidName(newName);
     }
 
     public String getLocal(int index) {
         int i = 0;
-        for (String entry : locals) {
+        for (String entry : this.locals) {
             if (i == index) {
                 return entry;
             }
@@ -321,8 +327,14 @@ public class JavaMethod extends IDeobfuscated {
                     //v = -v;
                     STACK.push("" + v);
                     continue;
-                case PUTFIELD:
+                case PUTFIELD: {
                     int field_index = (code.get(++index) << 8) | code.get(++index);
+
+                    String[] popped = STACK.pop2();
+
+                    generatedCode.add(popped[0] + "." +
+                            getJavaField((ConstantFieldref) getDecompiledMethod().getEntry(field_index)).name
+                            + " = " + popped[1] + ";");
 
                     // set class member field at 'field_index' to popped value
 
@@ -331,6 +343,18 @@ public class JavaMethod extends IDeobfuscated {
                     //        NameUtil.toValidName(IDecompiled.getEntry(field_index).getName()) +
                     //        " = " + STACK.pop() + ";");
                     continue;
+                }
+                case GETFIELD: {
+                    int field_index = (code.get(++index) << 8) | code.get(++index);
+
+                    String ref = STACK.pop();
+
+                    STACK.push(
+                            getJavaField((ConstantFieldref) getDecompiledMethod().getEntry(field_index)).name
+                    );
+
+                    continue;
+                }
                 /*
                     TODO:
                     make a static database for retrieving already fixed/corrected
@@ -408,7 +432,6 @@ public class JavaMethod extends IDeobfuscated {
         // args
         s.append("(");
 
-
         if (!parameterMap.isEmpty()) {
             int i = 0;
             for (Map.Entry<String, Parameter> entry : parameterMap.entrySet()) {
@@ -423,8 +446,6 @@ public class JavaMethod extends IDeobfuscated {
 
         // exceptions
         // s.append("throws"); ...
-
-        generateMethodBody();
 
         // body
         for (int i=0; i<generatedCode.size(); i++) {

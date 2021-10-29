@@ -12,7 +12,7 @@ import com.crazicrafter1.jripper.decompiler.IPoolConstant;
 
 import java.util.*;
 
-public class JavaClass extends IDeobfuscated {
+public class JavaClass extends IObfuscate {
 
     private final DecompiledClass decompiledClass;
 
@@ -21,64 +21,78 @@ public class JavaClass extends IDeobfuscated {
     private String superClassName;
     private String flags;
 
-    //private HashMap<String, ValidatedMethod> validatedMethods;// = new LinkedHashMap<>();
-
-    //private ArrayList<JavaField> fields = new ArrayList<>();
+    /**
+     * (Decompiled field name, JavaField)
+     */
     private final HashMap<String, JavaField> fields = new LinkedHashMap<>();
-    //private ArrayList<JavaMethod> methods = new ArrayList<>(); // methods should be stored as signatures with names
+
+    /**
+     * (Decompiled method name, JavaMethod)
+     */
     private final HashMap<String, JavaMethod> methods = new LinkedHashMap<>();
 
-    private final HashSet<String> uniqueMethodNames = new HashSet<>();
-
+    /**
+     * (Decompiled interface name, JavaClass)
+     */
     private final HashMap<String, JavaClass> interfaces = new HashMap<>(); // super interfaces of this class
 
+    private final HashSet<String> uniqueMethodErasures = new HashSet<>();
     private final HashSet<String> classImports = new HashSet<>();
 
-    // to be referenced by
-    //public HashMap<Integer, Integer> constRefFields = new HashMap<>();
-
-    /*
-        dump data of javaClassFile into this where needed
-     */
     public JavaClass(JavaJar parentJar, DecompiledClass decompiledClass) {
         super(parentJar);
 
         this.decompiledClass = decompiledClass;
+
+        classes.put(decompiledClass.getPackageAndName(), this);
     }
 
     @Override
-    public void process() {
+    public void validationPhase() {
         String[] packageAndClass = Util.getPackageAndClass(decompiledClass.getPackageAndName());
         if (packageAndClass[0] != null)
-            packageName = Util.toValidTypeName(packageAndClass[0].replace('/', '.'));
+            packageName = Util.toValidTypeName(packageAndClass[0].replace("/", "."));
         else packageName = null;
 
-        className = Util.toValidTypeName(packageAndClass[1]);
-
-        superClassName = Util.toValidTypeName(
-                Util.getUnqualifiedName(decompiledClass.getSuperClassPackageAndName()));
         flags = decompiledClass.getAccessFlags();
+        className = Util.toValidTypeName(packageAndClass[1]);
+        superClassName = Util.toValidTypeName(Util.getUnqualifiedName(decompiledClass.getSuperClassPackageAndName()));
 
         for (DecompiledField decompiledField : decompiledClass.fieldContainer.getFields()) {
             JavaField javaField = new JavaField(this, decompiledField);
-            //javaField.process();
+            javaField.validationPhase();
             this.fields.put(decompiledField.getName(), javaField);
         }
 
         for (DecompiledMethod decompiledMethod : decompiledClass.methodContainer.getMethods()) {
-            // If a duplicate method already exists, then rename
+            final String parameterDescriptor = "(" + decompiledMethod.getParameterDescriptor() + ")";
             int ordinal = 0;
-            String newName = decompiledMethod.getErasureDescriptor();
-            while (uniqueMethodNames.contains(newName)) {
+            String uniqueErasure = decompiledMethod.getErasureDescriptor();
+            String uniqueName = decompiledMethod.getMethodName();
+            // Guarantee a unique name
+            while (uniqueMethodErasures.contains(uniqueErasure)) {
                 // generate a unique name
-                newName = "renamed_" + (ordinal++);
+                uniqueName = "renamed" + (ordinal++);
+                uniqueErasure = uniqueName + parameterDescriptor;
             }
             String identifier = decompiledMethod.UID();
+
             JavaMethod javaMethod = new JavaMethod(this, decompiledMethod);
-            javaMethod.setMutatedMethodName(newName);
+            javaMethod.validationPhase();
+            javaMethod.setMutatedMethodName(uniqueName);
 
             methods.put(identifier, javaMethod);
-            uniqueMethodNames.add(newName);
+            uniqueMethodErasures.add(uniqueErasure);
+        }
+    }
+
+    @Override
+    public void linkingPhase() {
+        for (JavaField javaField : fields.values()) {
+            javaField.linkingPhase();
+        }
+        for (JavaMethod javaMethod : methods.values()) {
+            javaMethod.linkingPhase();
         }
     }
 
@@ -86,14 +100,18 @@ public class JavaClass extends IDeobfuscated {
         this.classImports.addAll(imports);
     }
 
+    public JavaField getInternalJavaField(ConstantFieldref ref) {
+        return fields.get(ref.getFieldName());
+    }
+
     /**
      * Get the JavaMethod associated with the specified constant pool methodRef or interfaceMethodRef
      * @param ref
      * @return
      */
-    public JavaMethod getMethodByMethodRef(IPoolConstant ref) {
+    public JavaMethod getInternalJavaMethod(IPoolConstant ref) {
         if (ref instanceof ConstantMethodref) {
-            return methods.get(((ConstantMethodref) ref).UID());
+            return methods.get(((ConstantMethodref) ref).GUID());
         } else if (ref instanceof ConstantInterfaceMethodref) {
             throw new UnsupportedOperationException("Not yet implemented");
             //return methods.get(imr.getDescriptor());
@@ -126,12 +144,15 @@ public class JavaClass extends IDeobfuscated {
 
 
         if (packageName != null)
-            s.append("package ").append(packageName).append(";\n\n");
+            s.append("package ").append(packageName).append(";\n");
 
 
 
-        for (String imp : classImports) {
-            s.append("import ").append(imp).append(";").append("\n");
+        if (!classImports.isEmpty()) {
+            s.append("\n");
+            for (String imp : classImports) {
+                s.append("import ").append(imp).append(";").append("\n");
+            }
         }
 
         s.append("\n");
@@ -156,15 +177,15 @@ public class JavaClass extends IDeobfuscated {
         s.append(" {\n");
 
         // fields
-        for (Map.Entry<String, JavaField> entry : fields.entrySet()) {
-            s.append(entry.getKey()).append(";\n");
+        for (JavaField javaField : fields.values()) {
+            s.append(javaField).append("\n");
         }
 
         s.append("\n");
 
-        //for (JavaMethod javaMethod : methods) {
-        //    s.append(javaMethod).append("\n\n");
-        //}
+        for (JavaMethod javaMethod : methods.values()) {
+            s.append(javaMethod).append("\n\n");
+        }
 
         s.append("}");
 

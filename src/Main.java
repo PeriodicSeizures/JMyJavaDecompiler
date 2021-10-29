@@ -1,6 +1,6 @@
 import com.crazicrafter1.jripper.JRipper;
-import com.crazicrafter1.jripper.Util;
 import com.crazicrafter1.jripper.decompiler.DecompiledClass;
+import com.crazicrafter1.jripper.deobfuscator.JavaClass;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -47,13 +47,13 @@ public class Main {
         //String path = "samples/inherit/SubClass.class";
         //String path = "out/production/JMyJavaDecompiler/test/virtual/ChildClass.class";
 
-        String path = "out/production/JMyJavaDecompiler/test/MethodWithFields.class";
-        //String path = "out/production/JMyJavaDecompiler/test/SingleConstructor.class";
-        //String path = "out/production/JMyJavaDecompiler/test/ConstructorMembersGetSet.class";
-        //String path = "out/production/JMyJavaDecompiler/test/ConstantClass.class";
-        //String path = "out/production/JMyJavaDecompiler/test/StaticInitializerConstructor.class";
-        //String path = "out/production/JMyJavaDecompiler/test/obfnofall.class";
-        //String path = "out/production/JMyJavaDecompiler/test/MathOperations.class";
+        String path = "out/production/JRipper/test/MethodWithFields.class";
+        //String path = "out/production/JRipper/test/SingleConstructor.class";
+        //String path = "out/production/JRipper/test/ConstructorMembersGetSet.class";
+        //String path = "out/production/JRipper/test/ConstantClass.class";
+        //String path = "out/production/JRipper/test/StaticInitializerConstructor.class";
+        //String path = "out/production/JRipper/test/obfnofall.class";
+        //String path = "out/production/JRipper/test/MathOperations.class";
 
         try {
 
@@ -66,8 +66,10 @@ public class Main {
             DecompiledClass decompiledClass = JRipper.decompileClass(new FileInputStream(file));
             System.out.println(decompiledClass);
 
-            //var deObfuscatedClass = JRipper.deobfuscateClass(decompiledClass);
-            //System.out.println(deObfuscatedClass);
+            JavaClass javaClass = new JavaClass(null, decompiledClass);
+            javaClass.validationPhase();
+            javaClass.linkingPhase();
+            System.out.println(javaClass);
         } catch (Exception e) {
             e.printStackTrace();
         }

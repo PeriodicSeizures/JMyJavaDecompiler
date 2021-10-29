@@ -59,10 +59,10 @@ public class DecompiledMethod extends IDecompiled {
         return getMethodName();
     }
 
-    //public String getParameterDescriptor() {
-    //    var methodDescriptor = getMethodDescriptor();
-    //    return methodDescriptor.substring(1, methodDescriptor.indexOf(")"));
-    //}
+    public String getParameterDescriptor() {
+        String methodDescriptor = getMethodDescriptor();
+        return methodDescriptor.substring(1, methodDescriptor.indexOf(")"));
+    }
 
     public String getMethodDescriptor() {
         return (String) getEntry(descriptor_index).get();
