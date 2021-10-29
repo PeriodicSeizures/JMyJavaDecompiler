@@ -4,6 +4,8 @@ public class SubClass extends BaseClass {
 
     int sub_i = 6;
 
+    int shared_i;
+
     public SubClass(int base_i) {
         super(base_i);
     }

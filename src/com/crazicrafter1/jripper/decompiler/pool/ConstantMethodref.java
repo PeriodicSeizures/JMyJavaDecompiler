@@ -20,6 +20,7 @@ public class ConstantMethodref extends IPoolConstant implements IMethodRef {
         name_and_type_index = bytes.readUnsignedShort();
     }
 
+    @Override
     public ConstantClass getPointingClass() {
         return (ConstantClass) getEntry(class_index);
     }

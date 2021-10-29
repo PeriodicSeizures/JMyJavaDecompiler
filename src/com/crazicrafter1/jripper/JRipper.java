@@ -65,8 +65,10 @@ public class JRipper {
 
         linkDeObfuscatedClasses();
 
+        path.mkdirs();
+
         for (JavaClass javaClass : IObfuscate.classes.values()) {
-            File file = new File(path, javaClass.getClassName());
+            File file = new File(path, javaClass.getClassName() + ".java");
 
             file.createNewFile();
 

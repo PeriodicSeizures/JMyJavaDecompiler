@@ -47,6 +47,7 @@ public class Main {
         String path = "out/production/JRipper/test/inherited/BaseClass.class";
         String path1 = "out/production/JRipper/test/inherited/SubClass.class";
         String path2 = "out/production/JRipper/test/inherited/OtherClass.class";
+        String path3 = "out/production/JRipper/test/inherited/DeeperClass.class";
         //String path = "out/production/JMyJavaDecompiler/test/virtual/ChildClass.class";
 
         //String path = "out/production/JRipper/test/MethodWithFields.class";
@@ -60,13 +61,12 @@ public class Main {
 
         try {
 
-            File file = Paths.get(path).toFile();
+            //File file = Paths.get(path).toFile();
+            //if (!file.exists()) {
+            //    throw new FileNotFoundException();
+            //}
 
-            if (!file.exists()) {
-                throw new FileNotFoundException();
-            }
-
-            JRipper.deObfuscateClasses(new File(path), new File(path1), new File(path2));
+            JRipper.deObfuscateClasses(new File(path2)); //new File(path), new File(path1), new File(path2));
 
             JRipper.dump(new File("decompiled"));
         } catch (Exception e) {

@@ -5,7 +5,6 @@ import com.crazicrafter1.jripper.decompiler.Opcode;
 import com.crazicrafter1.jripper.decompiler.DecompiledMethod;
 import com.crazicrafter1.jripper.decompiler.attributes.CodeAttr;
 import com.crazicrafter1.jripper.decompiler.pool.ConstantFieldref;
-import com.crazicrafter1.jripper.decompiler.pool.IMethodRef;
 
 import java.util.*;
 
@@ -334,7 +333,7 @@ public class JavaMethod extends IObfuscate {
                     String[] popped = STACK.pop2();
 
                     generatedCode.add(popped[0] + "." +
-                            getJavaField((ConstantFieldref) getDecompiledMethod().getEntry(field_index)).name
+                            getGlobalJavaField((ConstantFieldref) getDecompiledMethod().getEntry(field_index)).name
                             + " = " + popped[1] + ";");
                     continue;
                 }
@@ -347,7 +346,7 @@ public class JavaMethod extends IObfuscate {
 
                     System.out.println(constantFieldref);
 
-                    JavaField javaField = getJavaField(field_index);
+                    JavaField javaField = getGlobalJavaField(field_index);
 
 
                     // If is not a reference to java.lang.Object representation
@@ -363,7 +362,7 @@ public class JavaMethod extends IObfuscate {
 
                     String value = STACK.pop();
 
-                    JavaField javaField = getJavaField(field_index);
+                    JavaField javaField = getGlobalJavaField(field_index);
 
                     generatedCode.add(javaField + " = " + value + ";");
 
@@ -372,7 +371,7 @@ public class JavaMethod extends IObfuscate {
                 case GETSTATIC: {
                     int field_index = (code.get(++index) << 8) | code.get(++index);
 
-                    JavaField javaField = getJavaField(field_index);
+                    JavaField javaField = getGlobalJavaField(field_index);
 
                     STACK.push(javaField.getContainedClass().getClassName() + "." + javaField.name);
 
@@ -381,7 +380,7 @@ public class JavaMethod extends IObfuscate {
                 case INVOKESPECIAL: {
                     final int method_index = (code.get(++index) << 8) | code.get(++index);
 
-                    JavaMethod javaMethod = getJavaMethod(method_index);
+                    JavaMethod javaMethod = getGlobalJavaMethod(method_index);
 
                     JavaClass superJavaClass = getContainedClass().getSuperClass();
 

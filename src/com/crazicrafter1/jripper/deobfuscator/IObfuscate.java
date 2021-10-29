@@ -1,15 +1,12 @@
 package com.crazicrafter1.jripper.deobfuscator;
 
-import com.crazicrafter1.jripper.decompiler.pool.ConstantFieldref;
-import com.crazicrafter1.jripper.decompiler.pool.ConstantInterfaceMethodref;
-import com.crazicrafter1.jripper.decompiler.pool.ConstantMethodref;
-import com.crazicrafter1.jripper.decompiler.pool.IMethodRef;
+import com.crazicrafter1.jripper.decompiler.pool.*;
 
 import java.util.HashMap;
 
 public abstract class IObfuscate {
 
-    private JavaClass containedClass;
+    private final JavaClass containedClass;
 
     public static HashMap<String, JavaClass> classes = new HashMap<>();
 
@@ -24,30 +21,64 @@ public abstract class IObfuscate {
     /**
      * Useful methods to get fields methods and classes globally from jar
      */
-    protected final JavaField getJavaField(ConstantFieldref ref) {
-        return classes.get(ref.getPointingClass().get()).getInternalJavaField(ref);
+    protected final JavaField getGlobalJavaField(ConstantFieldref ref) {
+        String pointed = ref.getPointingClass().get();
+        // search for field downwards through subclasses
+
+        JavaField javaField;
+        JavaClass javaClass;
+        do {
+            javaClass = getGlobalJavaClass(pointed);
+            if (javaClass == null)
+                return null;
+
+            pointed = getContainedClass().getDecompiledClass().getSuperClassName();
+            if (pointed == null)
+                throw new RuntimeException("Could not find field");
+
+        } while ((javaField = javaClass.getInternalJavaField(ref)) == null);
+
+        return javaField;
     }
 
-    protected final JavaMethod getJavaMethod(IMethodRef ref) {
-        if (ref instanceof ConstantMethodref) {
-            JavaClass javaClass = classes.get(((ConstantMethodref) ref).getPointingClass().get());
-            return javaClass.getInternalJavaMethod(ref);
-        } else if (ref instanceof ConstantInterfaceMethodref) {
-            return classes.get(((ConstantInterfaceMethodref) ref).getPointingClass().get()).getInternalJavaMethod(ref);
-        }
-        throw new RuntimeException("Constant must be of a method or interface reference");
+    protected final JavaField getGlobalJavaField(int constantPoolFieldRefIndex) {
+        ConstantFieldref fieldref = (ConstantFieldref) getContainedClass().getDecompiledClass().getEntry(constantPoolFieldRefIndex);
+        return getGlobalJavaField(fieldref);
     }
 
-    protected final JavaClass getJavaClass(String packageAndName) {
-        return classes.get(packageAndName);
+    protected final JavaMethod getGlobalJavaMethod(IMethodRef ref) {
+        String pointed = ref.getPointingClass().get();
+
+        JavaClass javaClass;
+        JavaMethod javaMethod;
+        do {
+            javaClass = getGlobalJavaClass(pointed);
+            if (javaClass == null)
+                return null;
+
+            pointed = getContainedClass().getDecompiledClass().getSuperClassName();
+            if (pointed == null)
+                throw new RuntimeException("Could not find method");
+
+        } while ((javaMethod = javaClass.getInternalJavaMethod(ref)) == null);
+
+        return javaMethod;
     }
 
-    protected final JavaField getJavaField(int constantPoolFieldRefIndex) {
-        return getJavaField((ConstantFieldref) getContainedClass().getDecompiledClass().getEntry(constantPoolFieldRefIndex));
+    protected final JavaMethod getGlobalJavaMethod(int constantPoolMethodRefIndex) {
+        IMethodRef methodRef = (IMethodRef) getContainedClass().getDecompiledClass().getEntry(constantPoolMethodRefIndex);
+        return getGlobalJavaMethod(methodRef);
     }
 
-    protected final JavaMethod getJavaMethod(int constantPoolMethodRefIndex) {
-        return getJavaMethod((IMethodRef) getContainedClass().getDecompiledClass().getEntry(constantPoolMethodRefIndex));
+    protected final JavaClass getGlobalJavaClass(String packageAndName) {
+        if (packageAndName.equals("java/lang/Object"))
+            return null;
+
+        JavaClass javaClass = classes.get(packageAndName);
+        if (javaClass == null)
+            throw new RuntimeException("Class " + packageAndName + " was not found");
+
+        return javaClass;
     }
 
     /**

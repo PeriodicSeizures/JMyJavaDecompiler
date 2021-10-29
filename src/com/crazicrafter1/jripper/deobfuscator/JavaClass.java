@@ -128,11 +128,7 @@ public class JavaClass extends IObfuscate {
         if (superClassPackageAndName.equals("Ljava/lang/Object"))
             return null;
 
-        JavaClass superClass = getJavaClass(superClassPackageAndName);
-        if (superClass == null)
-            throw new RuntimeException("Referred class was never loaded");
-
-        return superClass;
+        return getGlobalJavaClass(superClassPackageAndName);
     }
 
     public boolean hasJavaMethod(JavaMethod javaMethod) {
