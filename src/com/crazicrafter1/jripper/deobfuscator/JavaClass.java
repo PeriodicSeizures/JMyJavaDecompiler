@@ -2,13 +2,12 @@ package com.crazicrafter1.jripper.deobfuscator;
 
 import com.crazicrafter1.jripper.Util;
 import com.crazicrafter1.jripper.decompiler.DecompiledClass;
-import com.crazicrafter1.jripper.decompiler.except.InvalidTypeException;
 import com.crazicrafter1.jripper.decompiler.DecompiledField;
 import com.crazicrafter1.jripper.decompiler.DecompiledMethod;
 import com.crazicrafter1.jripper.decompiler.pool.ConstantFieldref;
 import com.crazicrafter1.jripper.decompiler.pool.ConstantInterfaceMethodref;
 import com.crazicrafter1.jripper.decompiler.pool.ConstantMethodref;
-import com.crazicrafter1.jripper.decompiler.IPoolConstant;
+import com.crazicrafter1.jripper.decompiler.pool.IMethodRef;
 
 import java.util.*;
 
@@ -39,12 +38,16 @@ public class JavaClass extends IObfuscate {
     private final HashSet<String> uniqueMethodErasures = new HashSet<>();
     private final HashSet<String> classImports = new HashSet<>();
 
-    public JavaClass(JavaJar parentJar, DecompiledClass decompiledClass) {
-        super(parentJar);
+    public JavaClass(DecompiledClass decompiledClass) {
+        super(null);
 
         this.decompiledClass = decompiledClass;
 
         classes.put(decompiledClass.getPackageAndName(), this);
+    }
+
+    public DecompiledClass getDecompiledClass() {
+        return decompiledClass;
     }
 
     @Override
@@ -75,7 +78,7 @@ public class JavaClass extends IObfuscate {
                 uniqueName = "renamed" + (ordinal++);
                 uniqueErasure = uniqueName + parameterDescriptor;
             }
-            String identifier = decompiledMethod.UID();
+            String identifier = decompiledMethod.GUID();
 
             JavaMethod javaMethod = new JavaMethod(this, decompiledMethod);
             javaMethod.validationPhase();
@@ -106,17 +109,34 @@ public class JavaClass extends IObfuscate {
 
     /**
      * Get the JavaMethod associated with the specified constant pool methodRef or interfaceMethodRef
-     * @param ref
+     * @param ref ConstantMethodref or ConstantInterfaceMethodref
      * @return
      */
-    public JavaMethod getInternalJavaMethod(IPoolConstant ref) {
+    public JavaMethod getInternalJavaMethod(IMethodRef ref) {
         if (ref instanceof ConstantMethodref) {
             return methods.get(((ConstantMethodref) ref).GUID());
         } else if (ref instanceof ConstantInterfaceMethodref) {
             throw new UnsupportedOperationException("Not yet implemented");
-            //return methods.get(imr.getDescriptor());
-        }// else
-            throw new InvalidTypeException("ref must be some kind of method ref");
+        } else
+            throw new RuntimeException("Ref must be of ConstantMethodref or ConstantInterfaceMethodref");
+    }
+
+    public JavaClass getSuperClass() {
+        String superClassPackageAndName = getDecompiledClass()
+                .getSuperClassPackageAndName();
+
+        if (superClassPackageAndName.equals("Ljava/lang/Object"))
+            return null;
+
+        JavaClass superClass = getJavaClass(superClassPackageAndName);
+        if (superClass == null)
+            throw new RuntimeException("Referred class was never loaded");
+
+        return superClass;
+    }
+
+    public boolean hasJavaMethod(JavaMethod javaMethod) {
+        return methods.containsValue(javaMethod);
     }
 
     public JavaField getMappedField(int constant_pool_index) {

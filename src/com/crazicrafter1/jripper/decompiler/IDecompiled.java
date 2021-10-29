@@ -12,11 +12,13 @@ public abstract class IDecompiled {
 
     public abstract void read(ByteReader bytes) throws IOException;
 
-    public DecompiledClass getMainClass() {
+    public final DecompiledClass getMainClass() {
         return mainClass;
     }
 
     public IPoolConstant getEntry(int i) {
-        return mainClass.constantPoolContainer.getEntry(i);
+        if (mainClass != null)
+            return mainClass.constantPoolContainer.getEntry(i);
+        return ((DecompiledClass)this).constantPoolContainer.getEntry(i);
     }
 }

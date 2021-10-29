@@ -1,6 +1,5 @@
 package com.crazicrafter1.jripper.decompiler;
 
-import com.crazicrafter1.jripper.decompiler.except.InvalidConstantPoolEntryException;
 import com.crazicrafter1.jripper.decompiler.pool.*;
 
 import java.io.IOException;
@@ -66,7 +65,7 @@ public class ConstantContainer extends IDecompiled {
                 case CONSTANT_METHODHANDLE: entry = new ConstantMethodHandle(getMainClass()); break;
                 case CONSTANT_METHODTYPE: entry = new ConstantMethodType(getMainClass()); break;
                 case CONSTANT_INVOKEDYNAMIC: entry = new ConstantInvokeDynamic(getMainClass()); break;
-                default: throw new InvalidConstantPoolEntryException("constant tagged " + tag + " does not exist");
+                default: throw new RuntimeException("ConstantPool entry tagged " + tag + " does not exist");
             }
 
             entry.read(bytes);

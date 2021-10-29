@@ -44,16 +44,19 @@ public class Main {
 
     public static void main(String[] args) {
 
-        //String path = "samples/inherit/SubClass.class";
+        String path = "out/production/JRipper/test/inherited/BaseClass.class";
+        String path1 = "out/production/JRipper/test/inherited/SubClass.class";
+        String path2 = "out/production/JRipper/test/inherited/OtherClass.class";
         //String path = "out/production/JMyJavaDecompiler/test/virtual/ChildClass.class";
 
-        String path = "out/production/JRipper/test/MethodWithFields.class";
+        //String path = "out/production/JRipper/test/MethodWithFields.class";
         //String path = "out/production/JRipper/test/SingleConstructor.class";
         //String path = "out/production/JRipper/test/ConstructorMembersGetSet.class";
         //String path = "out/production/JRipper/test/ConstantClass.class";
         //String path = "out/production/JRipper/test/StaticInitializerConstructor.class";
-        //String path = "out/production/JRipper/test/obfnofall.class";
+        //String path = "obfuscated/obfnofall.class";
         //String path = "out/production/JRipper/test/MathOperations.class";
+        //String path = "out/production/JRipper/test/cmp/IfStatement.class";
 
         try {
 
@@ -63,13 +66,9 @@ public class Main {
                 throw new FileNotFoundException();
             }
 
-            DecompiledClass decompiledClass = JRipper.decompileClass(new FileInputStream(file));
-            System.out.println(decompiledClass);
+            JRipper.deObfuscateClasses(new File(path), new File(path1), new File(path2));
 
-            JavaClass javaClass = new JavaClass(null, decompiledClass);
-            javaClass.validationPhase();
-            javaClass.linkingPhase();
-            System.out.println(javaClass);
+            JRipper.dump(new File("decompiled"));
         } catch (Exception e) {
             e.printStackTrace();
         }

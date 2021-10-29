@@ -2,22 +2,26 @@ package com.crazicrafter1.jripper;
 
 import com.crazicrafter1.jripper.decompiler.ByteReader;
 import com.crazicrafter1.jripper.decompiler.DecompiledClass;
-import com.crazicrafter1.jripper.decompiler.except.NoMagicHeaderException;
-import com.crazicrafter1.jripper.deobfuscator.JavaJar;
-//import com.crazicrafter1.jripper.deobfuscator.JavaClass;
+import com.crazicrafter1.jripper.deobfuscator.IObfuscate;
+import com.crazicrafter1.jripper.deobfuscator.JavaClass;
 
 import java.io.*;
+import java.net.URI;
+import java.nio.file.Paths;
+import java.util.Enumeration;
+import java.util.Map;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 public class JRipper {
 
     private JRipper() {}
 
-    public static DecompiledClass decompileClass(InputStream is) throws IOException {
-
+    private static DecompiledClass decompileClass(InputStream is) throws IOException {
         ByteReader bytes = new ByteReader(is);
 
         if (!bytes.compareNext(4, new byte[] {(byte)0xCA, (byte)0xFE, (byte)0xBA, (byte)0xBE}))
-            throw new NoMagicHeaderException("No magic header found");
+            throw new RuntimeException("No magic header found");
 
         DecompiledClass javaClassFile = new DecompiledClass();
 
@@ -27,11 +31,51 @@ public class JRipper {
         return javaClassFile;
     }
 
-    public static JavaJar deobfuscateJar(String path) {
-        JavaJar jar = new JavaJar(path);
+    public static void deObfuscateJar(File file) throws IOException {
+        JarFile jarFile = new JarFile(file);
 
-        jar.validationPhase();
+        for (Enumeration<JarEntry> enumEntry = jarFile.entries(); enumEntry.hasMoreElements(); ) {
+            JarEntry entry = enumEntry.nextElement();
 
-        return jar;
+            DecompiledClass decompiledClass =
+                    JRipper.decompileClass(jarFile.getInputStream(entry));
+
+            JavaClass javaClass = new JavaClass(decompiledClass);
+            javaClass.validationPhase();
+        }
     }
+
+    public static void deObfuscateClasses(File... files) throws IOException {
+        for (File file : files) {
+            DecompiledClass decompiledClass =
+                    JRipper.decompileClass(new FileInputStream(file));
+
+            JavaClass javaClass = new JavaClass(decompiledClass);
+            javaClass.validationPhase();
+        }
+    }
+
+    private static void linkDeObfuscatedClasses() {
+        for (Map.Entry<String, JavaClass> entry : IObfuscate.classes.entrySet()) {
+            entry.getValue().linkingPhase();
+        }
+    }
+
+    public static void dump(File path) throws IOException {
+
+        linkDeObfuscatedClasses();
+
+        for (JavaClass javaClass : IObfuscate.classes.values()) {
+            File file = new File(path, javaClass.getClassName());
+
+            file.createNewFile();
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+
+            writer.append(javaClass.toString());
+            writer.close();
+        }
+
+    }
+
 }

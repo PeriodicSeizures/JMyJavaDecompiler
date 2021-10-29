@@ -5,6 +5,7 @@ import com.crazicrafter1.jripper.decompiler.Opcode;
 import com.crazicrafter1.jripper.decompiler.DecompiledMethod;
 import com.crazicrafter1.jripper.decompiler.attributes.CodeAttr;
 import com.crazicrafter1.jripper.decompiler.pool.ConstantFieldref;
+import com.crazicrafter1.jripper.decompiler.pool.IMethodRef;
 
 import java.util.*;
 
@@ -65,7 +66,7 @@ public class JavaMethod extends IObfuscate {
                 // No return type
                 if (decompiledMethod.isInstanceInitializer()) {
                     mutatedReturnType = null;
-                    mutatedMethodName = ((JavaClass) getParentObfuscate()).getClassName();
+                    mutatedMethodName = getContainedClass().getClassName();
                 } else {
                     mutatedReturnType = Util.toValidTypeName(inReturnType.toString());
                 }
@@ -93,7 +94,7 @@ public class JavaMethod extends IObfuscate {
             });
         }
 
-        ((JavaClass) getParentObfuscate()).addClassImports(inImports);
+        getContainedClass().addClassImports(inImports);
     }
 
     @Override
@@ -118,14 +119,14 @@ public class JavaMethod extends IObfuscate {
             }
             i++;
         }
-        throw new IndexOutOfBoundsException("Index " + index + " exceeds local size");
+        throw new IndexOutOfBoundsException("Index " + index + " exceeds method locals size");
     }
 
     //private ArrayList<String>
 
     // https://stackoverflow.com/questions/61000749/local-variable-table-in-jvm-stack
     private void generateMethodBody() {
-        CodeAttr codeAttribute = this.getDecompiledMethod().getCode();
+        CodeAttr codeAttribute = this.getDecompiledMethod().getCodeAttr();
         ArrayList<Integer> code = codeAttribute.code;
 
 
@@ -335,13 +336,6 @@ public class JavaMethod extends IObfuscate {
                     generatedCode.add(popped[0] + "." +
                             getJavaField((ConstantFieldref) getDecompiledMethod().getEntry(field_index)).name
                             + " = " + popped[1] + ";");
-
-                    // set class member field at 'field_index' to popped value
-
-                    // not the best solution below...
-                    //generatedCode.add("this." +
-                    //        NameUtil.toValidName(IDecompiled.getEntry(field_index).getName()) +
-                    //        " = " + STACK.pop() + ";");
                     continue;
                 }
                 case GETFIELD: {
@@ -349,45 +343,103 @@ public class JavaMethod extends IObfuscate {
 
                     String ref = STACK.pop();
 
-                    STACK.push(
-                            getJavaField((ConstantFieldref) getDecompiledMethod().getEntry(field_index)).name
-                    );
+                    ConstantFieldref constantFieldref = (ConstantFieldref) this.getContainedClass().getDecompiledClass().getEntry(field_index);
+
+                    System.out.println(constantFieldref);
+
+                    JavaField javaField = getJavaField(field_index);
+
+
+                    // If is not a reference to java.lang.Object representation
+                    if (javaField != null) {
+                        STACK.push(ref + "." + javaField.name);
+                    } else {
+
+                    }
+                    continue;
+                }
+                case PUTSTATIC: {
+                    int field_index = (code.get(++index) << 8) | code.get(++index);
+
+                    String value = STACK.pop();
+
+                    JavaField javaField = getJavaField(field_index);
+
+                    generatedCode.add(javaField + " = " + value + ";");
 
                     continue;
                 }
-                /*
-                    TODO:
-                    make a static database for retrieving already fixed/corrected
-                    constants fields classes methods ...
+                case GETSTATIC: {
+                    int field_index = (code.get(++index) << 8) | code.get(++index);
 
-                    will be able to be retrieved by 'pool index', 'name', etc...
-                 */
+                    JavaField javaField = getJavaField(field_index);
+
+                    STACK.push(javaField.getContainedClass().getClassName() + "." + javaField.name);
+
+                    continue;
+                }
                 case INVOKESPECIAL: {
-                    //generatedCode.add("super();");
-                    //System.out.println("\nindex: " + index);
-                    int constIndex = (code.get(++index) << 8) | code.get(++index);
+                    final int method_index = (code.get(++index) << 8) | code.get(++index);
+
+                    JavaMethod javaMethod = getJavaMethod(method_index);
+
+                    JavaClass superJavaClass = getContainedClass().getSuperClass();
+
+                    /**
+                     * If the object is not java.lang.Object
+                     */
+                    if (superJavaClass != null && javaMethod != null) {
+                        // Then super
+                        if (javaMethod.getDecompiledMethod().isInstanceInitializer()) {
+                            // now add as many args as method takes
+
+                            if (!javaMethod.parameterMap.isEmpty()) {
+                                StringBuilder args = new StringBuilder("super(");
+                                for (int pIndex = 0; pIndex < javaMethod.parameterMap.size(); pIndex++) {
+                                    args.append(STACK.pop());
+                                    if (pIndex != javaMethod.parameterMap.size() - 1)
+                                        args.append(", ");
+                                }
+                                args.append(");");
+                                generatedCode.add(args.toString());
+                            }
+
+                        }
+                        if (superJavaClass.hasJavaMethod(javaMethod)) {
+
+                        }
+
+                    }
+
+                    //if (javaMethod.getDecompiledMethod().isProtected() &&
+                    //        superJavaClass.hasJavaMethod(javaMethod) &&
+                    //        getContainedClass().) {
+
+                    //    if ()
+
+                    //}
+
                     //System.out.println("INVOKE_SPECIAL: " +
                     //        RawItem.getEntry(constIndex).getValue());
                     //System.out.println();
                     continue;
                 }
-                case NEW: {
-                    int constIndex = (code.get(++index) << 8) | code.get(++index);
-                    //String newName = NameUtil.toValidTypeName(
-                    //        JavaUtil.getUnqualifiedName((String) IDecompiled.getEntry(constIndex).getValue()));
-
-                    //STACK.push("new " + newName + "()");
-                    //index += 2;
-                    continue;
-                }
+                //case NEW: {
+                //    int constIndex = (code.get(++index) << 8) | code.get(++index);
+                //    //String newName = NameUtil.toValidTypeName(
+                //    //        JavaUtil.getUnqualifiedName((String) IDecompiled.getEntry(constIndex).getValue()));
+                //    //STACK.push("new " + newName + "()");
+                //    //index += 2;
+                //    continue;
+                //}
                 case NOP:
                     continue;
-                case ANEWARRAY: {
-                    String count = STACK.pop();
-                    int constIndex = (code.get(++index) << 8) | code.get(++index);
-                    //STACK.push("new " + RawItem.getEntry(constIndex).getValue());
-                    continue;
-                }
+                //case ANEWARRAY: {
+                //    String count = STACK.pop();
+                //    int constIndex = (code.get(++index) << 8) | code.get(++index);
+                //    //STACK.push("new " + RawItem.getEntry(constIndex).getValue());
+                //    continue;
+                //}
                 case CHECKCAST:
                     index += 2;
                     continue;

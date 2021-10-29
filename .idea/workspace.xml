@@ -2,18 +2,26 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="05a7cbea-7fa1-4657-896a-7645ccc5c22d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/deobfuscator/IObfuscate.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/pool/IMethodRef.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/cmp/IfStatement.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/JRipper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/JRipper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/Util.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/Util.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/ConstantContainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/ConstantContainer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/DecompiledClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/DecompiledClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/DecompiledField.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/DecompiledField.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/DecompiledMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/DecompiledMethod.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/IDecompiled.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/IDecompiled.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/except/InvalidConstantPoolEntryException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/except/InvalidTypeException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/except/NoMagicHeaderException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/pool/ConstantInterfaceMethodref.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/pool/ConstantInterfaceMethodref.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/pool/ConstantMethodref.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/pool/ConstantMethodref.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/deobfuscator/IDeobfuscated.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/deobfuscator/IObfuscate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/deobfuscator/IObfuscate.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/deobfuscator/JavaClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/deobfuscator/JavaClass.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/deobfuscator/JavaField.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/deobfuscator/JavaField.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/deobfuscator/JavaJar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/deobfuscator/JavaJar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/deobfuscator/JavaJar.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/deobfuscator/JavaMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/crazicrafter1/jripper/deobfuscator/JavaMethod.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -21,8 +29,24 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="Interface" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="ProjectId" id="209T0vNjKhmY86JNAicdknaRznT" />
   <component name="ProjectViewState">
@@ -77,11 +101,14 @@
           <properties class="java.lang.IndexOutOfBoundsException" package="java.lang" />
           <option name="timeStamp" value="1" />
         </breakpoint>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.NullPointerException" package="java.lang" />
+          <option name="timeStamp" value="8" />
+        </breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <condition expression="entry.equals(&quot;int&quot;)" language="JAVA" />
-          <url>file://$PROJECT_DIR$/src/com/crazicrafter1/jripper/deobfuscator/JavaMethod.java</url>
-          <line>116</line>
-          <option name="timeStamp" value="4" />
+          <url>file://$PROJECT_DIR$/src/com/crazicrafter1/jripper/decompiler/ConstantContainer.java</url>
+          <line>88</line>
+          <option name="timeStamp" value="13" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

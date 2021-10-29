@@ -4,6 +4,7 @@ import com.crazicrafter1.jripper.decompiler.attributes.CodeAttr;
 import com.crazicrafter1.jripper.decompiler.attributes.EnumAttr;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class DecompiledMethod extends IDecompiled {
 
@@ -68,9 +69,21 @@ public class DecompiledMethod extends IDecompiled {
         return (String) getEntry(descriptor_index).get();
     }
 
-    public String UID() {
-        /// DecompiledMethod::UID()Ljava/lang/String;
+    public String GUID() {
+        /// DecompiledMethod::GUID()Ljava/lang/String;
         return getMainClass().getClassName() + "::" + getMethodName() + getMethodDescriptor();
+    }
+
+    public boolean isPublic() {
+        return (access_flags & ACC_PUBLIC) == ACC_PUBLIC;
+    }
+
+    public boolean isPrivate() {
+        return (access_flags & ACC_PRIVATE) == ACC_PRIVATE;
+    }
+
+    public boolean isProtected() {
+        return (access_flags & ACC_PROTECTED) == ACC_PROTECTED;
     }
 
     public boolean isInstanceInitializer() {
@@ -107,11 +120,11 @@ public class DecompiledMethod extends IDecompiled {
 
     public String getAccessFlags() {
         StringBuilder s = new StringBuilder();
-        if ((access_flags & ACC_PUBLIC) == ACC_PUBLIC)
+        if (isPublic())
             s.append("public ");
-        if ((access_flags & ACC_PRIVATE) == ACC_PRIVATE)
+        if (isPrivate())
             s.append("private ");
-        if ((access_flags & ACC_PROTECTED) == ACC_PROTECTED)
+        if (isProtected())
             s.append("protected ");
 
         if (isFinal())
@@ -132,7 +145,7 @@ public class DecompiledMethod extends IDecompiled {
         return s.toString().trim();
     }
 
-    public CodeAttr getCode() {
+    public CodeAttr getCodeAttr() {
         return (CodeAttr) attributeContainer.get(EnumAttr.Code);
     }
 

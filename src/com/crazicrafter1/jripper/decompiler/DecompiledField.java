@@ -41,6 +41,18 @@ public class DecompiledField extends IDecompiled {
         attributeContainer.read(bytes);
     }
 
+    public boolean isPublic() {
+        return (access_flags & ACC_PUBLIC) == ACC_PUBLIC;
+    }
+
+    public boolean isPrivate() {
+        return (access_flags & ACC_PRIVATE) == ACC_PRIVATE;
+    }
+
+    public boolean isProtected() {
+        return (access_flags & ACC_PROTECTED) == ACC_PROTECTED;
+    }
+
     public boolean isStatic() {
         return (access_flags & ACC_STATIC) == ACC_STATIC;
     }
@@ -68,11 +80,11 @@ public class DecompiledField extends IDecompiled {
         if (isVolatile())
             s.append("volatile ");
 
-        if ((access_flags & ACC_PUBLIC) == ACC_PUBLIC)
+        if (isPublic())
             s.append("public ");
-        else if ((access_flags & ACC_PRIVATE) == ACC_PRIVATE)
+        else if (isPrivate())
             s.append("private ");
-        else if ((access_flags & ACC_PROTECTED) == ACC_PROTECTED)
+        else if (isProtected())
             s.append("protected ");
 
         if (isStatic())
@@ -87,17 +99,17 @@ public class DecompiledField extends IDecompiled {
         return s.toString().trim();
     }
 
-    @Override
-    public String toString() {
-        return "{RawField} \t" + getEntry(name_index).get() + "(" + Util.toValidName((String) getEntry(name_index).get()) + "), " +
-                getEntry(descriptor_index).get() + "\n" + attributeContainer;
-    }
-
     public String getName() {
         return (String) getEntry(name_index).get();
     }
 
     public String getDescriptor() {
         return (String) getEntry(descriptor_index).get();
+    }
+
+    @Override
+    public String toString() {
+        return "{RawField} \t" + getEntry(name_index).get() + "(" + Util.toValidName((String) getEntry(name_index).get()) + "), " +
+                getEntry(descriptor_index).get() + "\n" + attributeContainer;
     }
 }

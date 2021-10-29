@@ -27,7 +27,7 @@ public class JavaField extends IObfuscate {
         Set<String> imports = new LinkedHashSet<>();
         this.type = Util.toValidName(
                 Util.getFieldType(decompiledField.getDescriptor(), imports));
-        ((JavaClass) getParentObfuscate()).addClassImports(imports);
+        ((JavaClass) getContainedClass()).addClassImports(imports);
 
         this.name = Util.toValidName(decompiledField.getName());
     }

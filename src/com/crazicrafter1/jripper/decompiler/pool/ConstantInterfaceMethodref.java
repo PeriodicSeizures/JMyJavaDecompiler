@@ -6,7 +6,7 @@ import com.crazicrafter1.jripper.decompiler.IPoolConstant;
 
 import java.io.IOException;
 
-public class ConstantInterfaceMethodref extends IPoolConstant {
+public class ConstantInterfaceMethodref extends IPoolConstant implements IMethodRef {
     int class_index;
     int name_and_type_index;
 

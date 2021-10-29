@@ -6,7 +6,7 @@ import com.crazicrafter1.jripper.decompiler.IPoolConstant;
 
 import java.io.IOException;
 
-public class ConstantMethodref extends IPoolConstant {
+public class ConstantMethodref extends IPoolConstant implements IMethodRef {
     private int class_index;
     private int name_and_type_index;
 
@@ -22,10 +22,6 @@ public class ConstantMethodref extends IPoolConstant {
 
     public ConstantClass getPointingClass() {
         return (ConstantClass) getEntry(class_index);
-    }
-
-    public String getUid() {
-        return getMethodDescriptor();
     }
 
     public String getMethodDescriptor() {

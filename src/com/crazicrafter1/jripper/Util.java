@@ -1,7 +1,5 @@
 package com.crazicrafter1.jripper;
 
-import com.crazicrafter1.jripper.decompiler.except.InvalidTypeException;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,12 +9,18 @@ import java.util.regex.Pattern;
 public class Util {
 
     /**
-     *
-     * @param qualifiedName 'com/package/class' or 'Lcom/package/class;'
-     * @return class
+     * Get the name of the class from a qualified name
+     * @param qualifiedName 'my/example/package/MyClass' or 'Lmy/example/package/MyClass;' or
+     *                      'my.example.package.MyClass' or 'my.example.package.MyClass;'
+     * @return 'MyClass'
      */
     public static String getUnqualifiedName(String qualifiedName) {
-        return qualifiedName.substring(qualifiedName.lastIndexOf("/") + 1).replaceAll(";", "");
+        int index;
+        if ((index = qualifiedName.lastIndexOf('/')) != -1)
+            return qualifiedName.substring(index + 1).replaceAll(";", "");
+        else if ((index = qualifiedName.lastIndexOf('.')) != -1)
+            return qualifiedName.substring(index + 1).replaceAll(";", "");
+        throw new RuntimeException("Invalid qualified name");
     }
 
     /**
@@ -149,7 +153,7 @@ public class Util {
                         parameterDescriptor.replaceAll(";", "").
                         replaceAll(",", ", "));
             }
-            default: throw new InvalidTypeException("type is invalid; class might be corrupted");
+            default: throw new RuntimeException("type is invalid; class might be corrupted");
         }
     }
 
@@ -203,7 +207,7 @@ public class Util {
                         fieldDescriptor.replaceAll(",", ", "));
             }
             default: {
-                throw new InvalidTypeException("type " + c + " is invalid");
+                throw new RuntimeException("type " + c + " is invalid");
             }
         }
     }
