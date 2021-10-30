@@ -1,11 +1,11 @@
 package com.crazicrafter1.jripper.decompiler;
 
-import com.crazicrafter1.jripper.decompiler.pool.*;
+import com.crazicrafter1.jripper.decompiler.constants.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ConstantContainer extends IDecompiled {
+public class ConstantContainer extends IDisassembled {
 
     private final static int CONSTANT_CLASS =               7;
     private final static int CONSTANT_FIELDREF =            9;
@@ -23,9 +23,9 @@ public class ConstantContainer extends IDecompiled {
     private final static int CONSTANT_INVOKEDYNAMIC =       18;
 
     public ArrayList<Integer> spaced_indexes = new ArrayList<>();
-    public ArrayList<IPoolConstant> constants = new ArrayList<>();
+    public ArrayList<IConstant> constants = new ArrayList<>();
 
-    public ConstantContainer(DecompiledClass belongingClass) {
+    public ConstantContainer(DisassembledClass belongingClass) {
         super(belongingClass);
     }
 
@@ -45,7 +45,7 @@ public class ConstantContainer extends IDecompiled {
         final int constant_pool_count = bytes.readUnsignedShort() - 1;
 
         while (spaced_indexes.size() < constant_pool_count) {
-            IPoolConstant entry;
+            IConstant entry;
 
             // reads the 1 byte tag
             int tag = bytes.readUnsignedByte();
@@ -85,7 +85,7 @@ public class ConstantContainer extends IDecompiled {
         }
     }
 
-    public IPoolConstant getEntry(int i) {
+    public IConstant getEntry(int i) {
         return getMainClass().constantPoolContainer.constants.get(
                 getMainClass().constantPoolContainer.spaced_indexes.get(i-1));
     }
@@ -97,7 +97,7 @@ public class ConstantContainer extends IDecompiled {
         stringBuilder.append("{ConstantPool}: ").append("\n");
 
         for (int i=1; i<=spaced_indexes.size(); i++) {
-            IPoolConstant javaPoolEntry = getEntry(i);
+            IConstant javaPoolEntry = getEntry(i);
             stringBuilder.append("  \t").append(i).append(" : ").append(javaPoolEntry.toString()).append("\n");
         }
 

@@ -425,8 +425,7 @@ public enum Opcode {
         this.varargs = varargs;
     }
 
-
-    public static int getVarArgs(ArrayList<Integer> code, int index) {
+    public static int getArgCount(ArrayList<Integer> code, int index) {
         Opcode c = VALUES[code.get(index)];
         if (c.varargs != -1 ) {
             return c.varargs;
@@ -438,49 +437,9 @@ public enum Opcode {
             return 3;
         }
 
-        //throw new InvalidArgumentException(new String[] {""});
-        //throw new Exception();
-        System.out.println(c.name() + " opcode is currently not implemented");
-
-        return -1;
+        throw new RuntimeException("Opcode " + c.name() + " is not implemented");
+        //return -1;
     }
-    /*
-    // determines whether a specific instruction is
-    public static int getLoad(ArrayList<Integer> code, int index) {
-        Opcode op = getOpcode(code.get(index));
-        if (op.name().contains("LOAD")) {
-            char c = op.name().charAt(op.name().length()-1);
-            if (c >= '0' && c <= '9')
-                return c - '0';
-            return code.get(index + 1);
-        }
-        return -1;
-    }
-
-    public static int getStore(ArrayList<Integer> code, int index) {
-        Opcode op = getOpcode(code.get(index));
-        if (op.name().contains("STORE")) {
-            char c = op.name().charAt(op.name().length()-1);
-            if (c >= '0' && c <= '9')
-                return c - '0';
-            return code.get(index + 1);
-        }
-        return -1;
-    }
-
-    public static int getConst(ArrayList<Integer> code, int index) {
-        Opcode op = getOpcode(code.get(index));
-        if (op.name().contains("CONST")) {
-            char c = op.name().charAt(op.name().length()-1);
-            if (op.name().charAt(op.name().length() - 2) == 'm')
-                return -1;
-            if (c >= '0' && c <= '9')
-                return c - '0';
-
-        }
-        return -9;
-    }
-     */
 
     public static Opcode getOpcode(int i) {
         return VALUES[i];

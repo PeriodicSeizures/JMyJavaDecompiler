@@ -2,13 +2,13 @@ package com.crazicrafter1.jripper.deobfuscator;
 
 import com.crazicrafter1.jripper.Util;
 import com.crazicrafter1.jripper.decompiler.Opcode;
-import com.crazicrafter1.jripper.decompiler.DecompiledMethod;
+import com.crazicrafter1.jripper.decompiler.DisassembledMethod;
 import com.crazicrafter1.jripper.decompiler.attributes.CodeAttr;
-import com.crazicrafter1.jripper.decompiler.pool.ConstantFieldref;
+import com.crazicrafter1.jripper.decompiler.constants.ConstantFieldref;
 
 import java.util.*;
 
-public class JavaMethod extends IObfuscate {
+public class JavaMethod extends IDecompiled {
 
     static class Parameter {
         String mutatedType;
@@ -20,7 +20,7 @@ public class JavaMethod extends IObfuscate {
         }
     }
 
-    private final DecompiledMethod decompiledMethod;
+    private final DisassembledMethod disassembledMethod;
     /*
      * Bytecode parsed
      */
@@ -30,11 +30,11 @@ public class JavaMethod extends IObfuscate {
 
     private Map<String, Parameter> parameterMap = new LinkedHashMap<>();
 
-    private final ArrayList<String> generatedCode = new ArrayList<>();
+    private final ArrayList<String> generatedCodeBody = new ArrayList<>();
 
-    public JavaMethod(JavaClass parentJavaClass, DecompiledMethod decompiledMethod) {
+    public JavaMethod(DecompiledJavaClass parentJavaClass, DisassembledMethod disassembledMethod) {
         super(parentJavaClass);
-        this.decompiledMethod = decompiledMethod;
+        this.disassembledMethod = disassembledMethod;
     }
 
     @Override
@@ -44,9 +44,11 @@ public class JavaMethod extends IObfuscate {
 
         ArrayList<String> parameterTypes =
                 Util.getParameterTypes(
-                        decompiledMethod.getMethodDescriptor(),
+                        disassembledMethod.getMethodDescriptor(),
                         inImports,
                         inReturnType);
+
+
 
         /**
          * Parameter types will not this reference,
@@ -54,16 +56,16 @@ public class JavaMethod extends IObfuscate {
          */
 
         // Only completely empty initializer
-        if (decompiledMethod.isStaticInitializer()) {
+        if (disassembledMethod.isStaticInitializer()) {
             // Nothing
         } else {
             // if instance method or constructor
-            if (decompiledMethod.isInstanceInitializer() || !decompiledMethod.isStatic()) {
+            if (disassembledMethod.isInstanceInitializer() || !disassembledMethod.isStatic()) {
 
                 locals.add("this");
 
                 // No return type
-                if (decompiledMethod.isInstanceInitializer()) {
+                if (disassembledMethod.isInstanceInitializer()) {
                     mutatedReturnType = null;
                     mutatedMethodName = getContainedClass().getClassName();
                 } else {
@@ -72,20 +74,17 @@ public class JavaMethod extends IObfuscate {
             } else
                 mutatedReturnType = Util.toValidTypeName(inReturnType.toString());
 
-            setMutatedMethodName(decompiledMethod.getMethodName());
+            setMutatedMethodName(disassembledMethod.getMethodName());
 
             // Has parameters
             parameterTypes.forEach(parameterType -> {
-                String validatedType = Util.toValidTypeName(parameterType);
-                final String localMutatedName = validatedType.substring(0, 1).toLowerCase() + validatedType.substring(1);
+                final String validatedType = Util.toValidTypeName(parameterType);
+                final String localMutatedName = validatedType.substring(0, 1).toLowerCase();
 
                 String name = localMutatedName;
                 int ordinal = 0;
-                while (locals.contains(name))
+                while (locals.contains(name) || name.equals(validatedType))
                     name = localMutatedName + (ordinal++);
-
-                if (name.equals(validatedType))
-                    name = "_" + name;
 
                 locals.add(name);
 
@@ -101,12 +100,12 @@ public class JavaMethod extends IObfuscate {
         generateMethodBody();
     }
 
-    public DecompiledMethod getDecompiledMethod() {
-        return this.decompiledMethod;
+    public DisassembledMethod getDecompiledMethod() {
+        return this.disassembledMethod;
     }
 
     public void setMutatedMethodName(String newName) {
-        if (!decompiledMethod.isInstanceInitializer() && !decompiledMethod.isStaticInitializer())
+        if (!disassembledMethod.isInstanceInitializer() && !disassembledMethod.isStaticInitializer())
             this.mutatedMethodName = Util.toValidName(newName);
     }
 
@@ -219,7 +218,7 @@ public class JavaMethod extends IObfuscate {
                 case IINC:          // increment by next byte
                     String first = getLocal(++index);
 
-                    generatedCode.add(first + " += " + getLocal(++index) + ";");
+                    generatedCodeBody.add(first + " += " + getLocal(++index) + ";");
                     continue;
                 case F2I:           // cast to int
                 case D2I:
@@ -254,44 +253,44 @@ public class JavaMethod extends IObfuscate {
                     //    System.out.println(name + " is not completely supported!");
 
                 case RETURN:           // return from function (void)
-                    generatedCode.add("return;");
+                    generatedCodeBody.add("return;");
                     continue;
                 case IRETURN:       // return value from function
                 case FRETURN:
                 case DRETURN:
                 case LRETURN:
                 case ARETURN:
-                    generatedCode.add("return " + STACK.pop() + ";");
+                    generatedCodeBody.add("return " + STACK.pop() + ";");
                     continue;
                 case ISTORE:        // pop and assign to local@next
                 case FSTORE:
                 case DSTORE:
                 case LSTORE:
-                    generatedCode.add(getLocal(++index) + " = " + STACK.pop() + ";");
+                    generatedCodeBody.add(getLocal(++index) + " = " + STACK.pop() + ";");
                     continue;
                 case ISTORE_0:      // pop and assign to local@0
                 case FSTORE_0:
                 case DSTORE_0:
                 case LSTORE_0:
-                    generatedCode.add(getLocal(0) + " = " + STACK.pop() + ";");
+                    generatedCodeBody.add(getLocal(0) + " = " + STACK.pop() + ";");
                     continue;
                 case ISTORE_1:      // pop and assign to local@1
                 case FSTORE_1:
                 case DSTORE_1:
                 case LSTORE_1:
-                    generatedCode.add(getLocal(1) + " = " + STACK.pop() + ";");
+                    generatedCodeBody.add(getLocal(1) + " = " + STACK.pop() + ";");
                     continue;
                 case ISTORE_2:      // pop and assign to local@2
                 case FSTORE_2:
                 case DSTORE_2:
                 case LSTORE_2:
-                    generatedCode.add(getLocal(2) + " = " + STACK.pop() + ";");
+                    generatedCodeBody.add(getLocal(2) + " = " + STACK.pop() + ";");
                     continue;
                 case ISTORE_3:      // pop and assign to local@3
                 case FSTORE_3:
                 case DSTORE_3:
                 case LSTORE_3:
-                    generatedCode.add(getLocal(3) + " = " + STACK.pop() + ";");
+                    generatedCodeBody.add(getLocal(3) + " = " + STACK.pop() + ";");
                     continue;
                 case ICONST_M1:     // push -1
                     STACK.push("-1");
@@ -317,7 +316,7 @@ public class JavaMethod extends IObfuscate {
                     STACK.push("5");
                     continue;
                 case LDC:           // push constant
-                    STACK.push("" + decompiledMethod.getMainClass().getEntry(code.get(++index)));
+                    STACK.push("" + disassembledMethod.getMainClass().getEntry(code.get(++index)));
                     continue;
                 case BIPUSH:
                     int v = (byte) (int) code.get(++index); // two's complement
@@ -332,8 +331,8 @@ public class JavaMethod extends IObfuscate {
 
                     String[] popped = STACK.pop2();
 
-                    generatedCode.add(popped[0] + "." +
-                            getGlobalJavaField((ConstantFieldref) getDecompiledMethod().getEntry(field_index)).name
+                    generatedCodeBody.add(popped[0] + "." +
+                            getGlobalField(field_index).name
                             + " = " + popped[1] + ";");
                     continue;
                 }
@@ -344,9 +343,7 @@ public class JavaMethod extends IObfuscate {
 
                     ConstantFieldref constantFieldref = (ConstantFieldref) this.getContainedClass().getDecompiledClass().getEntry(field_index);
 
-                    System.out.println(constantFieldref);
-
-                    JavaField javaField = getGlobalJavaField(field_index);
+                    JavaField javaField = getGlobalField(field_index);
 
 
                     // If is not a reference to java.lang.Object representation
@@ -362,16 +359,16 @@ public class JavaMethod extends IObfuscate {
 
                     String value = STACK.pop();
 
-                    JavaField javaField = getGlobalJavaField(field_index);
+                    JavaField javaField = getGlobalField(field_index);
 
-                    generatedCode.add(javaField + " = " + value + ";");
+                    generatedCodeBody.add(javaField + " = " + value + ";");
 
                     continue;
                 }
                 case GETSTATIC: {
                     int field_index = (code.get(++index) << 8) | code.get(++index);
 
-                    JavaField javaField = getGlobalJavaField(field_index);
+                    JavaField javaField = getGlobalField(field_index);
 
                     STACK.push(javaField.getContainedClass().getClassName() + "." + javaField.name);
 
@@ -382,7 +379,7 @@ public class JavaMethod extends IObfuscate {
 
                     JavaMethod javaMethod = getGlobalJavaMethod(method_index);
 
-                    JavaClass superJavaClass = getContainedClass().getSuperClass();
+                    DecompiledJavaClass superJavaClass = getContainedClass().getSuperClass();
 
                     /**
                      * If the object is not java.lang.Object
@@ -400,11 +397,8 @@ public class JavaMethod extends IObfuscate {
                                         args.append(", ");
                                 }
                                 args.append(");");
-                                generatedCode.add(args.toString());
+                                generatedCodeBody.add(args.toString());
                             }
-
-                        }
-                        if (superJavaClass.hasJavaMethod(javaMethod)) {
 
                         }
 
@@ -454,63 +448,59 @@ public class JavaMethod extends IObfuscate {
 
     @Override
     public String toString() {
-        //System.out.println("DESCRIPTOR: " + getRawMethod().getDescriptor());
-        StringBuilder s = new StringBuilder();
+
+        ArrayList<String> lines = new ArrayList<>();
 
         /*
          * static initializer
          */
         if (mutatedMethodName == null && mutatedReturnType == null) {
-            s.append("//<clinit>\n");
-            s.append("static {");
-            s.append("\n");
-            s.append("}");
-            return s.toString();
+            lines.add("//<clinit>");
+            lines.add("static {");
+            lines.add("");
+            lines.add("}");
+
+            return Util.beautify(lines);
         } else if (mutatedReturnType == null) {
-            s.append("//<init>\n");
+            lines.add("//<init>");
         }
 
         // access flags
-        s.append(getDecompiledMethod().getAccessFlags());
+        StringBuilder flags = new StringBuilder(getDecompiledMethod().getAccessFlags());
 
         // return type
         if (mutatedReturnType != null)
-            s.append(" ").append(mutatedReturnType);
+            flags.append(" ").append(mutatedReturnType);
 
         // name
-        s.append(" ").append(mutatedMethodName);
-
-        // args
-        s.append("(");
+        flags.append(" ").append(mutatedMethodName).append("(");
 
         if (!parameterMap.isEmpty()) {
             int i = 0;
             for (Map.Entry<String, Parameter> entry : parameterMap.entrySet()) {
-                s.append(entry.getValue().mutatedType).append(" ").append(entry.getValue().mutatedName);
+                flags.append(entry.getValue().mutatedType).append(" ").append(entry.getValue().mutatedName);
                 if (i != parameterMap.size() - 1) {
-                    s.append(", ");
+                    flags.append(", ");
                 }
+                i++;
             }
         }
 
-        s.append(") {").append("\n");
+        flags.append(") {");
 
-        // exceptions
-        // s.append("throws"); ...
+        lines.add(flags.toString());
 
         // body
-        for (int i=0; i<generatedCode.size(); i++) {
-            String line = generatedCode.get(i);
+        for (int i = 0; i< generatedCodeBody.size(); i++) {
+            String line = generatedCodeBody.get(i);
 
-            if (i == generatedCode.size()-1 && line.equals("return;")) break;
+            if (i == generatedCodeBody.size()-1 && line.equals("return;")) break;
 
-            s.append(line).append("\n");
+            lines.add(line);
         }
 
+        lines.add("}");
 
-        // terminal delimiter
-        s.append("}");
-
-        return s.toString();
+        return Util.beautify(lines);
     }
 }

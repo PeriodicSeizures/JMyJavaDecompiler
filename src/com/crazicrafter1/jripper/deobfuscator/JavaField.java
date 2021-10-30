@@ -1,35 +1,35 @@
 package com.crazicrafter1.jripper.deobfuscator;
 
 import com.crazicrafter1.jripper.Util;
-import com.crazicrafter1.jripper.decompiler.DecompiledField;
+import com.crazicrafter1.jripper.decompiler.DisassembledField;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class JavaField extends IObfuscate {
+public class JavaField extends IDecompiled {
 
-    private final DecompiledField decompiledField;
+    private final DisassembledField disassembledField;
 
     public String flags; // aka static final public private volatile etc...
     public String type;
     public String name;
 
-    public JavaField(JavaClass parentJavaClass, DecompiledField decompiledField) {
+    public JavaField(DecompiledJavaClass parentJavaClass, DisassembledField disassembledField) {
         super(parentJavaClass);
 
-        this.decompiledField = decompiledField;
+        this.disassembledField = disassembledField;
     }
 
     @Override
     public void validationPhase() {
-        this.flags = decompiledField.getAccessFlags();
+        this.flags = disassembledField.getAccessFlags();
 
         Set<String> imports = new LinkedHashSet<>();
         this.type = Util.toValidName(
-                Util.getFieldType(decompiledField.getDescriptor(), imports));
-        ((JavaClass) getContainedClass()).addClassImports(imports);
+                Util.getFieldType(disassembledField.getDescriptor(), imports));
+        getContainedClass().addClassImports(imports);
 
-        this.name = Util.toValidName(decompiledField.getName());
+        this.name = Util.toValidName(disassembledField.getName());
     }
 
     @Override

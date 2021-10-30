@@ -1,17 +1,17 @@
 package com.crazicrafter1.jripper.decompiler.attributes;
 
 import com.crazicrafter1.jripper.decompiler.ByteReader;
-import com.crazicrafter1.jripper.decompiler.DecompiledClass;
-import com.crazicrafter1.jripper.decompiler.IAttr;
+import com.crazicrafter1.jripper.decompiler.DisassembledClass;
+import com.crazicrafter1.jripper.decompiler.IDisassembled;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ExceptionsAttr extends IAttr {
+public class ExceptionsAttr extends IDisassembled implements IAttr {
 
     private ArrayList<Integer> exception_index_table = new ArrayList<>();
 
-    public ExceptionsAttr(DecompiledClass belongingClass) {
+    public ExceptionsAttr(DisassembledClass belongingClass) {
         super(belongingClass);
     }
 

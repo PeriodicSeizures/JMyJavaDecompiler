@@ -76,9 +76,8 @@ public class Util {
         assert parameterDescriptor != null : "descriptor must not be null";
         assert !parameterDescriptor.contains("(") : "Must be a field descriptor or stripped method (arg only) descriptor";
 
-        if (outRemainder != null)
-            outRemainder.replace(0, outRemainder.length(),
-                    parameterDescriptor.substring(1));
+        outRemainder.replace(0, outRemainder.length(),
+                parameterDescriptor.substring(1));
 
         switch (parameterDescriptor.charAt(0)) {
             case 'B': return "byte";
@@ -100,8 +99,8 @@ public class Util {
                     // then cut early, and break
                     char ch = parameterDescriptor.charAt(i);
                     if (openDelimiters == 0 && ch == ';') {
-                        if (outRemainder != null)
-                            outRemainder.replace(0, outRemainder.length(), parameterDescriptor.substring(i + 1));
+                        outRemainder.replace(0, outRemainder.length(),
+                                parameterDescriptor.substring(i + 1));
 
                         parameterDescriptor = parameterDescriptor.substring(0, i + 1);
                         break;
@@ -113,8 +112,8 @@ public class Util {
                         openDelimiters--;
                         if (openDelimiters == 0) {
                             // then record
-                            if (outRemainder != null)
-                                outRemainder.replace(0, outRemainder.length(), parameterDescriptor.substring(i + 2));
+                            outRemainder.replace(0, outRemainder.length(),
+                                    parameterDescriptor.substring(i + 2));
 
                             parameterDescriptor = parameterDescriptor.substring(0, i + 2);
                             break;
@@ -122,36 +121,7 @@ public class Util {
                     }
                 }
 
-                // override the default retArguments to not include the current descriptor
-                parameterDescriptor = parameterDescriptor.substring(1, parameterDescriptor.length() - 1)
-                        .replaceAll("<L", "<")
-                        .replaceAll(";L", ",")
-                        .replaceAll(";>", ">")
-                        .replaceAll("java/lang/", "")
-                        .replaceAll("/", ".");
-
-                /*
-                 * Add import to set
-                 */
-                // thanks @Fried Rice On Ice
-                Pattern pattern = Pattern.compile("(.*?)(?=<)(?:.+?[\\s<])?");
-                Matcher matcher = pattern.matcher(parameterDescriptor);
-                while (matcher.find()) {
-                    String match = matcher.group(1);
-
-                    if (match.isEmpty()) continue;
-
-                    if (outImports != null)
-                        outImports.add(match);
-
-                    parameterDescriptor = parameterDescriptor.replaceAll(
-                            match.substring(
-                                    0, match.lastIndexOf('.') + 1), "");
-                }
-
-                return toValidTypeName(
-                        parameterDescriptor.replaceAll(";", "").
-                        replaceAll(",", ", "));
+                return getFieldType(parameterDescriptor, outImports);
             }
             default: throw new RuntimeException("type is invalid; class might be corrupted");
         }
@@ -201,7 +171,21 @@ public class Util {
                                 match.substring(
                                         0, match.lastIndexOf('.') + 1), "");
                     }
+
+                    // test for '.'
+                    int pd = fieldDescriptor.lastIndexOf('.');
+                    if (pd != -1) {
+                        int dm = fieldDescriptor.indexOf('<');
+                        if (dm != -1)
+                            outImports.add(fieldDescriptor.substring(0, dm));
+                        else
+                            outImports.add(fieldDescriptor);
+                        fieldDescriptor = fieldDescriptor.substring(pd + 1);
+                    }
+
                 }
+
+
 
                 return toValidTypeName(
                         fieldDescriptor.replaceAll(",", ", "));
@@ -261,4 +245,41 @@ public class Util {
         }
         return builder.toString();
     }
+
+    public static String beautify(ArrayList<String> lines) {
+        StringBuilder builder = new StringBuilder();
+        builder.ensureCapacity(lines.size()*20);
+        int indentCount = 0;
+        for (String s : lines) {
+            String trimmed = s.trim();
+
+            if (trimmed.isEmpty())
+                continue;
+
+            if (trimmed.charAt(trimmed.length() - 1) == '}') {
+                indentCount -= 4;
+            }
+
+            builder.append(new String(new char[indentCount])
+                            .replace('\0', ' '))
+                    .append(trimmed).append("\n");
+
+            if (trimmed.charAt(trimmed.length() - 1) == '{') {
+                indentCount += 4;
+            }
+        }
+        return builder.substring(0, builder.length() - 1);
+    }
+
+    public static String combine(ArrayList<String> lines) {
+        StringBuilder builder = new StringBuilder();
+        builder.ensureCapacity(lines.size()*20);
+        for (String s : lines) {
+            String trimmed = s.trim();
+
+            builder.append(trimmed).append("\n");
+        }
+        return builder.substring(0, builder.length() - 1);
+    }
+
 }

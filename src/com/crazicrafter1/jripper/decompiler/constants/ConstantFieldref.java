@@ -1,17 +1,17 @@
-package com.crazicrafter1.jripper.decompiler.pool;
+package com.crazicrafter1.jripper.decompiler.constants;
 
 import com.crazicrafter1.jripper.decompiler.ByteReader;
-import com.crazicrafter1.jripper.decompiler.DecompiledClass;
-import com.crazicrafter1.jripper.decompiler.IPoolConstant;
+import com.crazicrafter1.jripper.decompiler.DisassembledClass;
+import com.crazicrafter1.jripper.decompiler.IDisassembled;
 
 import java.io.IOException;
 
-public class ConstantFieldref extends IPoolConstant {
+public class ConstantFieldref extends IDisassembled implements IConstant {
 
     private int class_index;
     private int name_and_type_index;
 
-    public ConstantFieldref(DecompiledClass belongingClass) {
+    public ConstantFieldref(DisassembledClass belongingClass) {
         super(belongingClass);
     }
 

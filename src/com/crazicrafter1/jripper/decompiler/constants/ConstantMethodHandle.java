@@ -1,12 +1,12 @@
-package com.crazicrafter1.jripper.decompiler.pool;
+package com.crazicrafter1.jripper.decompiler.constants;
 
 import com.crazicrafter1.jripper.decompiler.ByteReader;
-import com.crazicrafter1.jripper.decompiler.DecompiledClass;
-import com.crazicrafter1.jripper.decompiler.IPoolConstant;
+import com.crazicrafter1.jripper.decompiler.DisassembledClass;
+import com.crazicrafter1.jripper.decompiler.IDisassembled;
 
 import java.io.IOException;
 
-public class ConstantMethodHandle extends IPoolConstant {
+public class ConstantMethodHandle extends IDisassembled implements IConstant {
 
     public static final int REF_getField = 1;
     public static final int REF_getStatic = 2;
@@ -21,7 +21,7 @@ public class ConstantMethodHandle extends IPoolConstant {
     private int reference_kind;
     private int reference_index;
 
-    public ConstantMethodHandle(DecompiledClass belongingClass) {
+    public ConstantMethodHandle(DisassembledClass belongingClass) {
         super(belongingClass);
     }
 
@@ -35,7 +35,7 @@ public class ConstantMethodHandle extends IPoolConstant {
         return reference_kind;
     }
 
-    public IPoolConstant getRef() {
+    public IConstant getRef() {
         return getEntry(reference_index);
     }
 

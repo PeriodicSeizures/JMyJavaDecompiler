@@ -3,11 +3,11 @@ package com.crazicrafter1.jripper.decompiler;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class MethodContainer extends IDecompiled {
+public class MethodContainer extends IDisassembled {
 
-    private ArrayList<DecompiledMethod> methods = new ArrayList<>();
+    private ArrayList<DisassembledMethod> methods = new ArrayList<>();
 
-    public MethodContainer(DecompiledClass belongingClass) {
+    public MethodContainer(DisassembledClass belongingClass) {
         super(belongingClass);
     }
 
@@ -17,7 +17,7 @@ public class MethodContainer extends IDecompiled {
         int methods_count = bytes.readUnsignedShort();
 
         for (; methods_count > 0; methods_count--) {
-            DecompiledMethod javaMethod = new DecompiledMethod(getMainClass());
+            DisassembledMethod javaMethod = new DisassembledMethod(getMainClass());
 
             javaMethod.read(bytes);
 
@@ -25,11 +25,11 @@ public class MethodContainer extends IDecompiled {
         }
     }
 
-    public DecompiledMethod getMethod(int index) {
+    public DisassembledMethod getMethod(int index) {
         return methods.get(index);
     }
 
-    public ArrayList<DecompiledMethod> getMethods() {
+    public ArrayList<DisassembledMethod> getMethods() {
         return methods;
     }
 
@@ -42,7 +42,7 @@ public class MethodContainer extends IDecompiled {
 
         s.append("{MethodContainer} ").append("\n");
 
-        for (DecompiledMethod javaMethod : methods) {
+        for (DisassembledMethod javaMethod : methods) {
             s.append(javaMethod.toString()).append("\n");
         }
 

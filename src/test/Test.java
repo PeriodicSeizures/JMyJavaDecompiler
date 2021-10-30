@@ -18,8 +18,10 @@ public class Test {
         //String s5 = "Ljava/lang/Integer;";
         String s6 = "(Ljava/lang/Integer;Ljava/lang/Float;)Ljava/lang/Integer;";
         String s7 = "(FILjava/util/ArrayList<Ljava/lang/Integer;>;)Ljava/lang/Integer;";
-        String s8 = "Ljava/util/ArrayList<Ljava/lang/Integer;>;FI";
+        String s8 = "Ljava/util/ArrayList<Ljavae/util/ArrayList;>;";
         String s9 = "IF";
+
+        String s10 = "(ILjava/util/ArrayList<Ljava/util/HashMap;>;Ljava/util/ArrayList;Ljava/util/ArrayList;)V";
 
         //HashSet<String> set = new HashSet<>();
         //for (String s : JavaUtil.getMethodArguments(s7, set)) {
@@ -31,8 +33,11 @@ public class Test {
 
         //System.out.println(JavaUtil.getFirstType(s2));
 
+
         Set<String> imports = new HashSet<>();
-        System.out.println(Util.getParameterTypes(s7, imports, null));
+
+        //System.out.println(Util.getFieldType(s8, imports));
+        System.out.println(Util.getParameterTypes(s10, imports, null));
         System.out.println(imports);
 
         //opcodes();

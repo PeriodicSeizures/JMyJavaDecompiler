@@ -5,9 +5,9 @@ import com.crazicrafter1.jripper.decompiler.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class CodeAttr extends IAttr {
+public class CodeAttr extends IDisassembled implements IAttr {
 
-    private static class JExcept extends IAttr {
+    private static class JExcept extends IDisassembled {
 
         public int start_pc;
 
@@ -15,7 +15,7 @@ public class CodeAttr extends IAttr {
         public int handler_pc;
         public int catch_type;
 
-        public JExcept(DecompiledClass belongingClass) {
+        public JExcept(DisassembledClass belongingClass) {
             super(belongingClass);
         }
 
@@ -37,7 +37,7 @@ public class CodeAttr extends IAttr {
     public ArrayList<JExcept> exception_table = new ArrayList<>();
     private AttributeContainer attribute_container;
 
-    public CodeAttr(DecompiledClass belongingClass) {
+    public CodeAttr(DisassembledClass belongingClass) {
         super(belongingClass);
     }
 
@@ -82,7 +82,7 @@ public class CodeAttr extends IAttr {
         for (int index=0; index<code.size(); index++) {
             int c = code.get(index);
             Opcode opcode = Opcode.getOpcode(c);
-            int varargs = Opcode.getVarArgs(code, index);
+            int varargs = Opcode.getArgCount(code, index);
             a.append(opcode.name()).append("\n");// has arguments, which should be printed
             if (varargs != 0) {// as long as instruction has no arguments, then
                 int end = index + varargs;

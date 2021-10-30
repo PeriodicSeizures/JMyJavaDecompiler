@@ -4,9 +4,8 @@ import com.crazicrafter1.jripper.decompiler.attributes.CodeAttr;
 import com.crazicrafter1.jripper.decompiler.attributes.EnumAttr;
 
 import java.io.IOException;
-import java.util.Objects;
 
-public class DecompiledMethod extends IDecompiled {
+public class DisassembledMethod extends IDisassembled {
 
     /*
         method access flags
@@ -32,7 +31,7 @@ public class DecompiledMethod extends IDecompiled {
     private int descriptor_index;
     private AttributeContainer attributeContainer;
 
-    public DecompiledMethod(DecompiledClass belongingClass) {
+    public DisassembledMethod(DisassembledClass belongingClass) {
         super(belongingClass);
     }
 

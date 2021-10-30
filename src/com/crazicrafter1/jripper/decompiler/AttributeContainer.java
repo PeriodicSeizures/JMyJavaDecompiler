@@ -1,18 +1,19 @@
 package com.crazicrafter1.jripper.decompiler;
 
 import com.crazicrafter1.jripper.decompiler.attributes.EnumAttr;
+import com.crazicrafter1.jripper.decompiler.attributes.IAttr;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AttributeContainer extends IDecompiled {
+public class AttributeContainer extends IDisassembled {
 
     private final HashMap<EnumAttr, IAttr> attribute_map = new HashMap<>();
     private final ArrayList<String> ignored = new ArrayList<>();
 
-    public AttributeContainer(DecompiledClass belongingClass) {
+    public AttributeContainer(DisassembledClass belongingClass) {
         super(belongingClass);
     }
 
@@ -37,9 +38,9 @@ public class AttributeContainer extends IDecompiled {
                 float atr_version = Float.parseFloat(atr.major + "." + atr.minor);
 
                 if (class_version >= atr_version) {
-                    IAttr javaAttribute = atr.clazz.getConstructor(DecompiledClass.class).newInstance(getMainClass());
+                    IAttr javaAttribute = atr.clazz.getConstructor(DisassembledClass.class).newInstance(getMainClass());
 
-                    javaAttribute.read(bytes);
+                    ((IDisassembled)javaAttribute).read(bytes);
                     attribute_map.put(atr, javaAttribute);
                 } else {
                     // do nothing

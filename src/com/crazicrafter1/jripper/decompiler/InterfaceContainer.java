@@ -3,11 +3,11 @@ package com.crazicrafter1.jripper.decompiler;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class InterfaceContainer extends IDecompiled {
+public class InterfaceContainer extends IDisassembled {
 
     private ArrayList<Integer> interfaces = new ArrayList<>();
 
-    public InterfaceContainer(DecompiledClass belongingClass) {
+    public InterfaceContainer(DisassembledClass belongingClass) {
         super(belongingClass);
     }
 

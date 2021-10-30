@@ -1,10 +1,9 @@
-import com.crazicrafter1.jripper.JRipper;
-import com.crazicrafter1.jripper.decompiler.DecompiledClass;
-import com.crazicrafter1.jripper.deobfuscator.JavaClass;
+//import com.crazicrafter1.jripper.deobfuscator.JRipper;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import com.crazicrafter1.jripper.decompiler.ByteReader;
+import com.crazicrafter1.jripper.decompiler.DisassembledClass;
+
+import java.io.*;
 import java.nio.file.Paths;
 
 public class Main {
@@ -42,37 +41,98 @@ public class Main {
      *  -->
      */
 
+    static void usage() {
+        System.out.println("Arg usage:");
+        System.out.println("\tdisassemble the specified class(es):");
+        System.out.println("\t\t-dasm [files...]                ");
+        System.out.println("\tdeobfuscate the specified class(es)");
+        System.out.println("\t\t-crunch [out] ['-files', '-all', '-jar'] [file(s)...] ");
+        System.exit(0);
+    }
+
     public static void main(String[] args) {
-
-        String path = "out/production/JRipper/test/inherited/BaseClass.class";
-        String path1 = "out/production/JRipper/test/inherited/SubClass.class";
-        String path2 = "out/production/JRipper/test/inherited/OtherClass.class";
-        String path3 = "out/production/JRipper/test/inherited/DeeperClass.class";
-        //String path = "out/production/JMyJavaDecompiler/test/virtual/ChildClass.class";
-
-        //String path = "out/production/JRipper/test/MethodWithFields.class";
-        //String path = "out/production/JRipper/test/SingleConstructor.class";
-        //String path = "out/production/JRipper/test/ConstructorMembersGetSet.class";
-        //String path = "out/production/JRipper/test/ConstantClass.class";
-        //String path = "out/production/JRipper/test/StaticInitializerConstructor.class";
-        //String path = "obfuscated/obfnofall.class";
-        //String path = "out/production/JRipper/test/MathOperations.class";
-        //String path = "out/production/JRipper/test/cmp/IfStatement.class";
+        if (args.length == 0) {
+            usage();
+        }
 
         try {
+            switch (args[0].toLowerCase()) {
+                case "-dasm": {
+                    if (args.length < 2)
+                        usage();
 
-            //File file = Paths.get(path).toFile();
-            //if (!file.exists()) {
-            //    throw new FileNotFoundException();
-            //}
+                    // Decompile classes
+                    for (int i = 1; i < args.length; i++) {
+                        DisassembledClass disassembledClass = new DisassembledClass();
+                        disassembledClass.read(new ByteReader(new FileInputStream(Paths.get(args[i]).toFile())));
+                        System.out.println(disassembledClass);
+                    }
 
-            JRipper.deObfuscateClasses(new File(path2)); //new File(path), new File(path1), new File(path2));
+                    break;
+                }
+                case "-crunch": {
+                    if (args.length < 4)
+                        usage();
 
-            JRipper.dump(new File("decompiled"));
+                    // Decompile and deobfuscate classes
+
+                    break;
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        if (true)
+            return;
+
+        if (args[0].equalsIgnoreCase("-unpack")) {
+            if (args.length < 4) {
+                usage();
+            }
+
+            File output = Paths.get(args[1]).toFile();
+
+            boolean debug = args[2].equalsIgnoreCase("-dbg");
+
+        } else if (args[0].equalsIgnoreCase("-crunch")) {
+
+/*
+            int next = debug ? 3 : 2;
+            try {
+                switch (args[next]) {
+                    case "-files":
+                        for (int i = next+1; i < args.length; i++) {
+                            File file = Paths.get(args[i]).toFile();
+                            JRipper.deObfuscateJar(file, debug);
+                        }
+                        break;
+                    case "-all": {
+                        File path = Paths.get(args[next + 1]).toFile();
+                        for (File file : path.listFiles()) {
+                            String filename = file.getName();
+                            int ext = filename.indexOf('.');
+                            if (ext != -1 && filename.substring(ext + 1).equals("class")) {
+                                JRipper.deObfuscateClass(file, debug);
+                            }
+                        }
+                        break;
+                    } case "-jar": {
+                        File path = Paths.get(args[next + 1]).toFile();
+                        JRipper.deObfuscateJar(path, debug);
+                        break;
+                    } default:
+                        usage();
+                }
+
+                output.mkdirs();
+                JRipper.dump(output);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+ */
+        } else
+            usage();
     }
 
 }

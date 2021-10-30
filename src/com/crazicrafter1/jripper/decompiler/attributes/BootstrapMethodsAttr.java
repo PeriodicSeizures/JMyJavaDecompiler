@@ -1,20 +1,20 @@
 package com.crazicrafter1.jripper.decompiler.attributes;
 
 import com.crazicrafter1.jripper.decompiler.ByteReader;
-import com.crazicrafter1.jripper.decompiler.DecompiledClass;
-import com.crazicrafter1.jripper.decompiler.IAttr;
+import com.crazicrafter1.jripper.decompiler.DisassembledClass;
+import com.crazicrafter1.jripper.decompiler.IDisassembled;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class BootstrapMethodsAttr extends IAttr {
+public class BootstrapMethodsAttr extends IDisassembled implements IAttr {
 
-    private static class BootstrapMethod extends IAttr {
+    private static class BootstrapMethod extends IDisassembled {
 
         public int bootstrap_method_ref;
         public ArrayList<Integer> bootstrap_arguments = new ArrayList<>();
 
-        public BootstrapMethod(DecompiledClass belongingClass) {
+        public BootstrapMethod(DisassembledClass belongingClass) {
             super(belongingClass);
         }
 
@@ -32,7 +32,7 @@ public class BootstrapMethodsAttr extends IAttr {
 
     private final ArrayList<BootstrapMethod> bootstrap_methods = new ArrayList<>();
 
-    public BootstrapMethodsAttr(DecompiledClass belongingClass) {
+    public BootstrapMethodsAttr(DisassembledClass belongingClass) {
         super(belongingClass);
     }
 

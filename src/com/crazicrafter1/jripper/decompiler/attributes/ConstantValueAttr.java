@@ -1,16 +1,16 @@
 package com.crazicrafter1.jripper.decompiler.attributes;
 
 import com.crazicrafter1.jripper.decompiler.ByteReader;
-import com.crazicrafter1.jripper.decompiler.DecompiledClass;
-import com.crazicrafter1.jripper.decompiler.IAttr;
+import com.crazicrafter1.jripper.decompiler.DisassembledClass;
+import com.crazicrafter1.jripper.decompiler.IDisassembled;
 
 import java.io.IOException;
 
-public class ConstantValueAttr extends IAttr {
+public class ConstantValueAttr extends IDisassembled implements IAttr {
 
     private int constantvalue_index;
 
-    public ConstantValueAttr(DecompiledClass belongingClass) {
+    public ConstantValueAttr(DisassembledClass belongingClass) {
         super(belongingClass);
     }
 

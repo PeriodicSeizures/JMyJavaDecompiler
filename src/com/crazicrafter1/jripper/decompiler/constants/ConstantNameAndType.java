@@ -1,18 +1,18 @@
-package com.crazicrafter1.jripper.decompiler.pool;
+package com.crazicrafter1.jripper.decompiler.constants;
 
 import com.crazicrafter1.jripper.decompiler.ByteReader;
-import com.crazicrafter1.jripper.decompiler.DecompiledClass;
-import com.crazicrafter1.jripper.decompiler.IPoolConstant;
+import com.crazicrafter1.jripper.decompiler.DisassembledClass;
 import com.crazicrafter1.jripper.Util;
+import com.crazicrafter1.jripper.decompiler.IDisassembled;
 
 import java.io.IOException;
 
-public class ConstantNameAndType extends IPoolConstant {
+public class ConstantNameAndType extends IDisassembled implements IConstant {
 
     private int name_index;
     private int descriptor_index;
 
-    public ConstantNameAndType(DecompiledClass belongingClass) {
+    public ConstantNameAndType(DisassembledClass belongingClass) {
         super(belongingClass);
     }
 

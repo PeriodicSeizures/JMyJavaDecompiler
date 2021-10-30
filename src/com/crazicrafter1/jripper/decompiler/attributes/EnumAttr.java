@@ -1,7 +1,5 @@
 package com.crazicrafter1.jripper.decompiler.attributes;
 
-import com.crazicrafter1.jripper.decompiler.IAttr;
-
 public enum EnumAttr {
 
     /*

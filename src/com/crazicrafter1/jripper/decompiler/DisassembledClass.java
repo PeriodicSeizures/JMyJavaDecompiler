@@ -4,7 +4,7 @@ import com.crazicrafter1.jripper.Util;
 
 import java.io.IOException;
 
-public class DecompiledClass extends IDecompiled {
+public class DisassembledClass extends IDisassembled {
 
     private static final int ACC_PUBLIC =        0x0001;
     private static final int ACC_FINAL =         0x0010;
@@ -29,11 +29,14 @@ public class DecompiledClass extends IDecompiled {
     public MethodContainer methodContainer = new MethodContainer(this);
     public AttributeContainer attributeContainer = new AttributeContainer(this);
 
-    public DecompiledClass() {
+    public DisassembledClass() {
         super(null);
     }
 
     public void read(ByteReader bytes) throws IOException {
+        if (!bytes.compareNext(4, new byte[] {(byte)0xCA, (byte)0xFE, (byte)0xBA, (byte)0xBE}))
+            throw new RuntimeException("No magic header found");
+
         int minor_version = bytes.readUnsignedShort();
         int major_version = bytes.readUnsignedShort();
 
@@ -119,14 +122,14 @@ public class DecompiledClass extends IDecompiled {
      * Get the super class name
      * @return Return 'java.lang.Object' or 'com.my.package.MyClazz'
      */
-    public String getSuperClassPackageAndName() {
+    public String getSuperBinaryName() {
         if (super_class != 0)
             return (String) getEntry(super_class).get();
         return "Ljava/lang/Object"; // must then directly inherit from Object
     }
 
     public String getSuperClassName() {
-        String[] pk =  Util.getPackageAndClass((getSuperClassPackageAndName()));
+        String[] pk =  Util.getPackageAndClass((getSuperBinaryName()));
         return pk[1];
     }
 
@@ -138,7 +141,7 @@ public class DecompiledClass extends IDecompiled {
     public String toString() {
         return  "class version: " + class_version + "\n" +
                 "class: " + getPackageAndName() + "\n" +
-                "super class: " + getSuperClassPackageAndName() + "\n" +
+                "super class: " + getSuperBinaryName() + "\n" +
                 interfaceContainer + "\n" +
                 constantPoolContainer + "\n" +
                 fieldContainer + "\n" +

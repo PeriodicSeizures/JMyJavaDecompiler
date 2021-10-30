@@ -3,11 +3,11 @@ package com.crazicrafter1.jripper.decompiler;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class FieldContainer extends IDecompiled {
+public class FieldContainer extends IDisassembled {
 
-    private ArrayList<DecompiledField> fields = new ArrayList<>();
+    private ArrayList<DisassembledField> fields = new ArrayList<>();
 
-    public FieldContainer(DecompiledClass belongingClass) {
+    public FieldContainer(DisassembledClass belongingClass) {
         super(belongingClass);
     }
 
@@ -16,7 +16,7 @@ public class FieldContainer extends IDecompiled {
         int fields_count = bytes.readUnsignedShort();
 
         for (; fields_count > 0; fields_count--) {
-            DecompiledField field = new DecompiledField(getMainClass());
+            DisassembledField field = new DisassembledField(getMainClass());
 
             field.read(bytes);
 
@@ -24,7 +24,7 @@ public class FieldContainer extends IDecompiled {
         }
     }
 
-    public ArrayList<DecompiledField> getFields() {
+    public ArrayList<DisassembledField> getFields() {
         return fields;
     }
 
@@ -33,7 +33,7 @@ public class FieldContainer extends IDecompiled {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("{FieldContainer}: ").append("\n");
         for (int i=0; i<fields.size(); i++) {
-            DecompiledField rawField = fields.get(i);
+            DisassembledField rawField = fields.get(i);
             stringBuilder.append("  ").append(i).append(" : ").append(rawField.toString()).append("\n");
         }
         stringBuilder.append("size: ").append(fields.size()).append("\n");

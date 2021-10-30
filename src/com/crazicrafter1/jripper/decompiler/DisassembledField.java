@@ -4,7 +4,7 @@ import com.crazicrafter1.jripper.Util;
 
 import java.io.IOException;
 
-public class DecompiledField extends IDecompiled {
+public class DisassembledField extends IDisassembled {
 
     /*
         field access flags
@@ -28,7 +28,7 @@ public class DecompiledField extends IDecompiled {
 
     private AttributeContainer attributeContainer = new AttributeContainer(getMainClass());
 
-    public DecompiledField(DecompiledClass belongingClass) {
+    public DisassembledField(DisassembledClass belongingClass) {
         super(belongingClass);
     }
 

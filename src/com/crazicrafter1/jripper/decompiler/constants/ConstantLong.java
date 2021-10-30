@@ -1,16 +1,16 @@
-package com.crazicrafter1.jripper.decompiler.pool;
+package com.crazicrafter1.jripper.decompiler.constants;
 
 import com.crazicrafter1.jripper.decompiler.ByteReader;
-import com.crazicrafter1.jripper.decompiler.DecompiledClass;
-import com.crazicrafter1.jripper.decompiler.IPoolConstant;
+import com.crazicrafter1.jripper.decompiler.DisassembledClass;
+import com.crazicrafter1.jripper.decompiler.IDisassembled;
 
 import java.io.IOException;
 
-public class ConstantLong extends IPoolConstant {
+public class ConstantLong extends IDisassembled implements IConstant {
 
     private long value;
 
-    public ConstantLong(DecompiledClass belongingClass) {
+    public ConstantLong(DisassembledClass belongingClass) {
         super(belongingClass);
     }
 
