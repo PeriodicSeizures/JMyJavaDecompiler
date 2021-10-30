@@ -68,7 +68,7 @@ public class ConstantContainer extends IDisassembled {
                 default: throw new RuntimeException("ConstantPool entry tagged " + tag + " does not exist");
             }
 
-            entry.read(bytes);
+            ((IDisassembled)entry).read(bytes);
 
             spaced_indexes.add(constants.size());
 

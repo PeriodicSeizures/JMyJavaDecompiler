@@ -13,7 +13,7 @@ public class JRipper {
 
     private JRipper() {}
 
-    public static DisassembledClass disassembleClass(InputStream is) throws IOException {
+    private static DisassembledClass disassembleClass(InputStream is) throws IOException {
         ByteReader bytes = new ByteReader(is);
 
         DisassembledClass decompiledClass = new DisassembledClass();
@@ -26,19 +26,23 @@ public class JRipper {
         return decompiledClass;
     }
 
-    public static void decompileClass(File file, boolean debug) throws IOException {
+    public static void decompileClass(File file) throws IOException {
+
+        String name = file.getName();
+        int ext = name.lastIndexOf('.');
+        if (!name.substring(ext).equals(".class")) {
+            System.out.println("Not a .class file");
+            return;
+        }
+
         DisassembledClass decompiledClass =
                 JRipper.disassembleClass(new FileInputStream(file));
-
-        if (debug) {
-            System.out.println(decompiledClass);
-        }
 
         DecompiledJavaClass decompiledJavaClass = new DecompiledJavaClass(decompiledClass);
         decompiledJavaClass.validationPhase();
     }
 
-    public static void decompileJar(File file, boolean debug) throws IOException {
+    public static void decompileJar(File file) throws IOException {
         JarFile jarFile = new JarFile(file);
 
         for (Enumeration<JarEntry> enumEntry = jarFile.entries(); enumEntry.hasMoreElements(); ) {
@@ -46,10 +50,6 @@ public class JRipper {
 
             DisassembledClass decompiledClass =
                     JRipper.disassembleClass(jarFile.getInputStream(entry));
-
-            if (debug) {
-                System.out.println(decompiledClass);
-            }
 
             DecompiledJavaClass decompiledJavaClass = new DecompiledJavaClass(decompiledClass);
             decompiledJavaClass.validationPhase();

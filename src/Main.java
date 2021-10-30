@@ -2,6 +2,7 @@
 
 import com.crazicrafter1.jripper.decompiler.ByteReader;
 import com.crazicrafter1.jripper.decompiler.DisassembledClass;
+import com.crazicrafter1.jripper.deobfuscator.JRipper;
 
 import java.io.*;
 import java.nio.file.Paths;
@@ -44,9 +45,9 @@ public class Main {
     static void usage() {
         System.out.println("Arg usage:");
         System.out.println("\tdisassemble the specified class(es):");
-        System.out.println("\t\t-dasm [files...]                ");
-        System.out.println("\tdeobfuscate the specified class(es)");
-        System.out.println("\t\t-crunch [out] ['-files', '-all', '-jar'] [file(s)...] ");
+        System.out.println("\t\t-asm [files...]                ");
+        System.out.println("\tdecompile the specified class/classes/jar");
+        System.out.println("\t\t-crunch [out] [file(s)...] ");
         System.exit(0);
     }
 
@@ -57,7 +58,7 @@ public class Main {
 
         try {
             switch (args[0].toLowerCase()) {
-                case "-dasm": {
+                case "-asm": {
                     if (args.length < 2)
                         usage();
 
@@ -71,68 +72,52 @@ public class Main {
                     break;
                 }
                 case "-crunch": {
-                    if (args.length < 4)
+                    if (args.length < 3)
                         usage();
 
+                    File output = Paths.get(args[1]).toFile();
+
+                    if (args.length == 3) {
+                        // directory
+                        // single file
+                        // single jar
+                        File input = Paths.get(args[2]).toFile();
+                        if (input.isDirectory()) {
+                            for (File file : input.listFiles()) {
+                                JRipper.decompileClass(file);
+                            }
+                        } else {
+                            String name = input.getName();
+                            int ext = name.lastIndexOf('.');
+                            // single class
+                            if (name.substring(ext).equals(".class")) {
+                                JRipper.decompileClass(input);
+                            } else if (name.substring(ext).equals(".jar")) {
+                                JRipper.decompileJar(input);
+                            } else
+                                System.out.println("Invalid filetype, use only .class or .jar");
+                        }
+                    } else {
+                        // all files in args
+                        for (int i = 2; i < args.length; i++) {
+                            File file = Paths.get(args[i]).toFile();
+
+                            JRipper.decompileClass(file);
+                        }
+                    }
                     // Decompile and deobfuscate classes
+
+                    output.mkdirs();
+                    JRipper.dump(output);
 
                     break;
                 }
+                default:
+                    usage();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        if (true)
-            return;
-
-        if (args[0].equalsIgnoreCase("-unpack")) {
-            if (args.length < 4) {
-                usage();
-            }
-
-            File output = Paths.get(args[1]).toFile();
-
-            boolean debug = args[2].equalsIgnoreCase("-dbg");
-
-        } else if (args[0].equalsIgnoreCase("-crunch")) {
-
-/*
-            int next = debug ? 3 : 2;
-            try {
-                switch (args[next]) {
-                    case "-files":
-                        for (int i = next+1; i < args.length; i++) {
-                            File file = Paths.get(args[i]).toFile();
-                            JRipper.deObfuscateJar(file, debug);
-                        }
-                        break;
-                    case "-all": {
-                        File path = Paths.get(args[next + 1]).toFile();
-                        for (File file : path.listFiles()) {
-                            String filename = file.getName();
-                            int ext = filename.indexOf('.');
-                            if (ext != -1 && filename.substring(ext + 1).equals("class")) {
-                                JRipper.deObfuscateClass(file, debug);
-                            }
-                        }
-                        break;
-                    } case "-jar": {
-                        File path = Paths.get(args[next + 1]).toFile();
-                        JRipper.deObfuscateJar(path, debug);
-                        break;
-                    } default:
-                        usage();
-                }
-
-                output.mkdirs();
-                JRipper.dump(output);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
- */
-        } else
-            usage();
     }
 
 }
