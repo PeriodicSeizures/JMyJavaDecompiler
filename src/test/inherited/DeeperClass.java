@@ -10,12 +10,19 @@ public class DeeperClass extends SubClass {
     }
 
     @Override
-    void someMethod() {
+    public void someMethod() {
         base_i -= 9;
         sub_i += base_i;
         super.sub_i += base_i;
-        ((BaseClass)(this)).base_i += base_i;
+        ((BaseClass)this).base_i += base_i;
         ((BaseClass)this).shared_i = 4;
     }
 
+    @Override
+    public String toString() {
+        return "DeeperClass{" +
+                "base_i=" + base_i +
+                ", sub_i=" + sub_i +
+                "} " + super.toString();
+    }
 }

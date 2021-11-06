@@ -4,7 +4,7 @@ public class SubClass extends BaseClass {
 
     int sub_i = 6;
 
-    int shared_i;
+    int shared_i = 58;
 
     public SubClass(int base_i) {
         super(base_i);
@@ -16,8 +16,15 @@ public class SubClass extends BaseClass {
         base_i += otherClass.other_i;
     }
 
-    void someMethod() {
+    public void someMethod() {
 
     }
 
+    @Override
+    public String toString() {
+        return "SubClass{" +
+                "sub_i=" + sub_i +
+                ", shared_i=" + shared_i +
+                "} " + super.toString();
+    }
 }

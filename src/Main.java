@@ -1,8 +1,6 @@
-//import com.crazicrafter1.jripper.deobfuscator.JRipper;
+import com.crazicrafter1.jripper.decompile.JRipper;
 
-import com.crazicrafter1.jripper.decompiler.ByteReader;
-import com.crazicrafter1.jripper.decompiler.DisassembledClass;
-import com.crazicrafter1.jripper.deobfuscator.JRipper;
+import com.crazicrafter1.jripper.disassemble.IDisassembled;
 
 import java.io.*;
 import java.nio.file.Paths;
@@ -64,9 +62,9 @@ public class Main {
 
                     // Decompile classes
                     for (int i = 1; i < args.length; i++) {
-                        DisassembledClass disassembledClass = new DisassembledClass();
-                        disassembledClass.read(new ByteReader(new FileInputStream(Paths.get(args[i]).toFile())));
-                        System.out.println(disassembledClass);
+                        //System.out.println(JRipper.disassembleClass(Paths.get(args[i]).toFile()));
+                        System.out.println(
+                                IDisassembled.disassemble(new FileInputStream(Paths.get(args[i]).toFile())));
                     }
 
                     break;

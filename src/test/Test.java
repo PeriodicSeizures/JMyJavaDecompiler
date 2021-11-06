@@ -1,8 +1,11 @@
 package test;
 
-import com.crazicrafter1.jripper.Util;
+import com.crazicrafter1.jripper.util.Util;
+import test.inherited.DeeperClass;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,11 +37,17 @@ public class Test {
         //System.out.println(JavaUtil.getFirstType(s2));
 
 
-        Set<String> imports = new HashSet<>();
+        //Set<String> imports = new HashSet<>();
 
         //System.out.println(Util.getFieldType(s8, imports));
-        System.out.println(Util.getParameterTypes(s10, imports, null));
-        System.out.println(imports);
+        //System.out.println(Util.getParameterTypes(s10, imports, null));
+        //System.out.println(imports);
+
+        DeeperClass deeperClass = new DeeperClass(498);
+        System.out.println(deeperClass);
+        deeperClass.someMethod();
+        System.out.println(deeperClass);
+
 
         //opcodes();
     }
